@@ -84,51 +84,7 @@
 <% if @recent_articles.any? %>
   <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
     <% @recent_articles.each do |article| %>
-      <% tag_colors = %w[bg-purple-600 bg-blue-500 bg-green-600 bg-yellow-500 bg-pink-600] %>
-      <article class="group bg-white border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-        <div class="relative h-[350px] overflow-hidden">
-          <% if article.cover_image.present? %>
-            <%= image_tag article.cover_image, alt: article.title,
-              class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" %>
-          <% else %>
-            <div class="w-full h-full bg-gray-100 flex items-center justify-center">
-              <%= lucide_icon "image", class: "w-10 h-10 text-gray-300" %>
-            </div>
-          <% end %>
-          <div class="absolute top-3 left-3 flex flex-wrap gap-1">
-            <% if article.category %>
-              <span class="text-xs font-bold px-2 py-0.5 bg-red-500 text-white uppercase tracking-wide"><%= article.category.name %></span>
-            <% end %>
-            <% article.tags.first(3).each_with_index do |tag, i| %>
-              <span class="text-xs font-bold px-2 py-0.5 <%= tag_colors[i % tag_colors.length] %> text-white uppercase tracking-wide"><%= tag.name %></span>
-            <% end %>
-          </div>
-          <%# Read time badge — slides up on hover %>
-          <div class="absolute bottom-0 left-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-            <div class="bg-black bg-opacity-80 px-4 py-2.5 inline-flex items-center gap-2">
-              <span class="text-white text-xs font-bold">Read Time:</span>
-              <span class="text-white text-xs font-medium"><%= [(article.body.to_s.split.size / 200.0).ceil, 1].max %> Min</span>
-            </div>
-          </div>
-          <%# Red corner triangle — fades in on hover %>
-          <div class="absolute bottom-0 right-0 w-16 h-16 bg-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style="clip-path: polygon(100% 0, 100% 100%, 0 100%)"></div>
-        </div>
-        <div class="p-5">
-          <div class="flex items-center gap-1.5 text-xs text-gray-500 mb-3">
-            <%= lucide_icon "calendar", class: "w-3.5 h-3.5 shrink-0" %>
-            <time><%= article.published_at.strftime("%B %-d, %Y") %></time>
-          </div>
-          <h3 class="font-serif text-xl font-bold leading-snug mb-2">
-            <%= link_to article.title, article_path(article),
-              class: "text-red-600 hover:text-red-700 transition-colors" %>
-          </h3>
-          <p class="text-gray-500 text-sm leading-relaxed line-clamp-3 mb-4"><%= article.excerpt %></p>
-          <div class="pt-3 border-t border-gray-100">
-            <%= link_to "Read More", article_path(article),
-              class: "text-sm font-semibold px-4 py-2 bg-red-500 text-white hover:bg-red-600 transition-colors" %>
-          </div>
-        </div>
-      </article>
+      <%= render "articles/article_card", article: article %>
     <% end %>
   </section>
 <% else %>

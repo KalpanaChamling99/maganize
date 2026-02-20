@@ -1,0 +1,77 @@
+<%#
+  Locals:
+    article              (required)
+    image_height         default: "h-[350px]"
+    show_category_badge  default: true
+    tag_limit            default: 3  (0 = no tags shown)
+    title_size           default: "text-xl"
+    card_padding         default: "p-5"
+    date_color           default: "text-gray-500"
+    badge_padding        default: "px-4 py-2.5"
+    triangle_size        default: "w-16 h-16"
+    placeholder_icon_size default: "w-10 h-10"
+    show_excerpt         default: true
+%>
+<%
+  tag_colors            = %w[bg-purple-600 bg-blue-500 bg-green-600 bg-yellow-500 bg-pink-600]
+  image_height          ||= "h-[350px]"
+  show_category_badge   = local_assigns.fetch(:show_category_badge, true)
+  tag_limit             ||= 3
+  title_size            ||= "text-xl"
+  card_padding          ||= "p-5"
+  date_color            ||= "text-gray-500"
+  badge_padding         ||= "px-4 py-2.5"
+  triangle_size         ||= "w-16 h-16"
+  placeholder_icon_size ||= "w-10 h-10"
+  show_excerpt          = local_assigns.fetch(:show_excerpt, true)
+%>
+<article class="group bg-white border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+  <div class="relative <%= image_height %> overflow-hidden">
+    <% if article.cover_image.attached? %>
+      <%= image_tag article.cover_image, alt: article.title,
+        class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" %>
+    <% else %>
+      <div class="w-full h-full bg-gray-100 flex items-center justify-center">
+        <%= lucide_icon "image", class: "#{placeholder_icon_size} text-gray-300" %>
+      </div>
+    <% end %>
+
+    <div class="absolute top-3 left-3 flex flex-wrap gap-1">
+      <% if show_category_badge && article.category %>
+        <span class="text-xs font-bold px-2 py-0.5 bg-red-500 text-white uppercase tracking-wide"><%= article.category.name %></span>
+      <% end %>
+      <% article.tags.first(tag_limit).each_with_index do |tag, i| %>
+        <span class="text-xs font-bold px-2 py-0.5 <%= tag_colors[i % tag_colors.length] %> text-white uppercase tracking-wide"><%= tag.name %></span>
+      <% end %>
+    </div>
+
+    <%# Read time badge — slides up on hover %>
+    <div class="absolute bottom-0 left-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+      <div class="bg-black bg-opacity-80 <%= badge_padding %> inline-flex items-center gap-2">
+        <span class="text-white text-xs font-bold">Read Time:</span>
+        <span class="text-white text-xs font-medium"><%= [(article.body.to_s.split.size / 200.0).ceil, 1].max %> Min</span>
+      </div>
+    </div>
+
+    <%# Red triangle — slides in from right on hover %>
+    <div class="absolute bottom-0 right-0 <%= triangle_size %> bg-red-500 translate-x-full group-hover:translate-x-0 transition-transform duration-300" style="clip-path: polygon(100% 0, 100% 100%, 0 100%)"></div>
+  </div>
+
+  <div class="<%= card_padding %>">
+    <div class="flex items-center gap-1.5 text-xs <%= date_color %> mb-3">
+      <%= lucide_icon "calendar", class: "w-3.5 h-3.5 shrink-0" %>
+      <time><%= article.published_at.strftime("%B %-d, %Y") %></time>
+    </div>
+    <h3 class="font-serif <%= title_size %> font-bold leading-snug mb-2">
+      <%= link_to article.title, article_path(article),
+        class: "text-red-600 hover:text-red-700 transition-colors" %>
+    </h3>
+    <% if show_excerpt %>
+      <p class="text-gray-500 text-sm leading-relaxed line-clamp-3 mb-4"><%= article.excerpt %></p>
+    <% end %>
+    <div class="pt-3 border-t border-gray-100">
+      <%= link_to "Read More", article_path(article),
+        class: "text-sm font-semibold px-4 py-2 bg-red-500 text-white hover:bg-red-600 transition-colors" %>
+    </div>
+  </div>
+</article>
