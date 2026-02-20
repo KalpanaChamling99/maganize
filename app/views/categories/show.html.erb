@@ -1,12 +1,6 @@
-<% if notice.present? %>
-  <div class="mb-6 bg-green-50 border border-green-200 text-green-800 text-sm px-4 py-3">
-    <%= notice %>
-  </div>
-<% end %>
-
-<%# Category header %>
-<div class="mb-10 pb-6 border-b border-gray-900">
-  <p class="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-1">Category</p>
+<%# ── Category header ──────────────────────────────────────── %>
+<div class="mb-10 pb-8 border-b border-gray-200">
+  <p class="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-2">Category</p>
   <div class="flex items-end justify-between gap-4 flex-wrap">
     <h1 class="font-serif text-4xl sm:text-5xl font-bold"><%= @category.name %></h1>
     <span class="text-sm text-gray-400 mb-1">
@@ -14,43 +8,57 @@
     </span>
   </div>
   <% if @category.description.present? %>
-    <p class="mt-3 text-gray-500 text-base leading-relaxed max-w-2xl"><%= @category.description %></p>
+    <p class="mt-4 text-gray-500 text-base leading-relaxed max-w-2xl"><%= @category.description %></p>
   <% end %>
 </div>
 
-<%# Articles in this category %>
+<%# ── Articles ──────────────────────────────────────────────── %>
 <% if @articles.any? %>
 
-  <%# Hero article — first one, full width %>
+  <%# Hero — first article, full-width feature card %>
   <% hero = @articles.first %>
-  <article class="group mb-10 grid grid-cols-1 md:grid-cols-2 gap-0 border border-gray-200 hover:border-gray-900 transition-colors">
-    <% if hero.cover_image.present? %>
-      <div class="h-[350px] overflow-hidden">
-        <%= image_tag hero.cover_image, alt: hero.title,
-          class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" %>
-      </div>
-    <% else %>
-      <div class="hidden md:flex bg-gray-50 items-center justify-center min-h-48">
-        <span class="font-serif text-6xl text-gray-200"><%= @category.name[0] %></span>
-      </div>
-    <% end %>
-    <div class="p-6 sm:p-8 flex flex-col justify-center">
-      <span class="text-xs font-semibold tracking-widest uppercase text-red-600 mb-3">Latest</span>
-      <h2 class="font-serif text-2xl font-bold leading-tight mb-3">
-        <%= link_to hero.title, article_path(hero), class: "hover:text-gray-600 transition-colors" %>
-      </h2>
-      <p class="text-gray-500 text-sm leading-relaxed mb-4 line-clamp-3"><%= hero.excerpt %></p>
-      <div class="flex items-center gap-4 mt-auto">
-        <time class="text-xs text-gray-400"><%= hero.published_at.strftime("%B %-d, %Y") %></time>
-        <% if hero.tags.any? %>
-          <div class="flex gap-2">
-            <% hero.tags.first(2).each do |tag| %>
-              <%= link_to tag.name, tag_path(tag),
-                class: "text-xs px-2 py-0.5 bg-gray-100 hover:bg-gray-900 hover:text-white transition-colors" %>
+  <article class="group mb-10 border border-gray-200 hover:border-gray-900 hover:shadow-lg transition-all">
+    <div class="grid grid-cols-1 md:grid-cols-5">
+
+      <% if hero.cover_image.attached? %>
+        <div class="md:col-span-2 h-[360px] overflow-hidden">
+          <%= image_tag hero.cover_image, alt: hero.title,
+            class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" %>
+        </div>
+        <div class="md:col-span-3 p-8 flex flex-col justify-center">
+      <% else %>
+        <div class="md:col-span-2 h-[360px] bg-gray-100 flex items-center justify-center">
+          <span class="font-serif text-8xl text-gray-200"><%= @category.name[0] %></span>
+        </div>
+        <div class="md:col-span-3 p-8 flex flex-col justify-center">
+      <% end %>
+
+          <span class="text-xs font-bold px-3 py-1 bg-red-500 text-white uppercase tracking-widest self-start mb-4">
+            Latest
+          </span>
+          <h2 class="font-serif text-2xl sm:text-3xl font-bold leading-tight mb-3">
+            <%= link_to hero.title, article_path(hero), class: "hover:text-gray-600 transition-colors" %>
+          </h2>
+          <p class="text-gray-500 text-sm leading-relaxed mb-5 line-clamp-3"><%= hero.excerpt %></p>
+          <div class="flex items-center gap-4 mt-auto">
+            <div class="flex items-center gap-1.5 text-xs text-gray-400">
+              <%= lucide_icon "calendar", class: "w-3.5 h-3.5 shrink-0" %>
+              <time><%= hero.published_at.strftime("%B %-d, %Y") %></time>
+            </div>
+            <% if hero.tags.any? %>
+              <div class="flex flex-wrap gap-1.5">
+                <% hero.tags.first(3).each do |tag| %>
+                  <%= link_to "##{tag.name}", tag_path(tag),
+                    class: "text-xs px-2 py-0.5 bg-gray-100 text-gray-500 hover:bg-gray-900 hover:text-white transition-colors" %>
+                <% end %>
+              </div>
             <% end %>
           </div>
-        <% end %>
-      </div>
+          <div class="mt-6">
+            <%= link_to "Read Article →", article_path(hero),
+              class: "inline-block text-sm font-semibold px-5 py-2.5 bg-red-500 text-white hover:bg-red-600 transition-colors" %>
+          </div>
+        </div>
     </div>
   </article>
 
@@ -60,26 +68,25 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <% @articles[1..].each do |article| %>
         <article class="group bg-white border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-          <div class="relative h-[350px] overflow-hidden">
-            <% if article.cover_image.present? %>
+          <div class="relative h-[220px] overflow-hidden">
+            <% if article.cover_image.attached? %>
               <%= image_tag article.cover_image, alt: article.title,
                 class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" %>
             <% else %>
               <div class="w-full h-full bg-gray-100 flex items-center justify-center">
-                <%= lucide_icon "image", class: "w-10 h-10 text-gray-300" %>
+                <%= lucide_icon "image", class: "w-8 h-8 text-gray-300" %>
               </div>
             <% end %>
             <div class="absolute top-3 left-3 flex flex-wrap gap-1">
-              <% if article.category %>
-                <span class="text-xs font-bold px-2 py-0.5 bg-red-500 text-white uppercase tracking-wide"><%= article.category.name %></span>
-              <% end %>
-              <% article.tags.first(3).each_with_index do |tag, i| %>
-                <span class="text-xs font-bold px-2 py-0.5 <%= tag_colors[i % tag_colors.length] %> text-white uppercase tracking-wide"><%= tag.name %></span>
+              <% article.tags.first(2).each_with_index do |tag, i| %>
+                <span class="text-xs font-bold px-2 py-0.5 <%= tag_colors[i % tag_colors.length] %> text-white uppercase tracking-wide">
+                  <%= tag.name %>
+                </span>
               <% end %>
             </div>
           </div>
           <div class="p-5">
-            <div class="flex items-center gap-1.5 text-xs text-gray-500 mb-3">
+            <div class="flex items-center gap-1.5 text-xs text-gray-400 mb-3">
               <%= lucide_icon "calendar", class: "w-3.5 h-3.5 shrink-0" %>
               <time><%= article.published_at.strftime("%B %-d, %Y") %></time>
             </div>
@@ -105,8 +112,21 @@
   </div>
 <% end %>
 
-<%# Admin actions %>
-<div class="mt-12 pt-6 border-t border-gray-200 flex items-center gap-6 text-sm text-gray-400">
-  <%= link_to "← All categories", categories_path, class: "hover:text-gray-900 transition-colors" %>
-  <%= link_to "Edit category", edit_category_path(@category), class: "hover:text-gray-900 transition-colors" %>
+<%# ── Other categories ─────────────────────────────────────── %>
+<% other_cats = Category.where.not(id: @category.id).first(6) %>
+<% if other_cats.any? %>
+  <div class="mt-16 pt-8 border-t border-gray-200">
+    <p class="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-4">Other Categories</p>
+    <div class="flex flex-wrap gap-2">
+      <% other_cats.each do |cat| %>
+        <%= link_to cat.name, category_path(cat),
+          class: "text-xs font-semibold px-4 py-2 border border-gray-200 hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-all" %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<%# ── Footer nav ───────────────────────────────────────────── %>
+<div class="mt-8 pt-6 border-t border-gray-200">
+  <%= link_to "← All categories", categories_path, class: "text-sm text-gray-400 hover:text-gray-900 transition-colors" %>
 </div>
