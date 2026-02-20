@@ -40,7 +40,7 @@
   <%# Cover Image %>
   <div>
     <p class="block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2">Cover Image</p>
-    <% if article.cover_image.attached? %>
+    <% if article.persisted? && article.cover_image.attached? %>
       <div class="mb-3">
         <%= image_tag article.cover_image, class: "h-40 w-auto object-cover border border-gray-200" %>
         <p class="text-xs text-gray-400 mt-1">Current image — upload a new one to replace</p>
@@ -119,8 +119,9 @@
     <div>
       <%= form.label :published_at, "Publish Date & Time", class: "block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2" %>
       <%= form.datetime_local_field :published_at,
+        value: (article.published_at || Time.current).strftime("%Y-%m-%dT%H:%M"),
         class: "w-full border border-gray-200 focus:border-gray-900 focus:outline-none focus:ring-0 px-3 py-2.5 text-sm bg-white transition-colors" %>
-      <p class="text-xs text-gray-400 mt-1">Leave blank to save as draft</p>
+      <p class="text-xs text-gray-400 mt-1">Defaults to today — change to schedule ahead</p>
     </div>
     <div class="flex items-start gap-3 md:pt-7">
       <%= form.check_box :featured,

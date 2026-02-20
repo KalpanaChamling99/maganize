@@ -11,7 +11,7 @@ class Admin::ArticlesController < Admin::BaseController
   end
 
   def new
-    @article = Article.new
+    @article = Article.new(published_at: Time.current)
   end
 
   def edit

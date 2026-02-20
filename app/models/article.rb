@@ -1,9 +1,12 @@
 class Article < ApplicationRecord
-  belongs_to :category
+  belongs_to :category, optional: true
   has_many :article_tags, dependent: :destroy
   has_many :tags, through: :article_tags
 
   has_one_attached :cover_image
+
+  validates :title, presence: true
+  validates :published_at, presence: true
 
   scope :published, -> { where.not(published_at: nil).where("published_at <= ?", Time.current) }
   scope :featured, -> { where(featured: true) }
