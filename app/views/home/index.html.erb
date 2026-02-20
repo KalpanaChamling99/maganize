@@ -1,0 +1,54 @@
+<!-- Hero / Featured Articles -->
+<section class="featured">
+  <h2>Featured Stories</h2>
+  <% if @featured_articles.any? %>
+    <div class="featured-grid">
+      <% @featured_articles.each do |article| %>
+        <article class="featured-card">
+          <% if article.cover_image.present? %>
+            <%= image_tag article.cover_image, alt: article.title %>
+          <% end %>
+          <div class="card-body">
+            <span class="category-badge"><%= article.category.name %></span>
+            <h3><%= link_to article.title, article %></h3>
+            <p><%= article.excerpt %></p>
+            <time><%= article.published_at.strftime("%B %d, %Y") %></time>
+          </div>
+        </article>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="empty-state">No featured articles yet. <%= link_to "Add one", new_article_path %>.</p>
+  <% end %>
+</section>
+
+<!-- Categories -->
+<section class="categories">
+  <h2>Browse by Category</h2>
+  <div class="category-list">
+    <% @categories.each do |category| %>
+      <%= link_to category.name, category, class: "category-tag" %>
+    <% end %>
+  </div>
+</section>
+
+<!-- Recent Articles -->
+<section class="recent">
+  <h2>Latest Articles</h2>
+  <% if @recent_articles.any? %>
+    <div class="articles-grid">
+      <% @recent_articles.each do |article| %>
+        <article class="article-card">
+          <div class="card-body">
+            <span class="category-badge"><%= article.category.name %></span>
+            <h3><%= link_to article.title, article %></h3>
+            <p><%= article.excerpt %></p>
+            <time><%= article.published_at.strftime("%B %d, %Y") %></time>
+          </div>
+        </article>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="empty-state">No articles yet. <%= link_to "Write one", new_article_path %>.</p>
+  <% end %>
+</section>
