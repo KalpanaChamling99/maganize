@@ -90,7 +90,7 @@
     <%# Upload new images %>
     <label class="flex flex-col items-center justify-center border-2 border-dashed border-gray-200 hover:border-gray-400 transition-colors cursor-pointer p-8 text-center bg-white"
            id="gallery-drop-zone">
-      <%= form.file_field :images, multiple: true, accept: "image/*",
+      <%= form.file_field :images, multiple: true, name: "article[images][]", accept: "image/*",
         class: "sr-only", id: "gallery_images_input", onchange: "previewGallery(event)" %>
       <div id="gallery-preview" class="hidden w-full mb-4">
         <div id="gallery-preview-grid" class="grid grid-cols-3 sm:grid-cols-4 gap-2"></div>
