@@ -4,6 +4,7 @@ class Article < ApplicationRecord
   has_many :tags, through: :article_tags
 
   has_one_attached :cover_image
+  has_many_attached :images
 
   validates :title, presence: true
   validates :published_at, presence: true

@@ -9,7 +9,11 @@ Rails.application.routes.draw do
   # Admin section
   namespace :admin do
     root "dashboard#index"
-    resources :articles
+    resources :articles do
+      member do
+        delete :purge_image
+      end
+    end
     resources :categories
     resources :tags, only: [:index, :new, :create, :destroy]
   end

@@ -1,5 +1,5 @@
 class Admin::ArticlesController < Admin::BaseController
-  before_action :set_article, only: [:show, :edit, :update, :destroy]
+  before_action :set_article, only: [:show, :edit, :update, :destroy, :purge_image]
   before_action :set_form_data, only: [:new, :edit]
 
   def index
@@ -46,6 +46,11 @@ class Admin::ArticlesController < Admin::BaseController
     redirect_to admin_articles_path, notice: "\"#{title}\" was deleted."
   end
 
+  def purge_image
+    @article.images.attachments.find(params[:image_id]).purge
+    redirect_to edit_admin_article_path(@article), notice: "Image removed."
+  end
+
   private
 
   def set_article
@@ -62,6 +67,6 @@ class Admin::ArticlesController < Admin::BaseController
   end
 
   def article_params
-    params.require(:article).permit(:title, :excerpt, :body, :published_at, :featured, :cover_image, :category_id)
+    params.require(:article).permit(:title, :excerpt, :body, :published_at, :featured, :cover_image, :category_id, images: [])
   end
 end
