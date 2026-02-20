@@ -16,6 +16,9 @@ module Magazine
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w(assets tasks))
 
+    # Make app/assets/builds (Tailwind output) resolvable by Sprockets
+    config.assets.paths << Rails.root.join("app/assets/builds")
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files

@@ -1,10 +1,95 @@
-<p style="color: green"><%= notice %></p>
+<% if notice.present? %>
+  <div class="mb-6 bg-green-50 border border-green-200 text-green-800 text-sm px-4 py-3">
+    <%= notice %>
+  </div>
+<% end %>
 
-<%= render @category %>
+<%# Category header %>
+<div class="mb-10 pb-6 border-b border-gray-900">
+  <p class="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-1">Category</p>
+  <div class="flex items-end justify-between gap-4 flex-wrap">
+    <h1 class="font-serif text-4xl sm:text-5xl font-bold"><%= @category.name %></h1>
+    <span class="text-sm text-gray-400 mb-1">
+      <%= pluralize(@articles.count, "article") %>
+    </span>
+  </div>
+  <% if @category.description.present? %>
+    <p class="mt-3 text-gray-500 text-base leading-relaxed max-w-2xl"><%= @category.description %></p>
+  <% end %>
+</div>
 
-<div>
-  <%= link_to "Edit this category", edit_category_path(@category) %> |
-  <%= link_to "Back to categories", categories_path %>
+<%# Articles in this category %>
+<% if @articles.any? %>
 
-  <%= button_to "Destroy this category", @category, method: :delete %>
+  <%# Hero article — first one, full width %>
+  <% hero = @articles.first %>
+  <article class="group mb-10 grid grid-cols-1 md:grid-cols-2 gap-0 border border-gray-200 hover:border-gray-900 transition-colors">
+    <% if hero.cover_image.present? %>
+      <div class="aspect-video md:aspect-auto overflow-hidden">
+        <%= image_tag hero.cover_image, alt: hero.title,
+          class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" %>
+      </div>
+    <% else %>
+      <div class="hidden md:flex bg-gray-50 items-center justify-center min-h-48">
+        <span class="font-serif text-6xl text-gray-200"><%= @category.name[0] %></span>
+      </div>
+    <% end %>
+    <div class="p-6 sm:p-8 flex flex-col justify-center">
+      <span class="text-xs font-semibold tracking-widest uppercase text-red-600 mb-3">Latest</span>
+      <h2 class="font-serif text-2xl font-bold leading-tight mb-3">
+        <%= link_to hero.title, article_path(hero), class: "hover:text-gray-600 transition-colors" %>
+      </h2>
+      <p class="text-gray-500 text-sm leading-relaxed mb-4 line-clamp-3"><%= hero.excerpt %></p>
+      <div class="flex items-center gap-4 mt-auto">
+        <time class="text-xs text-gray-400"><%= hero.published_at.strftime("%B %-d, %Y") %></time>
+        <% if hero.tags.any? %>
+          <div class="flex gap-2">
+            <% hero.tags.first(2).each do |tag| %>
+              <%= link_to tag.name, tag_path(tag),
+                class: "text-xs px-2 py-0.5 bg-gray-100 hover:bg-gray-900 hover:text-white transition-colors" %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </article>
+
+  <%# Remaining articles — 3-col grid %>
+  <% if @articles.count > 1 %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <% @articles[1..].each do |article| %>
+        <article class="group border-t-2 border-gray-900 pt-4">
+          <% if article.cover_image.present? %>
+            <div class="aspect-video overflow-hidden mb-4">
+              <%= image_tag article.cover_image, alt: article.title,
+                class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" %>
+            </div>
+          <% end %>
+          <h3 class="font-serif text-lg font-bold leading-snug mb-2">
+            <%= link_to article.title, article_path(article), class: "hover:text-gray-600 transition-colors" %>
+          </h3>
+          <p class="text-gray-500 text-sm leading-relaxed line-clamp-2 mb-3"><%= article.excerpt %></p>
+          <div class="flex items-center justify-between">
+            <time class="text-xs text-gray-400"><%= article.published_at.strftime("%B %-d, %Y") %></time>
+            <% if article.tags.any? %>
+              <%= link_to article.tags.first.name, tag_path(article.tags.first),
+                class: "text-xs px-2 py-0.5 bg-gray-100 hover:bg-gray-900 hover:text-white transition-colors" %>
+            <% end %>
+          </div>
+        </article>
+      <% end %>
+    </div>
+  <% end %>
+
+<% else %>
+  <div class="py-20 text-center border border-dashed border-gray-300">
+    <p class="text-gray-400 mb-3">No published articles in this category yet.</p>
+    <%= link_to "Write one →", new_admin_article_path, class: "text-sm font-semibold text-gray-900 underline" %>
+  </div>
+<% end %>
+
+<%# Admin actions %>
+<div class="mt-12 pt-6 border-t border-gray-200 flex items-center gap-6 text-sm text-gray-400">
+  <%= link_to "← All categories", categories_path, class: "hover:text-gray-900 transition-colors" %>
+  <%= link_to "Edit category", edit_category_path(@category), class: "hover:text-gray-900 transition-colors" %>
 </div>

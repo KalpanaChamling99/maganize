@@ -1,16 +1,113 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Magazine</title>
+    <title>The Magazine</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="bg-white text-gray-900 font-sans antialiased">
+
+    <%# Top banner %>
+    <div class="border-b border-gray-200 bg-gray-50 py-1.5 text-center text-xs tracking-widest text-gray-500 uppercase">
+      <%= Date.today.strftime("%A, %B %-d, %Y") %>
+    </div>
+
+    <%# Masthead %>
+    <header class="border-b border-gray-900">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6">
+
+        <%# Logo row %>
+        <div class="flex items-center justify-between py-5">
+          <div class="text-xs tracking-widest text-gray-500 uppercase hidden sm:block">
+            Est. 2024
+          </div>
+          <%= link_to root_path, class: "text-center" do %>
+            <h1 class="font-serif text-4xl sm:text-5xl font-bold tracking-tight text-gray-900 leading-none">
+              The Magazine
+            </h1>
+            <p class="text-xs tracking-[0.3em] text-gray-400 uppercase mt-1">Stories that matter</p>
+          <% end %>
+          <div class="hidden sm:block">
+            <%= link_to "Subscribe", "#",
+              class: "bg-gray-900 text-white text-xs font-semibold tracking-widest uppercase px-5 py-2.5 hover:bg-gray-700 transition-colors" %>
+          </div>
+        </div>
+
+        <%# Nav %>
+        <nav class="border-t border-gray-200 overflow-x-auto">
+          <ul class="flex items-center gap-0 text-sm font-medium whitespace-nowrap">
+            <li>
+              <%= link_to "Home", root_path,
+                class: "block px-4 py-3 hover:text-gray-500 border-b-2 border-gray-900 transition-colors" %>
+            </li>
+            <% Category.all.each do |cat| %>
+              <li>
+                <%= link_to cat.name, category_path(cat),
+                  class: "block px-4 py-3 hover:text-gray-500 border-b-2 border-transparent hover:border-gray-300 transition-colors" %>
+              </li>
+            <% end %>
+            <li>
+              <%= link_to "All Articles", articles_path,
+                class: "block px-4 py-3 hover:text-gray-500 border-b-2 border-transparent hover:border-gray-300 transition-colors" %>
+            </li>
+            <li>
+              <%= link_to "Tags", tags_path,
+                class: "block px-4 py-3 hover:text-gray-500 border-b-2 border-transparent hover:border-gray-300 transition-colors" %>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <%# Main content %>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+      <%= yield %>
+    </main>
+
+    <%# Footer %>
+    <footer class="bg-gray-900 text-gray-300 mt-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 border-b border-gray-700 pb-10">
+          <div>
+            <h2 class="font-serif text-2xl font-bold text-white mb-3">The Magazine</h2>
+            <p class="text-sm leading-relaxed text-gray-400">
+              Stories that matter, perspectives that inspire, ideas that endure.
+            </p>
+          </div>
+          <div>
+            <h4 class="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">Sections</h4>
+            <ul class="space-y-2 text-sm">
+              <% Category.all.each do |cat| %>
+                <li><%= link_to cat.name, category_path(cat), class: "hover:text-white transition-colors" %></li>
+              <% end %>
+              <li><%= link_to "All Articles", articles_path, class: "hover:text-white transition-colors" %></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">About</h4>
+            <ul class="space-y-2 text-sm">
+              <li><a href="#" class="hover:text-white transition-colors">About Us</a></li>
+              <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+              <li><a href="#" class="hover:text-white transition-colors">Advertise</a></li>
+              <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+            </ul>
+          </div>
+        </div>
+        <p class="text-xs text-gray-600 mt-6 text-center">
+          &copy; <%= Date.today.year %> The Magazine. All rights reserved.
+        </p>
+      </div>
+    </footer>
+
   </body>
 </html>

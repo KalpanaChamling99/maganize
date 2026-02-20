@@ -1,0 +1,42 @@
+<% content_for :page_title, "Tags" %>
+<% content_for :header_action do %>
+  <%= link_to "+ New Tag", new_admin_tag_path,
+    class: "bg-gray-900 text-white text-xs font-semibold tracking-widest uppercase px-4 py-2 hover:bg-gray-700 transition-colors" %>
+<% end %>
+
+<div class="bg-white border border-gray-200">
+  <% if @tags.any? %>
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-gray-100 text-xs font-semibold tracking-widest uppercase text-gray-400">
+          <th class="text-left px-6 py-3">Name</th>
+          <th class="text-left px-6 py-3 hidden md:table-cell">Slug</th>
+          <th class="text-left px-6 py-3">Articles</th>
+          <th class="px-6 py-3"></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-50">
+        <% @tags.each do |tag| %>
+          <tr class="hover:bg-gray-50 transition-colors">
+            <td class="px-6 py-4">
+              <span class="font-medium">#<%= tag.name %></span>
+            </td>
+            <td class="px-6 py-4 hidden md:table-cell text-gray-400 text-xs font-mono"><%= tag.slug %></td>
+            <td class="px-6 py-4 text-gray-500"><%= tag.articles.count %></td>
+            <td class="px-6 py-4 text-right">
+              <%= button_to "Delete", admin_tag_path(tag), method: :delete,
+                data: { turbo_confirm: "Delete tag \"#{tag.name}\"?" },
+                class: "text-xs font-semibold text-red-400 hover:text-red-700 transition-colors bg-transparent border-none cursor-pointer p-0" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <div class="px-6 py-16 text-center">
+      <p class="text-gray-400 mb-3">No tags yet.</p>
+      <%= link_to "Create the first one →", new_admin_tag_path,
+        class: "text-sm font-semibold text-gray-900 underline" %>
+    </div>
+  <% end %>
+</div>

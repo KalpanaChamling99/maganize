@@ -1,0 +1,90 @@
+<%# Tag header %>
+<div class="mb-10 pb-6 border-b border-gray-900">
+  <p class="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-1">Tag</p>
+  <div class="flex items-end justify-between gap-4 flex-wrap">
+    <h1 class="font-serif text-4xl sm:text-5xl font-bold">#<%= @tag.name %></h1>
+    <span class="text-sm text-gray-400 mb-1">
+      <%= pluralize(@articles.count, "article") %>
+    </span>
+  </div>
+</div>
+
+<%# Articles with this tag %>
+<% if @articles.any? %>
+
+  <%# Featured / first article %>
+  <% hero = @articles.first %>
+  <article class="group mb-10 border border-gray-200 hover:border-gray-900 transition-colors">
+    <div class="grid grid-cols-1 md:grid-cols-5">
+      <% if hero.cover_image.present? %>
+        <div class="md:col-span-2 aspect-video md:aspect-auto overflow-hidden">
+          <%= image_tag hero.cover_image, alt: hero.title,
+            class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" %>
+        </div>
+        <div class="md:col-span-3 p-6 sm:p-8 flex flex-col justify-center">
+      <% else %>
+        <div class="md:col-span-5 p-6 sm:p-8">
+      <% end %>
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-xs font-semibold tracking-widest uppercase text-red-600">
+              <%= hero.category.name %>
+            </span>
+            <span class="text-gray-200">·</span>
+            <span class="text-xs font-semibold tracking-widest uppercase text-gray-400">Latest</span>
+          </div>
+          <h2 class="font-serif text-2xl sm:text-3xl font-bold leading-tight mb-3">
+            <%= link_to hero.title, article_path(hero), class: "hover:text-gray-600 transition-colors" %>
+          </h2>
+          <p class="text-gray-500 text-sm leading-relaxed mb-4 line-clamp-3"><%= hero.excerpt %></p>
+          <time class="text-xs text-gray-400"><%= hero.published_at.strftime("%B %-d, %Y") %></time>
+        </div>
+    </div>
+  </article>
+
+  <%# Remaining articles %>
+  <% if @articles.count > 1 %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <% @articles[1..].each do |article| %>
+        <article class="group border-t-2 border-gray-900 pt-4">
+          <% if article.cover_image.present? %>
+            <div class="aspect-video overflow-hidden mb-4">
+              <%= image_tag article.cover_image, alt: article.title,
+                class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" %>
+            </div>
+          <% end %>
+          <span class="text-xs font-semibold tracking-widest uppercase text-red-600 mb-2 block">
+            <%= article.category.name %>
+          </span>
+          <h3 class="font-serif text-xl font-bold leading-snug mb-2">
+            <%= link_to article.title, article_path(article), class: "hover:text-gray-600 transition-colors" %>
+          </h3>
+          <p class="text-gray-500 text-sm leading-relaxed line-clamp-2 mb-3"><%= article.excerpt %></p>
+          <time class="text-xs text-gray-400"><%= article.published_at.strftime("%B %-d, %Y") %></time>
+        </article>
+      <% end %>
+    </div>
+  <% end %>
+
+<% else %>
+  <div class="py-20 text-center border border-dashed border-gray-300">
+    <p class="text-gray-400">No published articles with this tag yet.</p>
+  </div>
+<% end %>
+
+<%# Related tags %>
+<% other_tags = Tag.all.reject { |t| t.id == @tag.id }.first(8) %>
+<% if other_tags.any? %>
+  <div class="mt-12 pt-8 border-t border-gray-200">
+    <p class="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-4">Other Tags</p>
+    <div class="flex flex-wrap gap-2">
+      <% other_tags.each do |tag| %>
+        <%= link_to "##{tag.name}", tag_path(tag),
+          class: "text-xs px-3 py-1.5 border border-gray-200 hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-all" %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<div class="mt-8 pt-6 border-t border-gray-200">
+  <%= link_to "← All tags", tags_path, class: "text-sm text-gray-400 hover:text-gray-900 transition-colors" %>
+</div>

@@ -2,7 +2,13 @@
   "permissions": {
     "allow": [
       "Bash(ruby:*)",
-      "Bash(rails:*)"
+      "Bash(rails:*)",
+      "Bash(bundle install:*)",
+      "Bash(pkill:*)",
+      "Bash(bin/dev:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill:*)",
+      "Bash(curl:*)"
     ]
   }
 }

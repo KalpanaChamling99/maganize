@@ -1,14 +1,40 @@
-<p style="color: green"><%= notice %></p>
-
-<h1>Categories</h1>
-
-<div id="categories">
-  <% @categories.each do |category| %>
-    <%= render category %>
-    <p>
-      <%= link_to "Show this category", category %>
-    </p>
-  <% end %>
+<%# Page header %>
+<div class="mb-10 border-b border-gray-200 pb-6">
+  <p class="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-1">Browse</p>
+  <h1 class="font-serif text-4xl font-bold">All Categories</h1>
 </div>
 
-<%= link_to "New category", new_category_path %>
+<%# Categories grid %>
+<% if @categories.any? %>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+    <% @categories.each do |category| %>
+      <article class="group border border-gray-200 hover:border-gray-900 transition-colors">
+        <div class="p-6">
+          <h2 class="font-serif text-2xl font-bold mb-2 group-hover:text-gray-600 transition-colors">
+            <%= link_to category.name, category_path(category), class: "hover:text-gray-600" %>
+          </h2>
+          <% if category.description.present? %>
+            <p class="text-gray-500 text-sm leading-relaxed mb-4 line-clamp-2"><%= category.description %></p>
+          <% end %>
+          <div class="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
+            <span class="text-xs text-gray-400">
+              <%= pluralize(category.articles.published.count, "article") %>
+            </span>
+            <%= link_to "Browse →", category_path(category),
+              class: "text-xs font-semibold tracking-wide text-gray-900 hover:text-gray-500 transition-colors" %>
+          </div>
+        </div>
+      </article>
+    <% end %>
+  </div>
+<% else %>
+  <div class="py-20 text-center border border-dashed border-gray-300">
+    <p class="text-gray-400 mb-3">No categories yet.</p>
+    <%= link_to "Create one →", new_admin_category_path, class: "text-sm font-semibold text-gray-900 underline" %>
+  </div>
+<% end %>
+
+<div class="border-t border-gray-200 pt-6">
+  <%= link_to "+ New category", new_admin_category_path,
+    class: "text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors" %>
+</div>

@@ -1,54 +1,133 @@
-<!-- Hero / Featured Articles -->
-<section class="featured">
-  <h2>Featured Stories</h2>
-  <% if @featured_articles.any? %>
-    <div class="featured-grid">
-      <% @featured_articles.each do |article| %>
-        <article class="featured-card">
-          <% if article.cover_image.present? %>
-            <%= image_tag article.cover_image, alt: article.title %>
-          <% end %>
-          <div class="card-body">
-            <span class="category-badge"><%= article.category.name %></span>
-            <h3><%= link_to article.title, article %></h3>
-            <p><%= article.excerpt %></p>
-            <time><%= article.published_at.strftime("%B %d, %Y") %></time>
+<%# ── Hero: Featured stories ──────────────────────────────── %>
+<% if @featured_articles.any? %>
+  <section class="mb-14">
+    <div class="flex items-center gap-3 mb-6">
+      <span class="text-xs font-semibold tracking-widest uppercase text-gray-400">Featured</span>
+      <div class="flex-1 h-px bg-gray-200"></div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-px bg-gray-200 border border-gray-200">
+
+      <%# Primary hero card — takes 2 columns %>
+      <% hero = @featured_articles.first %>
+      <article class="bg-white lg:col-span-2 group">
+        <% if hero.cover_image.present? %>
+          <div class="aspect-video overflow-hidden">
+            <%= image_tag hero.cover_image, alt: hero.title,
+              class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" %>
           </div>
-        </article>
+        <% else %>
+          <div class="aspect-video bg-gray-100 flex items-center justify-center">
+            <span class="text-gray-300 text-6xl font-serif">&#9733;</span>
+          </div>
+        <% end %>
+        <div class="p-6 sm:p-8">
+          <span class="inline-block text-xs font-semibold tracking-widest uppercase text-red-600 mb-3">
+            <%= hero.category.name %>
+          </span>
+          <h2 class="font-serif text-2xl sm:text-3xl font-bold leading-tight mb-3">
+            <%= link_to hero.title, article_path(hero),
+              class: "hover:text-gray-600 transition-colors" %>
+          </h2>
+          <p class="text-gray-500 text-sm leading-relaxed mb-4 line-clamp-3"><%= hero.excerpt %></p>
+          <time class="text-xs text-gray-400 tracking-wide">
+            <%= hero.published_at.strftime("%B %-d, %Y") %>
+          </time>
+        </div>
+      </article>
+
+      <%# Secondary hero cards %>
+      <div class="flex flex-col gap-px bg-gray-200">
+        <% @featured_articles[1..].each do |article| %>
+          <article class="bg-white flex-1 group p-6 flex flex-col justify-between">
+            <div>
+              <span class="inline-block text-xs font-semibold tracking-widest uppercase text-red-600 mb-2">
+                <%= article.category.name %>
+              </span>
+              <h3 class="font-serif text-lg font-bold leading-snug mb-2">
+                <%= link_to article.title, article_path(article),
+                  class: "hover:text-gray-600 transition-colors" %>
+              </h3>
+              <p class="text-gray-500 text-sm leading-relaxed line-clamp-2"><%= article.excerpt %></p>
+            </div>
+            <time class="text-xs text-gray-400 tracking-wide mt-4 block">
+              <%= article.published_at.strftime("%B %-d, %Y") %>
+            </time>
+          </article>
+        <% end %>
+      </div>
+
+    </div>
+  </section>
+<% end %>
+
+<%# ── Category pills ──────────────────────────────────────── %>
+<% if @categories.any? %>
+  <section class="mb-12">
+    <div class="flex flex-wrap gap-2">
+      <% @categories.each do |cat| %>
+        <%= link_to cat.name, category_path(cat),
+          class: "text-xs font-semibold tracking-widest uppercase px-4 py-2 border border-gray-300 hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-all" %>
       <% end %>
     </div>
-  <% else %>
-    <p class="empty-state">No featured articles yet. <%= link_to "Add one", new_article_path %>.</p>
-  <% end %>
-</section>
+  </section>
+<% end %>
 
-<!-- Categories -->
-<section class="categories">
-  <h2>Browse by Category</h2>
-  <div class="category-list">
-    <% @categories.each do |category| %>
-      <%= link_to category.name, category, class: "category-tag" %>
+<%# ── Section divider ─────────────────────────────────────── %>
+<div class="flex items-center gap-3 mb-8">
+  <span class="text-xs font-semibold tracking-widest uppercase text-gray-400">Latest Articles</span>
+  <div class="flex-1 h-px bg-gray-200"></div>
+  <%= link_to "View all →", articles_path, class: "text-xs text-gray-400 hover:text-gray-900 transition-colors whitespace-nowrap" %>
+</div>
+
+<%# ── Recent articles grid ────────────────────────────────── %>
+<% if @recent_articles.any? %>
+  <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+    <% @recent_articles.each do |article| %>
+      <article class="group border-t-2 border-gray-900 pt-4">
+        <% if article.cover_image.present? %>
+          <div class="aspect-video overflow-hidden mb-4">
+            <%= image_tag article.cover_image, alt: article.title,
+              class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" %>
+          </div>
+        <% end %>
+        <span class="text-xs font-semibold tracking-widest uppercase text-red-600 mb-2 block">
+          <%= article.category.name %>
+        </span>
+        <h3 class="font-serif text-xl font-bold leading-snug mb-2">
+          <%= link_to article.title, article_path(article),
+            class: "hover:text-gray-600 transition-colors" %>
+        </h3>
+        <p class="text-gray-500 text-sm leading-relaxed line-clamp-3 mb-3"><%= article.excerpt %></p>
+        <time class="text-xs text-gray-400 tracking-wide">
+          <%= article.published_at.strftime("%B %-d, %Y") %>
+        </time>
+      </article>
     <% end %>
-  </div>
-</section>
+  </section>
+<% else %>
+  <%# Empty state ── shown when no articles exist %>
+  <section class="py-20 text-center border border-dashed border-gray-300 mb-16">
+    <p class="font-serif text-5xl text-gray-200 mb-4">✎</p>
+    <p class="text-gray-500 mb-2">No articles published yet.</p>
+    <%= link_to "Write your first article →", new_admin_article_path,
+      class: "text-sm text-gray-900 font-semibold underline hover:no-underline" %>
+  </section>
+<% end %>
 
-<!-- Recent Articles -->
-<section class="recent">
-  <h2>Latest Articles</h2>
-  <% if @recent_articles.any? %>
-    <div class="articles-grid">
-      <% @recent_articles.each do |article| %>
-        <article class="article-card">
-          <div class="card-body">
-            <span class="category-badge"><%= article.category.name %></span>
-            <h3><%= link_to article.title, article %></h3>
-            <p><%= article.excerpt %></p>
-            <time><%= article.published_at.strftime("%B %d, %Y") %></time>
-          </div>
-        </article>
-      <% end %>
-    </div>
-  <% else %>
-    <p class="empty-state">No articles yet. <%= link_to "Write one", new_article_path %>.</p>
-  <% end %>
+<%# ── Newsletter banner ───────────────────────────────────── %>
+<section class="bg-gray-900 text-white px-8 py-12 text-center mb-4">
+  <p class="text-xs tracking-widest uppercase text-gray-400 mb-2">Newsletter</p>
+  <h3 class="font-serif text-3xl font-bold mb-3">Never miss a story</h3>
+  <p class="text-gray-400 text-sm mb-6 max-w-md mx-auto">
+    Get the best articles delivered straight to your inbox every week.
+  </p>
+  <form class="flex flex-col sm:flex-row gap-3 max-w-sm mx-auto" onsubmit="return false">
+    <input type="email" placeholder="your@email.com"
+      class="flex-1 px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-white">
+    <button type="submit"
+      class="bg-white text-gray-900 font-semibold text-sm px-6 py-2.5 hover:bg-gray-100 transition-colors whitespace-nowrap">
+      Subscribe
+    </button>
+  </form>
 </section>

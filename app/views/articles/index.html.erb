@@ -1,14 +1,43 @@
-<p style="color: green"><%= notice %></p>
-
-<h1>Articles</h1>
-
-<div id="articles">
-  <% @articles.each do |article| %>
-    <%= render article %>
-    <p>
-      <%= link_to "Show this article", article %>
-    </p>
-  <% end %>
+<div class="mb-10 border-b border-gray-200 pb-6 flex items-end justify-between gap-4">
+  <div>
+    <p class="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-1">Archive</p>
+    <h1 class="font-serif text-4xl font-bold">All Articles</h1>
+  </div>
+  <span class="text-sm text-gray-400 mb-1"><%= pluralize(@articles.count, "article") %></span>
 </div>
 
-<%= link_to "New article", new_article_path %>
+<% if @articles.any? %>
+  <div class="divide-y divide-gray-100">
+    <% @articles.each do |article| %>
+      <article class="group py-6 grid grid-cols-1 md:grid-cols-4 gap-4 hover:bg-gray-50 -mx-2 px-2 transition-colors">
+        <% if article.cover_image.attached? %>
+          <div class="md:col-span-1 aspect-video overflow-hidden">
+            <%= image_tag article.cover_image, alt: article.title,
+              class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" %>
+          </div>
+          <div class="md:col-span-3">
+        <% else %>
+          <div class="md:col-span-4">
+        <% end %>
+          <div class="flex items-center gap-3 mb-2">
+            <span class="text-xs font-semibold tracking-widest uppercase text-red-600"><%= article.category.name %></span>
+            <% article.tags.first(3).each do |tag| %>
+              <%= link_to "##{tag.name}", tag_path(tag),
+                class: "text-xs text-gray-400 hover:text-gray-700 transition-colors" %>
+            <% end %>
+          </div>
+          <h2 class="font-serif text-xl font-bold leading-snug mb-1">
+            <%= link_to article.title, article_path(article), class: "hover:text-gray-600 transition-colors" %>
+          </h2>
+          <p class="text-gray-500 text-sm leading-relaxed line-clamp-2 mb-2"><%= article.excerpt %></p>
+          <time class="text-xs text-gray-400"><%= article.published_at.strftime("%B %-d, %Y") %></time>
+        </div>
+      </article>
+    <% end %>
+  </div>
+<% else %>
+  <div class="py-20 text-center border border-dashed border-gray-300">
+    <p class="text-gray-400 mb-3">No articles published yet.</p>
+    <%= link_to "Go to admin →", admin_root_path, class: "text-sm font-semibold text-gray-900 underline" %>
+  </div>
+<% end %>

@@ -1,0 +1,11 @@
+<% content_for :page_title do %>
+  Editing: <%= @article.title.truncate(50) %>
+<% end %>
+<% content_for :header_action do %>
+  <%= link_to "View on site →", article_path(@article), target: "_blank",
+    class: "text-xs text-gray-400 hover:text-gray-900 transition-colors" %>
+<% end %>
+
+<div class="max-w-3xl bg-white border border-gray-200 p-8">
+  <%= render "form", article: @article %>
+</div>

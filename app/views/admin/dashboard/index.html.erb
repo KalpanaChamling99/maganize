@@ -1,0 +1,147 @@
+<% content_for :page_title, "Dashboard" %>
+<% content_for :header_action do %>
+  <%= link_to "New Article", new_admin_article_path,
+    class: "bg-gray-900 text-white text-xs font-semibold tracking-widest uppercase px-4 py-2 hover:bg-gray-700 transition-colors" %>
+<% end %>
+
+<%# ── Stats cards ─────────────────────────────────────────── %>
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+
+  <div class="bg-white border border-gray-200 p-5">
+    <p class="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-1">Total Articles</p>
+    <p class="font-serif text-4xl font-bold"><%= @total_articles %></p>
+    <p class="text-xs text-gray-400 mt-2">
+      <%= @published_count %> published · <%= @draft_count %> draft
+    </p>
+  </div>
+
+  <div class="bg-white border border-gray-200 p-5">
+    <p class="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-1">Published</p>
+    <p class="font-serif text-4xl font-bold text-green-600"><%= @published_count %></p>
+    <p class="text-xs text-gray-400 mt-2"><%= @featured_count %> featured on homepage</p>
+  </div>
+
+  <div class="bg-white border border-gray-200 p-5">
+    <p class="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-1">Categories</p>
+    <p class="font-serif text-4xl font-bold"><%= @total_categories %></p>
+    <%= link_to "Manage →", admin_categories_path,
+      class: "text-xs text-gray-400 hover:text-gray-900 transition-colors mt-2 block" %>
+  </div>
+
+  <div class="bg-white border border-gray-200 p-5">
+    <p class="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-1">Tags</p>
+    <p class="font-serif text-4xl font-bold"><%= @total_tags %></p>
+    <%= link_to "Manage →", admin_tags_path,
+      class: "text-xs text-gray-400 hover:text-gray-900 transition-colors mt-2 block" %>
+  </div>
+
+</div>
+
+<%# ── Quick actions ───────────────────────────────────────── %>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+  <%= link_to new_admin_article_path,
+    class: "bg-gray-900 text-white p-5 flex items-center gap-4 hover:bg-gray-800 transition-colors group" do %>
+    <div class="h-10 w-10 border border-white/20 flex items-center justify-center shrink-0">
+      <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+      </svg>
+    </div>
+    <div>
+      <p class="font-semibold text-sm">Write Article</p>
+      <p class="text-xs text-gray-400 mt-0.5">Create a new post</p>
+    </div>
+  <% end %>
+
+  <%= link_to new_admin_category_path,
+    class: "bg-white border border-gray-200 p-5 flex items-center gap-4 hover:border-gray-900 transition-colors group" do %>
+    <div class="h-10 w-10 border border-gray-200 flex items-center justify-center shrink-0">
+      <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+      </svg>
+    </div>
+    <div>
+      <p class="font-semibold text-sm">New Category</p>
+      <p class="text-xs text-gray-400 mt-0.5">Organise your content</p>
+    </div>
+  <% end %>
+
+  <%= link_to new_admin_tag_path,
+    class: "bg-white border border-gray-200 p-5 flex items-center gap-4 hover:border-gray-900 transition-colors group" do %>
+    <div class="h-10 w-10 border border-gray-200 flex items-center justify-center shrink-0">
+      <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+      </svg>
+    </div>
+    <div>
+      <p class="font-semibold text-sm">New Tag</p>
+      <p class="text-xs text-gray-400 mt-0.5">Add topic labels</p>
+    </div>
+  <% end %>
+</div>
+
+<%# ── Recent articles table ───────────────────────────────── %>
+<div class="bg-white border border-gray-200">
+  <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+    <h3 class="font-semibold text-sm">Recent Articles</h3>
+    <%= link_to "View all →", admin_articles_path, class: "text-xs text-gray-400 hover:text-gray-900 transition-colors" %>
+  </div>
+
+  <% if @recent_articles.any? %>
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-gray-100 text-xs font-semibold tracking-widest uppercase text-gray-400">
+          <th class="text-left px-6 py-3">Title</th>
+          <th class="text-left px-6 py-3 hidden md:table-cell">Category</th>
+          <th class="text-left px-6 py-3 hidden lg:table-cell">Status</th>
+          <th class="text-left px-6 py-3 hidden lg:table-cell">Date</th>
+          <th class="px-6 py-3"></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-50">
+        <% @recent_articles.each do |article| %>
+          <tr class="hover:bg-gray-50 transition-colors">
+            <td class="px-6 py-4">
+              <p class="font-medium line-clamp-1"><%= article.title %></p>
+              <% if article.tags.any? %>
+                <div class="flex gap-1 mt-1">
+                  <% article.tags.first(3).each do |tag| %>
+                    <span class="text-xs px-1.5 py-0.5 bg-gray-100 text-gray-500">#<%= tag.name %></span>
+                  <% end %>
+                </div>
+              <% end %>
+            </td>
+            <td class="px-6 py-4 hidden md:table-cell text-gray-500">
+              <%= article.category&.name || "—" %>
+            </td>
+            <td class="px-6 py-4 hidden lg:table-cell">
+              <% if article.published? %>
+                <span class="inline-flex items-center gap-1 text-xs font-medium text-green-700 bg-green-50 px-2 py-0.5">
+                  <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span> Published
+                </span>
+              <% else %>
+                <span class="inline-flex items-center gap-1 text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5">
+                  <span class="h-1.5 w-1.5 rounded-full bg-gray-400"></span> Draft
+                </span>
+              <% end %>
+              <% if article.featured %>
+                <span class="ml-1 text-xs font-medium text-amber-700 bg-amber-50 px-2 py-0.5">★ Featured</span>
+              <% end %>
+            </td>
+            <td class="px-6 py-4 hidden lg:table-cell text-gray-400 text-xs">
+              <%= article.created_at.strftime("%b %-d, %Y") %>
+            </td>
+            <td class="px-6 py-4 text-right">
+              <%= link_to "Edit", edit_admin_article_path(article),
+                class: "text-xs font-semibold text-gray-500 hover:text-gray-900 transition-colors" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <div class="px-6 py-12 text-center text-gray-400 text-sm">
+      No articles yet.
+      <%= link_to "Write the first one →", new_admin_article_path, class: "text-gray-900 font-semibold underline" %>
+    </div>
+  <% end %>
+</div>

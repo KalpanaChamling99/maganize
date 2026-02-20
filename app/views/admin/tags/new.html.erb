@@ -1,0 +1,28 @@
+<% content_for :page_title, "New Tag" %>
+
+<div class="max-w-sm bg-white border border-gray-200 p-8">
+  <%= form_with(model: [:admin, @tag], class: "space-y-6") do |form| %>
+
+    <% if @tag.errors.any? %>
+      <div class="bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+        <%= @tag.errors.full_messages.first %>
+      </div>
+    <% end %>
+
+    <div>
+      <%= form.label :name, "Tag name", class: "block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2" %>
+      <%= form.text_field :name,
+        placeholder: "e.g. Technology",
+        autofocus: true,
+        class: "w-full border border-gray-200 focus:border-gray-900 focus:outline-none focus:ring-0 px-3 py-2.5 text-sm transition-colors" %>
+      <p class="text-xs text-gray-400 mt-1">Slug is generated automatically.</p>
+    </div>
+
+    <div class="flex items-center justify-between border-t border-gray-100 pt-4">
+      <%= link_to "Cancel", admin_tags_path, class: "text-sm text-gray-400 hover:text-gray-700 transition-colors" %>
+      <%= form.submit "Create Tag",
+        class: "px-6 py-2.5 text-sm font-semibold bg-gray-900 text-white hover:bg-gray-700 transition-colors cursor-pointer" %>
+    </div>
+
+  <% end %>
+</div>
