@@ -26,6 +26,9 @@ gem "stimulus-rails"
 # Tailwind CSS
 gem "tailwindcss-rails"
 
+# Lucide icons
+gem "lucide-rails"
+
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 

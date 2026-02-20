@@ -8,7 +8,8 @@
       "Bash(bin/dev:*)",
       "Bash(lsof:*)",
       "Bash(xargs kill:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(kill:*)"
     ]
   }
 }
