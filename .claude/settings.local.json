@@ -9,7 +9,11 @@
       "Bash(lsof:*)",
       "Bash(xargs kill:*)",
       "Bash(curl:*)",
-      "Bash(kill:*)"
+      "Bash(kill:*)",
+      "Bash(bin/rails runner:*)",
+      "Bash(bin/rails server:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
