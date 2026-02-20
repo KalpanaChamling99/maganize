@@ -22,7 +22,6 @@ class Admin::ArticlesController < Admin::BaseController
     @article.tag_ids = tag_ids_from_params
 
     if @article.save
-      attach_cover_image
       attach_gallery_images
       redirect_to admin_articles_path, notice: "Article \"#{@article.title}\" was created."
     else
@@ -35,8 +34,8 @@ class Admin::ArticlesController < Admin::BaseController
     @article.tag_ids = tag_ids_from_params
 
     if @article.update(article_params)
-      attach_cover_image
       attach_gallery_images
+      replace_gallery_images
       redirect_to admin_articles_path, notice: "Article updated."
     else
       set_form_data
@@ -70,17 +69,23 @@ class Admin::ArticlesController < Admin::BaseController
     Array(params.dig(:article, :tag_ids)).reject(&:blank?).map(&:to_i)
   end
 
-  def attach_cover_image
-    cover = params.dig(:article, :cover_image)
-    return unless cover.respond_to?(:read) && cover.original_filename.present?
-    @article.cover_image.attach(cover)
-  end
-
   def attach_gallery_images
     raw = params.dig(:article, :images)
     return if raw.blank?
     Array(raw).each do |file|
       next unless file.respond_to?(:read) && file.original_filename.present?
+      @article.images.attach(file)
+    end
+  end
+
+  def replace_gallery_images
+    replacements = params.dig(:article, :replace_image)
+    return if replacements.blank?
+    replacements.each do |attachment_id, file|
+      next unless file.respond_to?(:read) && file.original_filename.present?
+      attachment = @article.images.attachments.find_by(id: attachment_id.to_i)
+      next unless attachment
+      attachment.purge
       @article.images.attach(file)
     end
   end

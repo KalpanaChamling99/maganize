@@ -11,9 +11,9 @@
       <%# Primary hero card — takes 2 columns %>
       <% hero = @featured_articles.first %>
       <article class="bg-white lg:col-span-2 group">
-        <% if hero.cover_image.present? %>
+        <% if hero.images.attached? %>
           <div class="h-[350px] overflow-hidden">
-            <%= image_tag hero.cover_image, alt: hero.title,
+            <%= image_tag hero.images.first, alt: hero.title,
               class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" %>
           </div>
         <% else %>

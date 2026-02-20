@@ -37,70 +37,60 @@
       class: "w-full border border-gray-200 focus:border-gray-900 focus:outline-none focus:ring-0 p-4 text-sm leading-relaxed placeholder-gray-300 resize-y transition-colors font-mono" %>
   </div>
 
-  <%# Cover Image %>
+  <%# Images (first image = cover) %>
   <div>
-    <p class="block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2">Cover Image</p>
-    <% if article.persisted? && article.cover_image.attached? %>
-      <div class="mb-3">
-        <%= image_tag article.cover_image, class: "h-40 w-auto object-cover border border-gray-200" %>
-        <p class="text-xs text-gray-400 mt-1">Current image — upload a new one to replace</p>
-      </div>
-    <% end %>
-    <label class="flex flex-col items-center justify-center border-2 border-dashed border-gray-200 hover:border-gray-400 transition-colors cursor-pointer p-8 text-center bg-white"
-           id="image-drop-zone">
-      <%= form.file_field :cover_image, accept: "image/*",
-        class: "sr-only", id: "cover_image_input", onchange: "previewImage(event)" %>
-      <div id="image-preview" class="hidden mb-4">
-        <img id="preview-img" src="" alt="Preview" class="h-40 w-auto object-cover mx-auto">
-      </div>
-      <div id="upload-prompt">
-        <svg class="mx-auto h-10 w-10 text-gray-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-        </svg>
-        <p class="text-sm text-gray-500">Click or drag and drop to upload</p>
-        <p class="text-xs text-gray-400 mt-1">PNG, JPG, WEBP — max 10MB</p>
-      </div>
-    </label>
-  </div>
+    <p class="block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2">Images <span class="normal-case font-normal text-gray-400">— first image used as cover</span></p>
 
-  <%# Gallery Images %>
-  <div>
-    <p class="block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2">Gallery Images</p>
-
-    <%# Existing images %>
+    <%# Existing (saved) images %>
     <% if article.persisted? && article.images.attached? %>
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-4">
-        <% article.images.each do |image| %>
-          <div class="relative group border border-gray-200 overflow-hidden">
-            <%= image_tag image, class: "w-full h-28 object-cover" %>
-            <%= link_to purge_image_admin_article_path(article, image_id: image.id),
-              class: "absolute top-1 right-1 bg-white border border-gray-200 text-gray-500 hover:text-red-600 hover:border-red-300 transition-colors p-1 opacity-0 group-hover:opacity-100",
-              data: { turbo_method: :delete, turbo_confirm: "Remove this image?" } do %>
-              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-              </svg>
+        <% article.images.each_with_index do |image, i| %>
+          <div class="relative group border border-gray-200 overflow-hidden" id="saved-image-<%= image.id %>">
+            <%= image_tag image, class: "w-full h-28 object-cover", id: "saved-img-#{image.id}" %>
+            <% if i == 0 %>
+              <span class="absolute bottom-1 left-1 bg-gray-900 text-white text-[10px] font-semibold px-1.5 py-0.5 leading-none">Cover</span>
             <% end %>
+            <div class="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              <%# Replace button %>
+              <label class="bg-white border border-gray-200 text-gray-500 hover:text-blue-600 hover:border-blue-300 transition-colors p-1 cursor-pointer" title="Replace image">
+                <input type="file" name="article[replace_image][<%= image.id %>]" accept="image/*"
+                  class="sr-only" data-replace-for="<%= image.id %>">
+                <svg class="w-3.5 h-3.5 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                </svg>
+              </label>
+              <%# Delete button %>
+              <%= link_to purge_image_admin_article_path(article, image_id: image.id),
+                class: "bg-white border border-gray-200 text-gray-500 hover:text-red-600 hover:border-red-300 transition-colors p-1",
+                data: { turbo_method: :delete, turbo_confirm: "Remove this image?" } do %>
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              <% end %>
+            </div>
           </div>
         <% end %>
       </div>
     <% end %>
 
-    <%# Upload new images %>
-    <label class="flex flex-col items-center justify-center border-2 border-dashed border-gray-200 hover:border-gray-400 transition-colors cursor-pointer p-8 text-center bg-white"
+    <%# Selected-but-not-yet-saved preview (shown above the dropzone) %>
+    <div id="gallery-new-preview" class="hidden mb-3">
+      <p class="text-xs text-gray-500 font-medium mb-2">Selected for upload — hover to edit or remove:</p>
+      <div id="gallery-new-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2"></div>
+    </div>
+
+    <%# Dropzone — clicking/dropping always adds to the selection %>
+    <label class="flex items-center justify-center gap-4 border-2 border-dashed border-gray-200 hover:border-gray-400 transition-colors cursor-pointer px-6 py-5 bg-white"
            id="gallery-drop-zone">
       <%= form.file_field :images, multiple: true, name: "article[images][]", accept: "image/*",
-        class: "sr-only", id: "gallery_images_input", onchange: "previewGallery(event)" %>
-      <div id="gallery-preview" class="hidden w-full mb-4">
-        <div id="gallery-preview-grid" class="grid grid-cols-3 sm:grid-cols-4 gap-2"></div>
-      </div>
-      <div id="gallery-upload-prompt">
-        <svg class="mx-auto h-10 w-10 text-gray-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-        </svg>
+        class: "sr-only", id: "gallery_images_input" %>
+      <svg class="h-8 w-8 text-gray-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+      </svg>
+      <div>
         <p class="text-sm text-gray-500">Click or drag and drop to add images</p>
-        <p class="text-xs text-gray-400 mt-1">PNG, JPG, WEBP — select multiple files</p>
+        <p class="text-xs text-gray-400 mt-0.5">PNG, JPG, WEBP — select multiple at once</p>
       </div>
     </label>
   </div>
@@ -184,58 +174,123 @@
 <% end %>
 
 <script>
-  function previewImage(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      document.getElementById('preview-img').src = e.target.result;
-      document.getElementById('image-preview').classList.remove('hidden');
-      document.getElementById('upload-prompt').classList.add('hidden');
-    };
-    reader.readAsDataURL(file);
-  }
+  (function () {
+    var fileItems = [];
+    var nextId    = 0;
 
-  function previewGallery(event) {
-    const files = event.target.files;
-    if (!files.length) return;
-    const grid = document.getElementById('gallery-preview-grid');
-    grid.innerHTML = '';
-    Array.from(files).forEach(file => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = document.createElement('img');
-        img.src = e.target.result;
-        img.className = 'w-full h-20 object-cover border border-gray-200';
-        grid.appendChild(img);
+    var PENCIL = '<svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>';
+    var CROSS  = '<svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>';
+
+    function addFiles(files) {
+      Array.from(files).forEach(function (f) {
+        if (!f.type.startsWith('image/')) return;
+        fileItems.push({ id: nextId++, file: f, url: URL.createObjectURL(f) });
+      });
+      render(); sync();
+    }
+
+    function removeItem(id) {
+      var idx = fileItems.findIndex(function (x) { return x.id === id; });
+      if (idx === -1) return;
+      URL.revokeObjectURL(fileItems[idx].url);
+      fileItems.splice(idx, 1);
+      render(); sync();
+    }
+
+    function replaceItem(id) {
+      var picker = document.createElement('input');
+      picker.type = 'file'; picker.accept = 'image/*';
+      picker.onchange = function () {
+        if (!picker.files[0]) return;
+        var idx = fileItems.findIndex(function (x) { return x.id === id; });
+        if (idx === -1) return;
+        URL.revokeObjectURL(fileItems[idx].url);
+        fileItems[idx].file = picker.files[0];
+        fileItems[idx].url  = URL.createObjectURL(picker.files[0]);
+        render(); sync();
       };
-      reader.readAsDataURL(file);
-    });
-    document.getElementById('gallery-preview').classList.remove('hidden');
-    document.getElementById('gallery-upload-prompt').classList.add('hidden');
-  }
+      picker.click();
+    }
 
-  const zone = document.getElementById('image-drop-zone');
-  const input = document.getElementById('cover_image_input');
-  if (zone && input) {
-    zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('border-gray-900'); });
-    zone.addEventListener('dragleave', () => zone.classList.remove('border-gray-900'));
-    zone.addEventListener('drop', (e) => {
-      e.preventDefault(); zone.classList.remove('border-gray-900');
-      input.files = e.dataTransfer.files;
-      input.dispatchEvent(new Event('change'));
-    });
-  }
+    function sync() {
+      var dt    = new DataTransfer();
+      var input = document.getElementById('gallery_images_input');
+      fileItems.forEach(function (x) { dt.items.add(x.file); });
+      if (input) input.files = dt.files;
+    }
 
-  const galleryZone = document.getElementById('gallery-drop-zone');
-  const galleryInput = document.getElementById('gallery_images_input');
-  if (galleryZone && galleryInput) {
-    galleryZone.addEventListener('dragover', (e) => { e.preventDefault(); galleryZone.classList.add('border-gray-900'); });
-    galleryZone.addEventListener('dragleave', () => galleryZone.classList.remove('border-gray-900'));
-    galleryZone.addEventListener('drop', (e) => {
-      e.preventDefault(); galleryZone.classList.remove('border-gray-900');
-      galleryInput.files = e.dataTransfer.files;
-      galleryInput.dispatchEvent(new Event('change'));
+    function render() {
+      var grid    = document.getElementById('gallery-new-grid');
+      var wrapper = document.getElementById('gallery-new-preview');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      fileItems.forEach(function (item) {
+        var div = document.createElement('div');
+        div.className = 'relative group border border-gray-200 overflow-hidden';
+        div.innerHTML =
+          '<img src="' + item.url + '" class="w-full h-24 object-cover" alt="">' +
+          '<div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors pointer-events-none"></div>' +
+          '<div class="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">' +
+            '<button type="button" data-action="edit" data-id="' + item.id + '" title="Replace image" ' +
+              'class="bg-white border border-gray-200 text-gray-500 hover:text-blue-600 hover:border-blue-300 p-1 transition-colors">' +
+              PENCIL + '</button>' +
+            '<button type="button" data-action="remove" data-id="' + item.id + '" title="Remove" ' +
+              'class="bg-white border border-gray-200 text-gray-500 hover:text-red-600 hover:border-red-300 p-1 transition-colors">' +
+              CROSS + '</button>' +
+          '</div>';
+
+        div.querySelectorAll('button').forEach(function (btn) {
+          btn.addEventListener('click', function (e) {
+            e.preventDefault(); e.stopPropagation();
+            var id = parseInt(btn.dataset.id);
+            if (btn.dataset.action === 'remove') removeItem(id);
+            else replaceItem(id);
+          });
+        });
+
+        grid.appendChild(div);
+      });
+
+      if (wrapper) wrapper.classList.toggle('hidden', fileItems.length === 0);
+    }
+
+    // File input — accumulates, never replaces
+    var input = document.getElementById('gallery_images_input');
+    if (input) {
+      input.addEventListener('change', function () {
+        var captured = Array.from(input.files); // capture before resetting
+        input.value = '';  // reset so the same file can be re-picked
+        addFiles(captured); // sync() inside sets input.files = dt.files
+      });
+    }
+
+    // Drag-and-drop zone
+    var zone = document.getElementById('gallery-drop-zone');
+    if (zone && input) {
+      zone.addEventListener('dragover',  function (e) { e.preventDefault(); zone.classList.add('border-gray-900'); });
+      zone.addEventListener('dragleave', function ()  { zone.classList.remove('border-gray-900'); });
+      zone.addEventListener('drop', function (e) {
+        e.preventDefault(); zone.classList.remove('border-gray-900');
+        addFiles(e.dataTransfer.files);
+      });
+    }
+  })();
+
+  // ── Replace saved (database) images ──────────────────────────
+  document.querySelectorAll('input[data-replace-for]').forEach(function (inp) {
+    inp.addEventListener('change', function () {
+      if (!inp.files[0]) return;
+      var id  = inp.dataset.replaceFor;
+      var img = document.getElementById('saved-img-' + id);
+      if (img) img.src = URL.createObjectURL(inp.files[0]);
+      var container = document.getElementById('saved-image-' + id);
+      if (container && !container.querySelector('.replace-badge')) {
+        var badge = document.createElement('span');
+        badge.className = 'replace-badge absolute bottom-1 left-1 bg-blue-600 text-white text-[10px] font-semibold px-1.5 py-0.5 leading-none';
+        badge.textContent = 'Replacing…';
+        container.appendChild(badge);
+      }
     });
-  }
+  });
 </script>

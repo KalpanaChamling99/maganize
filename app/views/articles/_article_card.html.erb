@@ -27,8 +27,8 @@
 %>
 <article class="group bg-white border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
   <div class="relative <%= image_height %> overflow-hidden">
-    <% if article.cover_image.attached? %>
-      <%= image_tag article.cover_image, alt: article.title,
+    <% if article.images.attached? %>
+      <%= image_tag article.images.first, alt: article.title,
         class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" %>
     <% else %>
       <div class="w-full h-full bg-gray-100 flex items-center justify-center">

@@ -16,9 +16,9 @@
   <% hero = @articles.first %>
   <article class="group mb-10 border border-gray-200 hover:border-gray-900 transition-colors">
     <div class="grid grid-cols-1 md:grid-cols-5">
-      <% if hero.cover_image.present? %>
+      <% if hero.images.attached? %>
         <div class="md:col-span-2 h-[350px] overflow-hidden">
-          <%= image_tag hero.cover_image, alt: hero.title,
+          <%= image_tag hero.images.first, alt: hero.title,
             class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" %>
         </div>
         <div class="md:col-span-3 p-6 sm:p-8 flex flex-col justify-center">

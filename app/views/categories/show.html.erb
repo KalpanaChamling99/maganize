@@ -20,9 +20,9 @@
   <article class="group mb-10 border border-gray-200 hover:border-gray-900 hover:shadow-lg transition-all">
     <div class="grid grid-cols-1 md:grid-cols-5">
 
-      <% if hero.cover_image.attached? %>
+      <% if hero.images.attached? %>
         <div class="md:col-span-2 h-[360px] overflow-hidden">
-          <%= image_tag hero.cover_image, alt: hero.title,
+          <%= image_tag hero.images.first, alt: hero.title,
             class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" %>
         </div>
         <div class="md:col-span-3 p-8 flex flex-col justify-center">

@@ -1,7 +1,7 @@
 <%# ── Hero image ──────────────────────────────────────────── %>
-<% if @article.cover_image.attached? %>
+<% if @article.images.attached? %>
   <div class="relative h-[480px] -mx-4 sm:-mx-6 mb-10 overflow-hidden">
-    <%= image_tag @article.cover_image, alt: @article.title,
+    <%= image_tag @article.images.first, alt: @article.title,
       class: "w-full h-full object-cover" %>
     <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
 
@@ -80,12 +80,12 @@
     <%= raw @article.body %>
   </div>
 
-  <%# ── Gallery images ─────────────────────────────────────── %>
-  <% if @article.images.attached? %>
+  <%# ── Gallery images (skip first — used as cover) ────────── %>
+  <% if @article.images.count > 1 %>
     <div class="mt-10 pt-8 border-t border-gray-200">
       <p class="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-4">Gallery</p>
       <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        <% @article.images.each do |image| %>
+        <% @article.images[1..].each do |image| %>
           <%= image_tag image, alt: @article.title,
             class: "w-full h-48 object-cover border border-gray-100 hover:opacity-90 transition-opacity" %>
         <% end %>
