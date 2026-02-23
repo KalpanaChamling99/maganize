@@ -13,7 +13,9 @@
       "Bash(bin/rails runner:*)",
       "Bash(bin/rails server:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(bin/rails db:migrate:*)",
+      "Bash(bin/rails db:seed:*)"
     ]
   }
 }
