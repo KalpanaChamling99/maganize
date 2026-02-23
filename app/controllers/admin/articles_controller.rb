@@ -3,7 +3,7 @@ class Admin::ArticlesController < Admin::BaseController
   before_action :set_form_data, only: [:new, :edit]
 
   def index
-    @articles = Article.includes(:category, :tags).order(created_at: :desc)
+    @articles = Article.includes(:category, :tags).order(created_at: :desc).page(params[:page]).per(10)
   end
 
   def show

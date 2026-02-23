@@ -1,0 +1,38 @@
+<% return unless collection.total_pages > 1 %>
+
+<div class="mt-4 flex items-center justify-between text-sm text-gray-500">
+  <span class="text-xs">
+    Showing <%= collection.offset_value + 1 %>–<%= [collection.offset_value + collection.limit_value, collection.total_count].min %>
+    of <%= collection.total_count %> <%= label %>
+  </span>
+
+  <nav class="inline-flex items-center gap-1">
+    <%# Prev %>
+    <% if collection.first_page? %>
+      <span class="px-3 py-1.5 text-xs font-medium border border-gray-100 text-gray-300 cursor-not-allowed">← Prev</span>
+    <% else %>
+      <%= link_to "← Prev", url_for(page: collection.prev_page),
+        class: "px-3 py-1.5 text-xs font-medium border border-gray-200 hover:bg-gray-50 transition-colors" %>
+    <% end %>
+
+    <%# Page numbers with gap logic %>
+    <% paginate_range(collection).each do |item| %>
+      <% if item == :gap %>
+        <span class="px-2 py-1.5 text-xs text-gray-400">…</span>
+      <% elsif item == collection.current_page %>
+        <span class="px-3 py-1.5 text-xs font-semibold border border-gray-900 bg-gray-900 text-white"><%= item %></span>
+      <% else %>
+        <%= link_to item, url_for(page: item),
+          class: "px-3 py-1.5 text-xs font-medium border border-gray-200 hover:bg-gray-50 transition-colors" %>
+      <% end %>
+    <% end %>
+
+    <%# Next %>
+    <% if collection.last_page? %>
+      <span class="px-3 py-1.5 text-xs font-medium border border-gray-100 text-gray-300 cursor-not-allowed">Next →</span>
+    <% else %>
+      <%= link_to "Next →", url_for(page: collection.next_page),
+        class: "px-3 py-1.5 text-xs font-medium border border-gray-200 hover:bg-gray-50 transition-colors" %>
+    <% end %>
+  </nav>
+</div>

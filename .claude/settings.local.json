@@ -15,7 +15,10 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(bin/rails db:migrate:*)",
-      "Bash(bin/rails db:seed:*)"
+      "Bash(bin/rails db:seed:*)",
+      "Bash(bundle exec ruby:*)",
+      "Bash(bundle exec gem:*)",
+      "Bash(bin/rails generate:*)"
     ]
   }
 }
