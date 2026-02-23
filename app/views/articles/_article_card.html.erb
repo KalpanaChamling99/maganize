@@ -61,6 +61,19 @@
     <div class="flex items-center gap-1.5 text-xs <%= date_color %> mb-3">
       <%= lucide_icon "calendar", class: "w-3.5 h-3.5 shrink-0" %>
       <time><%= article.published_at.strftime("%B %-d, %Y") %></time>
+      <% if article.author %>
+        <span class="text-gray-300">·</span>
+        <%= link_to team_member_path(article.author), class: "flex items-center gap-1.5 hover:opacity-80 transition-opacity min-w-0" do %>
+          <div class="w-5 h-5 rounded-full overflow-hidden bg-gray-200 shrink-0 flex items-center justify-center">
+            <% if article.author.avatar.attached? %>
+              <%= image_tag article.author.avatar, class: "w-full h-full object-cover" %>
+            <% else %>
+              <span class="text-[8px] font-bold text-gray-500 leading-none"><%= article.author.name.split.map(&:first).first(2).join.upcase %></span>
+            <% end %>
+          </div>
+          <span class="truncate"><%= article.author.name %></span>
+        <% end %>
+      <% end %>
     </div>
     <h3 class="font-serif <%= title_size %> font-bold leading-snug mb-2">
       <%= link_to article.title, article_path(article),

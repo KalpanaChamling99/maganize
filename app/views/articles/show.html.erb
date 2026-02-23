@@ -24,6 +24,12 @@
         <div class="flex items-center gap-4 text-sm text-white/70">
           <%= lucide_icon "calendar", class: "w-4 h-4 shrink-0 text-white/60" %>
           <time><%= @article.published_at.strftime("%B %-d, %Y") %></time>
+          <% if @article.author %>
+            <span class="text-white/40">·</span>
+            <%= lucide_icon "user", class: "w-4 h-4 shrink-0 text-white/60" %>
+            <%= link_to @article.author.name, team_member_path(@article.author),
+              class: "hover:text-white transition-colors" %>
+          <% end %>
           <span class="text-white/40">·</span>
           <%= lucide_icon "clock", class: "w-4 h-4 shrink-0 text-white/60" %>
           <span><%= [((@article.body.to_s.split.size) / 200.0).ceil, 1].max %> min read</span>
@@ -50,6 +56,12 @@
     <div class="flex items-center gap-4 text-sm text-gray-400">
       <%= lucide_icon "calendar", class: "w-4 h-4 shrink-0" %>
       <time><%= @article.published_at.strftime("%B %-d, %Y") %></time>
+      <% if @article.author %>
+        <span>·</span>
+        <%= lucide_icon "user", class: "w-4 h-4 shrink-0" %>
+        <%= link_to @article.author.name, team_member_path(@article.author),
+          class: "hover:text-gray-700 transition-colors" %>
+      <% end %>
       <span>·</span>
       <%= lucide_icon "clock", class: "w-4 h-4 shrink-0" %>
       <span><%= [((@article.body.to_s.split.size) / 200.0).ceil, 1].max %> min read</span>
@@ -102,6 +114,35 @@
           <%= link_to "##{tag.name}", tag_path(tag),
             class: "text-sm px-3 py-1.5 border border-gray-200 hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-all" %>
         <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%# ── Author card ─────────────────────────────────────────── %>
+  <% if @article.author %>
+    <% author = @article.author %>
+    <div class="mt-10 pt-8 border-t border-gray-200">
+      <p class="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-4">Written by</p>
+      <div class="flex items-start gap-4">
+        <%= link_to team_member_path(author) do %>
+          <div class="w-14 h-14 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center text-gray-500 font-serif font-bold text-lg shrink-0 ring-2 ring-gray-200">
+            <% if author.avatar.attached? %>
+              <%= image_tag author.avatar, class: "w-full h-full object-cover" %>
+            <% else %>
+              <%= author.name.split.map(&:first).first(2).join %>
+            <% end %>
+          </div>
+        <% end %>
+        <div>
+          <%= link_to author.name, team_member_path(author),
+            class: "font-serif text-lg font-bold text-gray-900 hover:text-red-600 transition-colors" %>
+          <% if author.role.present? %>
+            <p class="text-xs uppercase tracking-widest text-gray-400 mt-0.5"><%= author.role %></p>
+          <% end %>
+          <% if author.bio.present? %>
+            <p class="text-sm text-gray-500 leading-relaxed mt-2"><%= author.bio %></p>
+          <% end %>
+        </div>
       </div>
     </div>
   <% end %>

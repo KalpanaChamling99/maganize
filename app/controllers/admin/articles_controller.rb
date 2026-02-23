@@ -4,7 +4,7 @@ class Admin::ArticlesController < Admin::BaseController
 
   def index
     per = [10, 20, 50, 100].include?(params[:per_page].to_i) ? params[:per_page].to_i : 10
-    @articles = Article.includes(:category, :tags).order(created_at: :desc).page(params[:page]).per(per)
+    @articles = Article.includes(:category, :tags, :author).order(created_at: :desc).page(params[:page]).per(per)
   end
 
   def show
@@ -92,6 +92,6 @@ class Admin::ArticlesController < Admin::BaseController
   end
 
   def article_params
-    params.require(:article).permit(:title, :excerpt, :body, :published_at, :featured, :category_id)
+    params.require(:article).permit(:title, :excerpt, :body, :published_at, :featured, :category_id, :team_member_id)
   end
 end

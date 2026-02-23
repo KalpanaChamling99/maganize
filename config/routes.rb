@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :articles, only: [:index, :show]
   resources :categories, only: [:index, :show]
   resources :tags, only: [:index, :show]
+  resources :team_members, only: [:show]
 
   # Static pages
   get "about",   to: "pages#about",   as: :about
@@ -21,6 +22,7 @@ Rails.application.routes.draw do
     resources :categories
     resources :tags, only: [:index, :new, :create, :destroy]
     resources :media, only: [:index, :destroy]
+    resources :team_members
   end
 
   get "up" => "rails/health#show", as: :rails_health_check

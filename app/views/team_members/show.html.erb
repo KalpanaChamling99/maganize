@@ -1,0 +1,75 @@
+<%# Team Member Profile %>
+
+<%# Profile header %>
+<div class="border-b border-gray-200 pb-8 mb-10">
+  <p class="text-xs tracking-widest uppercase text-gray-400 mb-4">
+    <%= link_to "About", about_path, class: "hover:text-gray-600 transition-colors" %>
+    <span class="mx-1">/</span>
+    The Team
+  </p>
+  <div class="flex items-center gap-6">
+    <div class="w-20 h-20 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center text-gray-500 font-serif font-bold text-xl flex-shrink-0 ring-2 ring-gray-200">
+      <% if @team_member.avatar.attached? %>
+        <%= image_tag @team_member.avatar, class: "w-full h-full object-cover" %>
+      <% else %>
+        <%= @team_member.name.split.map(&:first).first(2).join %>
+      <% end %>
+    </div>
+    <div>
+      <h1 class="font-serif text-3xl sm:text-4xl font-bold text-gray-900 leading-tight"><%= @team_member.name %></h1>
+      <p class="text-sm text-gray-400 uppercase tracking-widest mt-1"><%= @team_member.role %></p>
+    </div>
+  </div>
+  <% if @team_member.bio.present? %>
+    <p class="mt-5 text-gray-600 leading-relaxed max-w-2xl"><%= @team_member.bio %></p>
+  <% end %>
+</div>
+
+<%# Articles by this author %>
+<div>
+  <h2 class="font-serif text-2xl font-bold text-gray-900 mb-6">
+    Articles by <%= @team_member.name %>
+    <span class="text-base font-normal text-gray-400 ml-2">(<%= @articles.total_count %>)</span>
+  </h2>
+
+  <% if @articles.any? %>
+    <div class="divide-y divide-gray-100">
+      <% @articles.each do |article| %>
+        <div class="py-5 flex gap-5 group">
+          <%# Thumbnail %>
+          <div class="w-24 h-20 flex-shrink-0 overflow-hidden bg-gray-100">
+            <% if article.images.attached? %>
+              <%= image_tag article.images.first, alt: article.title,
+                class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" %>
+            <% else %>
+              <div class="w-full h-full flex items-center justify-center">
+                <%= lucide_icon "image", class: "w-6 h-6 text-gray-300" %>
+              </div>
+            <% end %>
+          </div>
+
+          <%# Info %>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-1">
+              <% if article.category %>
+                <span class="text-xs font-bold px-2 py-0.5 bg-red-500 text-white uppercase tracking-wide"><%= article.category.name %></span>
+              <% end %>
+              <time class="text-xs text-gray-400"><%= article.published_at.strftime("%B %-d, %Y") %></time>
+            </div>
+            <h3 class="font-serif text-lg font-bold leading-snug mb-1">
+              <%= link_to article.title, article_path(article),
+                class: "text-gray-900 hover:text-red-600 transition-colors" %>
+            </h3>
+            <% if article.excerpt.present? %>
+              <p class="text-sm text-gray-500 leading-relaxed line-clamp-2"><%= article.excerpt %></p>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <%= render "shared/pagination", collection: @articles, label: "articles" %>
+  <% else %>
+    <p class="text-sm text-gray-400 py-6">No published articles yet.</p>
+  <% end %>
+</div>

@@ -5,7 +5,7 @@ class TagsController < ApplicationController
 
   def show
     @tag = Tag.find(params[:id])
-    @articles = @tag.articles.published.recent
+    @articles = @tag.articles.published.recent.includes(:category, :tags, :author)
   end
 
   def new

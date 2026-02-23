@@ -1,0 +1,94 @@
+<%= form_with(model: [:admin, team_member], multipart: true, class: "space-y-6") do |form| %>
+
+  <% if team_member.errors.any? %>
+    <div class="bg-red-50 border border-red-200 px-5 py-4">
+      <p class="text-sm font-semibold text-red-700 mb-2">
+        <%= pluralize(team_member.errors.count, "error") %> prevented this from being saved:
+      </p>
+      <ul class="list-disc list-inside text-sm text-red-600 space-y-1">
+        <% team_member.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%# Avatar upload %>
+  <div>
+    <%= form.label :avatar, "Profile Photo", class: "block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-3" %>
+    <div class="flex items-center gap-5">
+      <%# Current avatar preview %>
+      <div id="avatar-preview" class="w-16 h-16 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center shrink-0">
+        <% if team_member.avatar.attached? %>
+          <%= image_tag team_member.avatar, class: "w-full h-full object-cover" %>
+        <% else %>
+          <span class="text-gray-400 font-serif font-bold text-lg" id="avatar-initials">
+            <%= team_member.name.present? ? team_member.name.split.map(&:first).first(2).join.upcase : "?" %>
+          </span>
+        <% end %>
+      </div>
+      <div class="flex-1">
+        <%= form.file_field :avatar, accept: "image/*",
+          class: "block w-full text-xs text-gray-500 file:mr-3 file:py-2 file:px-4 file:border-0 file:text-xs file:font-semibold file:bg-gray-900 file:text-white hover:file:bg-gray-700 file:cursor-pointer cursor-pointer",
+          onchange: "previewAvatar(this)" %>
+        <p class="text-xs text-gray-400 mt-1.5">JPG, PNG or WebP — recommended 200×200 px or larger.</p>
+        <% if team_member.avatar.attached? %>
+          <label class="inline-flex items-center gap-1.5 mt-2 text-xs text-red-400 hover:text-red-600 cursor-pointer">
+            <%= form.check_box :avatar, { checked: false, class: "hidden", id: "remove_avatar" }, "0", "0" %>
+            <span onclick="document.getElementById('remove_avatar').click()">Remove photo</span>
+          </label>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <%= form.label :name, "Full Name", class: "block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2" %>
+      <%= form.text_field :name,
+        placeholder: "e.g. Eleanor Voss",
+        class: "w-full border border-gray-200 focus:border-gray-900 focus:outline-none focus:ring-0 px-3 py-2.5 text-sm bg-white transition-colors" %>
+    </div>
+
+    <div>
+      <%= form.label :role, "Role / Title", class: "block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2" %>
+      <%= form.text_field :role,
+        placeholder: "e.g. Editor in Chief",
+        class: "w-full border border-gray-200 focus:border-gray-900 focus:outline-none focus:ring-0 px-3 py-2.5 text-sm bg-white transition-colors" %>
+    </div>
+  </div>
+
+  <div>
+    <%= form.label :bio, "Bio", class: "block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2" %>
+    <%= form.text_area :bio, rows: 4,
+      placeholder: "Short biography shown on the About page and author profiles…",
+      class: "w-full border border-gray-200 focus:border-gray-900 focus:outline-none focus:ring-0 p-3 text-sm leading-relaxed placeholder-gray-300 resize-none transition-colors" %>
+  </div>
+
+  <div>
+    <%= form.label :slug, "Slug", class: "block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2" %>
+    <%= form.text_field :slug,
+      placeholder: "auto-generated from name if left blank",
+      class: "w-full border border-gray-200 focus:border-gray-900 focus:outline-none focus:ring-0 px-3 py-2.5 text-sm font-mono bg-white transition-colors text-gray-500" %>
+    <p class="text-xs text-gray-400 mt-1">Used in the public URL: /team_members/slug</p>
+  </div>
+
+  <div class="flex items-center justify-between border-t border-gray-200 pt-6">
+    <%= link_to "Discard", admin_team_members_path, class: "text-sm text-gray-400 hover:text-gray-700 transition-colors" %>
+    <%= form.submit team_member.persisted? ? "Update Member" : "Add Member",
+      class: "px-6 py-2.5 text-sm font-semibold bg-gray-900 text-white hover:bg-gray-700 transition-colors cursor-pointer" %>
+  </div>
+
+<% end %>
+
+<script>
+  function previewAvatar(input) {
+    if (!input.files || !input.files[0]) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var preview = document.getElementById('avatar-preview');
+      preview.innerHTML = '<img src="' + e.target.result + '" class="w-full h-full object-cover">';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+</script>

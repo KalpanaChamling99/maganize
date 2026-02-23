@@ -10,6 +10,7 @@
       <thead>
         <tr class="border-b border-gray-100 text-xs font-semibold tracking-widest uppercase text-gray-400">
           <th class="text-left px-6 py-3">Title</th>
+          <th class="text-left px-6 py-3 hidden md:table-cell">Author</th>
           <th class="text-left px-6 py-3 hidden md:table-cell">Category</th>
           <th class="text-left px-6 py-3 hidden lg:table-cell">Tags</th>
           <th class="text-left px-6 py-3 hidden lg:table-cell">Status</th>
@@ -23,6 +24,9 @@
             <td class="px-6 py-4 max-w-xs">
               <p class="font-medium line-clamp-1 group-hover:text-gray-600"><%= article.title %></p>
               <p class="text-xs text-gray-400 mt-0.5 line-clamp-1"><%= article.excerpt %></p>
+            </td>
+            <td class="px-6 py-4 hidden md:table-cell text-gray-500 text-xs">
+              <%= article.author&.name || "—" %>
             </td>
             <td class="px-6 py-4 hidden md:table-cell text-gray-500 text-xs">
               <%= article.category&.name || "—" %>
