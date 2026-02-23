@@ -6,6 +6,10 @@ Rails.application.routes.draw do
   resources :categories, only: [:index, :show]
   resources :tags, only: [:index, :show]
 
+  # Static pages
+  get "about",   to: "pages#about",   as: :about
+  get "contact", to: "pages#contact", as: :contact
+
   # Admin section
   namespace :admin do
     root "dashboard#index"

@@ -52,7 +52,7 @@
               <%= link_to "Home", root_path,
                 class: "block px-4 py-3 hover:text-gray-500 border-b-2 border-gray-900 transition-colors" %>
             </li>
-            <% Category.all.each do |cat| %>
+            <% Category.joins(:articles).merge(Article.published).distinct.limit(5).each do |cat| %>
               <li>
                 <%= link_to cat.name, category_path(cat),
                   class: "block px-4 py-3 hover:text-gray-500 border-b-2 border-transparent hover:border-gray-300 transition-colors" %>
@@ -64,6 +64,14 @@
             </li>
             <li>
               <%= link_to "Tags", tags_path,
+                class: "block px-4 py-3 hover:text-gray-500 border-b-2 border-transparent hover:border-gray-300 transition-colors" %>
+            </li>
+            <li>
+              <%= link_to "About", about_path,
+                class: "block px-4 py-3 hover:text-gray-500 border-b-2 border-transparent hover:border-gray-300 transition-colors" %>
+            </li>
+            <li>
+              <%= link_to "Contact", contact_path,
                 class: "block px-4 py-3 hover:text-gray-500 border-b-2 border-transparent hover:border-gray-300 transition-colors" %>
             </li>
           </ul>
@@ -89,7 +97,7 @@
           <div>
             <h4 class="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">Sections</h4>
             <ul class="space-y-2 text-sm">
-              <% Category.all.each do |cat| %>
+              <% Category.joins(:articles).merge(Article.published).distinct.each do |cat| %>
                 <li><%= link_to cat.name, category_path(cat), class: "hover:text-white transition-colors" %></li>
               <% end %>
               <li><%= link_to "All Articles", articles_path, class: "hover:text-white transition-colors" %></li>
@@ -98,8 +106,8 @@
           <div>
             <h4 class="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">About</h4>
             <ul class="space-y-2 text-sm">
-              <li><a href="#" class="hover:text-white transition-colors">About Us</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+              <li><%= link_to "About Us", about_path, class: "hover:text-white transition-colors" %></li>
+              <li><%= link_to "Contact", contact_path, class: "hover:text-white transition-colors" %></li>
               <li><a href="#" class="hover:text-white transition-colors">Advertise</a></li>
               <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
             </ul>

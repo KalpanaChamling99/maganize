@@ -1,0 +1,104 @@
+<%# Contact %>
+
+<div class="max-w-3xl mx-auto">
+
+  <%# Page header %>
+  <div class="border-b border-gray-200 pb-8 mb-10">
+    <p class="text-xs tracking-widest uppercase text-gray-400 mb-2">Reach Out</p>
+    <h1 class="font-serif text-4xl sm:text-5xl font-bold text-gray-900 leading-tight">Contact Us</h1>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-5 gap-12">
+
+    <%# Left: contact form %>
+    <div class="sm:col-span-3">
+      <h2 class="font-serif text-xl font-bold text-gray-900 mb-1">Send us a message</h2>
+      <p class="text-sm text-gray-400 mb-6">We read every message and aim to reply within two business days.</p>
+
+      <%= tag.form action: "#", method: "post", class: "space-y-5" do %>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div>
+            <label class="block text-xs font-medium text-gray-700 mb-1.5 tracking-wide uppercase">First Name</label>
+            <input type="text" placeholder="Jane"
+              class="w-full border border-gray-200 px-3 py-2.5 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:border-gray-400 transition-colors">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-700 mb-1.5 tracking-wide uppercase">Last Name</label>
+            <input type="text" placeholder="Smith"
+              class="w-full border border-gray-200 px-3 py-2.5 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:border-gray-400 transition-colors">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-gray-700 mb-1.5 tracking-wide uppercase">Email Address</label>
+          <input type="email" placeholder="jane@example.com"
+            class="w-full border border-gray-200 px-3 py-2.5 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:border-gray-400 transition-colors">
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-gray-700 mb-1.5 tracking-wide uppercase">Subject</label>
+          <select class="w-full border border-gray-200 px-3 py-2.5 text-sm text-gray-600 bg-white focus:outline-none focus:border-gray-400 transition-colors">
+            <option value="" disabled selected>Select a topic…</option>
+            <option>Story Pitch</option>
+            <option>Editorial Feedback</option>
+            <option>Advertising Inquiry</option>
+            <option>Subscription Support</option>
+            <option>General Question</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-gray-700 mb-1.5 tracking-wide uppercase">Message</label>
+          <textarea rows="5" placeholder="Tell us what's on your mind…"
+            class="w-full border border-gray-200 px-3 py-2.5 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:border-gray-400 transition-colors resize-none"></textarea>
+        </div>
+
+        <div>
+          <button type="submit"
+            class="bg-gray-900 text-white text-xs font-semibold tracking-widest uppercase px-6 py-3 hover:bg-gray-700 transition-colors">
+            Send Message
+          </button>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Right: contact info %>
+    <div class="sm:col-span-2 space-y-8">
+
+      <div>
+        <h3 class="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-3">Editorial</h3>
+        <p class="text-sm text-gray-600 leading-relaxed">For story pitches, corrections, or editorial enquiries.</p>
+        <a href="mailto:editorial@themagazine.com" class="text-sm font-medium text-gray-900 hover:text-gray-600 transition-colors mt-1 block">
+          editorial@themagazine.com
+        </a>
+      </div>
+
+      <div class="border-t border-gray-100 pt-8">
+        <h3 class="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-3">Advertising</h3>
+        <p class="text-sm text-gray-600 leading-relaxed">To discuss partnerships or advertising opportunities.</p>
+        <a href="mailto:advertise@themagazine.com" class="text-sm font-medium text-gray-900 hover:text-gray-600 transition-colors mt-1 block">
+          advertise@themagazine.com
+        </a>
+      </div>
+
+      <div class="border-t border-gray-100 pt-8">
+        <h3 class="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-3">Subscriptions</h3>
+        <p class="text-sm text-gray-600 leading-relaxed">Billing, account access, and subscription questions.</p>
+        <a href="mailto:support@themagazine.com" class="text-sm font-medium text-gray-900 hover:text-gray-600 transition-colors mt-1 block">
+          support@themagazine.com
+        </a>
+      </div>
+
+      <div class="border-t border-gray-100 pt-8">
+        <h3 class="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-3">Office</h3>
+        <address class="text-sm text-gray-600 not-italic leading-relaxed">
+          The Magazine<br>
+          123 Press Row, Suite 4<br>
+          New York, NY 10001
+        </address>
+      </div>
+
+    </div>
+  </div>
+
+</div>

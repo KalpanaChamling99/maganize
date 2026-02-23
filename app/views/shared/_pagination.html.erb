@@ -2,53 +2,85 @@
 <% per_page_options = local_assigns.fetch(:per_page_options, [10, 20, 50, 100]) %>
 <% current_per_page = collection.limit_value %>
 
-<div class="mt-4 flex items-center justify-between text-sm text-gray-500">
-  <div class="flex items-center gap-3">
-    <span class="text-xs">
-      Showing <%= collection.offset_value + 1 %>–<%= [collection.offset_value + collection.limit_value, collection.total_count].min %>
-      of <%= collection.total_count %> <%= label %>
-    </span>
+<div class="mt-6 border-t border-gray-100 pt-5 flex items-center justify-between gap-4">
 
-    <span class="text-gray-200 select-none">|</span>
+  <%# Left: record count + rows per page %>
+  <div class="flex items-center gap-4">
+    <p class="text-xs text-gray-400 whitespace-nowrap">
+      <span class="font-semibold text-gray-700"><%= collection.offset_value + 1 %>–<%= [collection.offset_value + collection.limit_value, collection.total_count].min %></span>
+      <span>of</span>
+      <span class="font-semibold text-gray-700"><%= collection.total_count %></span>
+      <span><%= label %></span>
+    </p>
 
-    <div class="flex items-center gap-1.5">
-      <label class="text-xs text-gray-400">Rows per page:</label>
-      <select class="text-xs border border-gray-200 pl-2 py-1.5 text-gray-600 bg-white focus:outline-none focus:border-gray-400 cursor-pointer" style="padding-right: 32px;"
-              onchange="window.location = '<%= url_for(request.query_parameters.merge(page: 1, per_page: '__PER__')) %>'.replace('__PER__', this.value)">
-        <% per_page_options.each do |n| %>
-          <option value="<%= n %>" <%= 'selected' if n == current_per_page %>><%= n %></option>
-        <% end %>
-      </select>
+    <div class="h-4 w-px bg-gray-200 hidden sm:block"></div>
+
+    <div class="hidden sm:flex items-center gap-2">
+      <label class="text-xs text-gray-400 whitespace-nowrap">Rows per page</label>
+      <div class="relative">
+        <select class="text-xs rounded-md border border-gray-200 bg-white pl-2.5 pr-7 py-1.5 text-gray-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 cursor-pointer transition-shadow hover:shadow"
+                style="padding-right: 28px;"
+                onchange="window.location = '<%= url_for(request.query_parameters.merge(page: 1, per_page: '__PER__')) %>'.replace('__PER__', this.value)">
+          <% per_page_options.each do |n| %>
+            <option value="<%= n %>" <%= 'selected' if n == current_per_page %>><%= n %></option>
+          <% end %>
+        </select>
+      </div>
     </div>
   </div>
 
-  <nav class="inline-flex items-center gap-1">
+  <%# Right: page navigation %>
+  <nav class="flex items-center gap-1" aria-label="Pagination">
+
     <%# Prev %>
     <% if collection.first_page? %>
-      <span class="px-3 py-1.5 text-xs font-medium border border-gray-100 text-gray-300 cursor-not-allowed">← Prev</span>
+      <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-gray-300 bg-gray-50 border border-gray-100 cursor-not-allowed select-none">
+        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Prev
+      </span>
     <% else %>
-      <%= link_to "← Prev", url_for(request.query_parameters.merge(page: collection.prev_page)),
-        class: "px-3 py-1.5 text-xs font-medium border border-gray-200 hover:bg-gray-50 transition-colors" %>
-    <% end %>
-
-    <%# Page numbers with gap logic %>
-    <% paginate_range(collection).each do |item| %>
-      <% if item == :gap %>
-        <span class="px-2 py-1.5 text-xs text-gray-400">…</span>
-      <% elsif item == collection.current_page %>
-        <span class="px-3 py-1.5 text-xs font-semibold border border-gray-900 bg-gray-900 text-white"><%= item %></span>
-      <% else %>
-        <%= link_to item, url_for(request.query_parameters.merge(page: item)),
-          class: "px-3 py-1.5 text-xs font-medium border border-gray-200 hover:bg-gray-50 transition-colors" %>
+      <%= link_to url_for(request.query_parameters.merge(page: collection.prev_page)),
+        class: "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300 shadow-sm transition-all" do %>
+        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Prev
       <% end %>
     <% end %>
 
+    <%# Page numbers %>
+    <div class="flex items-center gap-1 mx-0.5">
+      <% paginate_range(collection).each do |item| %>
+        <% if item == :gap %>
+          <span class="w-8 h-8 inline-flex items-center justify-center text-xs text-gray-400 select-none">…</span>
+        <% elsif item == collection.current_page %>
+          <span class="w-8 h-8 inline-flex items-center justify-center rounded-md text-xs font-semibold bg-gray-900 text-white shadow-sm"><%= item %></span>
+        <% else %>
+          <%= link_to item, url_for(request.query_parameters.merge(page: item)),
+            class: "w-8 h-8 inline-flex items-center justify-center rounded-md text-xs font-medium text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300 shadow-sm transition-all" %>
+        <% end %>
+      <% end %>
+    </div>
+
     <%# Next %>
     <% if collection.last_page? %>
-      <span class="px-3 py-1.5 text-xs font-medium border border-gray-100 text-gray-300 cursor-not-allowed">Next →</span>
+      <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-gray-300 bg-gray-50 border border-gray-100 cursor-not-allowed select-none">
+        Next
+        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+        </svg>
+      </span>
     <% else %>
-      <%= link_to "Next →", url_for(request.query_parameters.merge(page: collection.next_page)),
-        class: "px-3 py-1.5 text-xs font-medium border border-gray-200 hover:bg-gray-50 transition-colors" %>
+      <%= link_to url_for(request.query_parameters.merge(page: collection.next_page)),
+        class: "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300 shadow-sm transition-all" do %>
+        Next
+        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+        </svg>
+      <% end %>
     <% end %>
+
   </nav>
 </div>
