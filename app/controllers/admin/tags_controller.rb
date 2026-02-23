@@ -1,6 +1,9 @@
 class Admin::TagsController < Admin::BaseController
   def index
-    @tags = Tag.all.sort_by { |t| -t.articles.count }
+    @tags = Tag.left_joins(:article_tags)
+               .group(:id)
+               .order("COUNT(article_tags.tag_id) DESC")
+               .page(params[:page]).per(10)
   end
 
   def new
