@@ -74,6 +74,14 @@
             <span class="ml-auto text-xs bg-white/10 px-2 py-0.5 rounded-full"><%= ActiveStorage::Attachment.where(record_type: "Article", name: "images").count %></span>
           <% end %>
 
+          <%# Team Members %>
+          <%= link_to admin_team_members_path,
+            class: "flex items-center gap-3 px-3 py-2.5 rounded text-sm font-medium transition-colors #{request.path.start_with?('/admin/team_members') ? 'bg-white/10 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'}" do %>
+            <%= lucide_icon "users", class: "h-4 w-4 shrink-0" %>
+            Team Members
+            <span class="ml-auto text-xs bg-white/10 px-2 py-0.5 rounded-full"><%= TeamMember.count %></span>
+          <% end %>
+
           <%# Divider %>
           <div class="pt-4 pb-1 px-3">
             <p class="text-xs font-semibold tracking-widest uppercase text-gray-600">Quick Add</p>
