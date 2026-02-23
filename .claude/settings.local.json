@@ -18,7 +18,8 @@
       "Bash(bin/rails db:seed:*)",
       "Bash(bundle exec ruby:*)",
       "Bash(bundle exec gem:*)",
-      "Bash(bin/rails generate:*)"
+      "Bash(bin/rails generate:*)",
+      "Bash(bin/rails articles:attach_images:*)"
     ]
   }
 }

@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     end
     resources :categories
     resources :tags, only: [:index, :new, :create, :destroy]
+    resources :media, only: [:index, :destroy]
   end
 
   get "up" => "rails/health#show", as: :rails_health_check
