@@ -3,7 +3,8 @@ class Admin::ArticlesController < Admin::BaseController
   before_action :set_form_data, only: [:new, :edit]
 
   def index
-    @articles = Article.includes(:category, :tags).order(created_at: :desc).page(params[:page]).per(10)
+    per = [10, 20, 50, 100].include?(params[:per_page].to_i) ? params[:per_page].to_i : 10
+    @articles = Article.includes(:category, :tags).order(created_at: :desc).page(params[:page]).per(per)
   end
 
   def show

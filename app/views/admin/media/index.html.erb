@@ -55,7 +55,7 @@
     <% end %>
   </div>
 
-  <%= render "shared/pagination", collection: @attachments, label: "images" %>
+  <%= render "shared/pagination", collection: @attachments, label: "images", per_page_options: [12, 24, 48] %>
 
 <% else %>
   <div class="bg-white border border-gray-200 px-6 py-20 text-center">

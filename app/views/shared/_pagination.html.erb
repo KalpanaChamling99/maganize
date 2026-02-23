@@ -1,17 +1,33 @@
-<% return unless collection.total_pages > 1 %>
+<% return if collection.none? %>
+<% per_page_options = local_assigns.fetch(:per_page_options, [10, 20, 50, 100]) %>
+<% current_per_page = collection.limit_value %>
 
 <div class="mt-4 flex items-center justify-between text-sm text-gray-500">
-  <span class="text-xs">
-    Showing <%= collection.offset_value + 1 %>–<%= [collection.offset_value + collection.limit_value, collection.total_count].min %>
-    of <%= collection.total_count %> <%= label %>
-  </span>
+  <div class="flex items-center gap-3">
+    <span class="text-xs">
+      Showing <%= collection.offset_value + 1 %>–<%= [collection.offset_value + collection.limit_value, collection.total_count].min %>
+      of <%= collection.total_count %> <%= label %>
+    </span>
+
+    <span class="text-gray-200 select-none">|</span>
+
+    <div class="flex items-center gap-1.5">
+      <label class="text-xs text-gray-400">Rows per page:</label>
+      <select class="text-xs border border-gray-200 pl-2 py-1.5 text-gray-600 bg-white focus:outline-none focus:border-gray-400 cursor-pointer" style="padding-right: 32px;"
+              onchange="window.location = '<%= url_for(request.query_parameters.merge(page: 1, per_page: '__PER__')) %>'.replace('__PER__', this.value)">
+        <% per_page_options.each do |n| %>
+          <option value="<%= n %>" <%= 'selected' if n == current_per_page %>><%= n %></option>
+        <% end %>
+      </select>
+    </div>
+  </div>
 
   <nav class="inline-flex items-center gap-1">
     <%# Prev %>
     <% if collection.first_page? %>
       <span class="px-3 py-1.5 text-xs font-medium border border-gray-100 text-gray-300 cursor-not-allowed">← Prev</span>
     <% else %>
-      <%= link_to "← Prev", url_for(page: collection.prev_page),
+      <%= link_to "← Prev", url_for(request.query_parameters.merge(page: collection.prev_page)),
         class: "px-3 py-1.5 text-xs font-medium border border-gray-200 hover:bg-gray-50 transition-colors" %>
     <% end %>
 
@@ -22,7 +38,7 @@
       <% elsif item == collection.current_page %>
         <span class="px-3 py-1.5 text-xs font-semibold border border-gray-900 bg-gray-900 text-white"><%= item %></span>
       <% else %>
-        <%= link_to item, url_for(page: item),
+        <%= link_to item, url_for(request.query_parameters.merge(page: item)),
           class: "px-3 py-1.5 text-xs font-medium border border-gray-200 hover:bg-gray-50 transition-colors" %>
       <% end %>
     <% end %>
@@ -31,7 +47,7 @@
     <% if collection.last_page? %>
       <span class="px-3 py-1.5 text-xs font-medium border border-gray-100 text-gray-300 cursor-not-allowed">Next →</span>
     <% else %>
-      <%= link_to "Next →", url_for(page: collection.next_page),
+      <%= link_to "Next →", url_for(request.query_parameters.merge(page: collection.next_page)),
         class: "px-3 py-1.5 text-xs font-medium border border-gray-200 hover:bg-gray-50 transition-colors" %>
     <% end %>
   </nav>

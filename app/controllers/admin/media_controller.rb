@@ -1,10 +1,11 @@
 class Admin::MediaController < Admin::BaseController
   def index
+    per = [12, 24, 48].include?(params[:per_page].to_i) ? params[:per_page].to_i : 24
     @attachments = ActiveStorage::Attachment
       .where(record_type: "Article", name: "images")
       .includes(:blob, record: :category)
       .order(created_at: :desc)
-      .page(params[:page]).per(24)
+      .page(params[:page]).per(per)
   end
 
   def destroy

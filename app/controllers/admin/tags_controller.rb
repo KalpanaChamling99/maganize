@@ -1,9 +1,10 @@
 class Admin::TagsController < Admin::BaseController
   def index
+    per = [10, 20, 50, 100].include?(params[:per_page].to_i) ? params[:per_page].to_i : 10
     @tags = Tag.left_joins(:article_tags)
                .group(:id)
                .order("COUNT(article_tags.tag_id) DESC")
-               .page(params[:page]).per(10)
+               .page(params[:page]).per(per)
   end
 
   def new
