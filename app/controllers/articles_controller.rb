@@ -2,7 +2,8 @@ class ArticlesController < ApplicationController
   before_action :set_article, only: [:show]
 
   def index
-    @articles = Article.published.recent.includes(:category, :tags, :author)
+    per = [6, 12, 24].include?(params[:per_page].to_i) ? params[:per_page].to_i : 12
+    @articles = Article.published.recent.includes(:category, :tags, :author).page(params[:page]).per(per)
   end
 
   def show

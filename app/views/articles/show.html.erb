@@ -18,7 +18,7 @@
               class: "text-xs font-semibold px-2 py-0.5 bg-white/20 text-white uppercase tracking-wide border border-white/30 hover:bg-white/30 transition-colors" %>
           <% end %>
         </div>
-        <h1 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4">
+        <h1 class="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4">
           <%= @article.title %>
         </h1>
         <div class="flex items-center gap-4 text-sm text-white/70">
@@ -50,7 +50,7 @@
           class: "text-xs font-semibold px-2 py-0.5 border border-gray-300 text-gray-500 uppercase tracking-wide hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-colors" %>
       <% end %>
     </div>
-    <h1 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight mb-4">
+    <h1 class="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight mb-4">
       <%= @article.title %>
     </h1>
     <div class="flex items-center gap-4 text-sm text-gray-400">
@@ -74,14 +74,14 @@
 
   <%# Excerpt / standfirst %>
   <% if @article.excerpt.present? %>
-    <p class="font-serif text-xl text-gray-600 leading-relaxed mb-8 pb-8 border-b border-gray-200">
+    <p class="text-xl text-gray-600 leading-relaxed mb-8 pb-8 border-b border-gray-200">
       <%= @article.excerpt %>
     </p>
   <% end %>
 
   <%# Body content %>
   <div class="prose prose-lg prose-gray max-w-none
-    prose-headings:font-serif prose-headings:font-bold
+    prose-headings:font-heading prose-headings:font-bold
     prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4
     prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
     prose-p:leading-relaxed prose-p:text-gray-700 prose-p:mb-5
@@ -125,7 +125,7 @@
       <p class="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-4">Written by</p>
       <div class="flex items-start gap-4">
         <%= link_to team_member_path(author) do %>
-          <div class="w-14 h-14 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center text-gray-500 font-serif font-bold text-lg shrink-0 ring-2 ring-gray-200">
+          <div class="w-14 h-14 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center text-gray-500 font-heading font-bold text-lg shrink-0 ring-2 ring-gray-200">
             <% if author.avatar.attached? %>
               <%= image_tag author.avatar, class: "w-full h-full object-cover" %>
             <% else %>
@@ -135,7 +135,7 @@
         <% end %>
         <div>
           <%= link_to author.name, team_member_path(author),
-            class: "font-serif text-lg font-bold text-gray-900 hover:text-red-600 transition-colors" %>
+            class: "font-heading text-lg font-bold text-gray-900 hover:text-red-600 transition-colors" %>
           <% if author.role.present? %>
             <p class="text-xs uppercase tracking-widest text-gray-400 mt-0.5"><%= author.role %></p>
           <% end %>

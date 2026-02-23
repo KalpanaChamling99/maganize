@@ -3,7 +3,7 @@
     <p class="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-1">Archive</p>
     <h1 class="font-serif text-4xl font-bold">All Articles</h1>
   </div>
-  <span class="text-sm text-gray-400 mb-1"><%= pluralize(@articles.count, "article") %></span>
+  <span class="text-sm text-gray-400 mb-1"><%= pluralize(@articles.total_count, "article") %></span>
 </div>
 
 <% if @articles.any? %>
@@ -12,6 +12,7 @@
       <%= render "articles/article_card", article: article %>
     <% end %>
   </div>
+  <%= render "shared/pagination", collection: @articles, label: "articles", per_page_options: [6, 12, 24] %>
 <% else %>
   <div class="py-20 text-center border border-dashed border-gray-300">
     <p class="text-gray-400 mb-3">No articles published yet.</p>
