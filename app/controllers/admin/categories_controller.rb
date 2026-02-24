@@ -1,5 +1,6 @@
 class Admin::CategoriesController < Admin::BaseController
   before_action :set_category, only: [:edit, :update, :destroy]
+  before_action :require_editor_role, only: [:new, :create, :edit, :update, :destroy]
 
   def index
     per = [10, 20, 50, 100].include?(params[:per_page].to_i) ? params[:per_page].to_i : 10

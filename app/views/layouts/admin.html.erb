@@ -91,27 +91,46 @@
             <span class="ml-auto text-xs bg-white/10 px-2 py-0.5 rounded-full"><%= Collection.count %></span>
           <% end %>
 
-          <%# Divider %>
-          <div class="pt-4 pb-1 px-3">
-            <p class="text-xs font-semibold tracking-widest uppercase text-gray-600">Quick Add</p>
-          </div>
+          <%# Users — admin+ only %>
+          <% if current_admin_user&.at_least?(:admin) %>
+            <%# Divider %>
+            <div class="pt-4 pb-1 px-3">
+              <p class="text-xs font-semibold tracking-widest uppercase text-gray-600">Access</p>
+            </div>
 
-          <%= link_to new_admin_article_path,
-            class: "flex items-center gap-3 px-3 py-2.5 rounded text-sm font-medium text-gray-400 hover:bg-white/5 hover:text-white transition-colors" do %>
-            <%= lucide_icon "plus", class: "h-4 w-4 shrink-0" %>
-            New Article
+            <%= link_to admin_users_path,
+              class: "flex items-center gap-3 px-3 py-2.5 rounded text-sm font-medium transition-colors #{request.path.start_with?('/admin/users') ? 'bg-white/10 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'}" do %>
+              <%= lucide_icon "shield", class: "h-4 w-4 shrink-0" %>
+              Users
+              <span class="ml-auto text-xs bg-white/10 px-2 py-0.5 rounded-full"><%= AdminUser.count %></span>
+            <% end %>
           <% end %>
 
-          <%= link_to new_admin_category_path,
-            class: "flex items-center gap-3 px-3 py-2.5 rounded text-sm font-medium text-gray-400 hover:bg-white/5 hover:text-white transition-colors" do %>
-            <%= lucide_icon "plus", class: "h-4 w-4 shrink-0" %>
-            New Category
-          <% end %>
+          <%# Quick Add — author+ only %>
+          <% if current_admin_user&.at_least?(:author) %>
+            <div class="pt-4 pb-1 px-3">
+              <p class="text-xs font-semibold tracking-widest uppercase text-gray-600">Quick Add</p>
+            </div>
 
-          <%= link_to new_admin_tag_path,
-            class: "flex items-center gap-3 px-3 py-2.5 rounded text-sm font-medium text-gray-400 hover:bg-white/5 hover:text-white transition-colors" do %>
-            <%= lucide_icon "plus", class: "h-4 w-4 shrink-0" %>
-            New Tag
+            <%= link_to new_admin_article_path,
+              class: "flex items-center gap-3 px-3 py-2.5 rounded text-sm font-medium text-gray-400 hover:bg-white/5 hover:text-white transition-colors" do %>
+              <%= lucide_icon "plus", class: "h-4 w-4 shrink-0" %>
+              New Article
+            <% end %>
+
+            <% if current_admin_user.at_least?(:editor) %>
+              <%= link_to new_admin_category_path,
+                class: "flex items-center gap-3 px-3 py-2.5 rounded text-sm font-medium text-gray-400 hover:bg-white/5 hover:text-white transition-colors" do %>
+                <%= lucide_icon "plus", class: "h-4 w-4 shrink-0" %>
+                New Category
+              <% end %>
+
+              <%= link_to new_admin_tag_path,
+                class: "flex items-center gap-3 px-3 py-2.5 rounded text-sm font-medium text-gray-400 hover:bg-white/5 hover:text-white transition-colors" do %>
+                <%= lucide_icon "plus", class: "h-4 w-4 shrink-0" %>
+                New Tag
+              <% end %>
+            <% end %>
           <% end %>
 
         </nav>
@@ -125,7 +144,10 @@
                   <%= current_admin_user.name.split.map(&:first).first(2).join.upcase %>
                 </span>
               </div>
-              <span class="text-xs text-gray-300 truncate"><%= current_admin_user.name %></span>
+              <div class="min-w-0">
+                <p class="text-xs text-gray-300 truncate leading-tight"><%= current_admin_user.name %></p>
+                <p class="text-[10px] text-gray-500 uppercase tracking-widest leading-tight"><%= AdminUser::ROLE_LABELS[current_admin_user.role] %></p>
+              </div>
             </div>
             <%= link_to admin_logout_path, data: { turbo_method: :delete },
               class: "flex items-center gap-2 px-3 py-1.5 text-xs text-gray-500 hover:text-white hover:bg-white/5 rounded transition-colors w-full" do %>

@@ -31,6 +31,7 @@ Rails.application.routes.draw do
     resources :media, only: [:index, :destroy]
     resources :team_members
     resources :collections
+    resources :users
   end
 
   get "up" => "rails/health#show", as: :rails_health_check

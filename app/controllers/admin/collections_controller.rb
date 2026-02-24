@@ -1,5 +1,6 @@
 class Admin::CollectionsController < Admin::BaseController
   before_action :set_collection, only: [:edit, :update, :destroy]
+  before_action :require_editor_role, only: [:new, :create, :edit, :update, :destroy]
 
   def index
     @collections = Collection.includes(:articles).order(created_at: :desc)

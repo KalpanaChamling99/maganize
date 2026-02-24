@@ -1,4 +1,6 @@
 class Admin::TagsController < Admin::BaseController
+  before_action :require_editor_role, only: [:new, :create, :destroy]
+
   def index
     per = [10, 20, 50, 100].include?(params[:per_page].to_i) ? params[:per_page].to_i : 10
     @tags = Tag.left_joins(:article_tags)

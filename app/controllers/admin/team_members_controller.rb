@@ -1,5 +1,6 @@
 class Admin::TeamMembersController < Admin::BaseController
   before_action :set_team_member, only: [:edit, :update, :destroy]
+  before_action :require_admin_role, only: [:new, :create, :edit, :update, :destroy]
 
   def index
     @team_members = TeamMember.order(:name)
