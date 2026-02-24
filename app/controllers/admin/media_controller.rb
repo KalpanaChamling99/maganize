@@ -1,5 +1,5 @@
 class Admin::MediaController < Admin::BaseController
-  before_action :require_editor_role, only: [:destroy]
+  before_action -> { require_permission(:delete_media) }, only: [:destroy]
 
   def index
     per = [12, 24, 48].include?(params[:per_page].to_i) ? params[:per_page].to_i : 24

@@ -1,8 +1,9 @@
 class Admin::ArticlesController < Admin::BaseController
   before_action :set_article, only: [:show, :edit, :update, :destroy, :purge_image]
   before_action :set_form_data, only: [:new, :edit]
-  before_action :require_author_role, only: [:new, :create, :edit, :update, :purge_image]
-  before_action :require_editor_role, only: [:destroy]
+  before_action -> { require_permission(:create_articles) }, only: [:new, :create]
+  before_action -> { require_permission(:edit_articles) },   only: [:edit, :update, :purge_image]
+  before_action -> { require_permission(:delete_articles) }, only: [:destroy]
 
   def index
     per = [10, 20, 50, 100].include?(params[:per_page].to_i) ? params[:per_page].to_i : 10

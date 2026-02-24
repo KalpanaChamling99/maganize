@@ -1,12 +1,34 @@
 # db/seeds.rb — idempotent seed data for magazine app
 
+# ── Roles ─────────────────────────────────────────────────────────────────────
+root_role = Role.find_or_create_by!(name: "Root Admin") do |r|
+  r.permissions = Role::ALL_PERMISSIONS
+end
+
+Role.find_or_create_by!(name: "Admin") do |r|
+  r.permissions = Role::ALL_PERMISSIONS - ["manage_roles"]
+end
+
+Role.find_or_create_by!(name: "Editor") do |r|
+  r.permissions = %w[
+    view_articles create_articles edit_articles delete_articles
+    manage_categories manage_tags manage_collections delete_media
+  ]
+end
+
+Role.find_or_create_by!(name: "Viewer") do |r|
+  r.permissions = %w[view_articles]
+end
+
+puts "Roles: #{Role.count} (#{Role.pluck(:name).join(', ')})"
+
 # ── Admin User ───────────────────────────────────────────────────────────────
 root = AdminUser.find_or_initialize_by(email: "admin@magazine.com")
 root.name     = "Admin"
-root.role     = :root_admin
+root.role     = root_role
 root.password = "password123" if root.new_record?
 root.save!
-puts "AdminUser ready  →  admin@magazine.com / password123  (root_admin)"
+puts "AdminUser ready  →  admin@magazine.com / password123  (Root Admin)"
 
 # ── Categories ──────────────────────────────────────────────────────────────
 category_names = [

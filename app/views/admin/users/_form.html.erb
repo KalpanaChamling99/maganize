@@ -43,14 +43,11 @@
 
   <%# Role %>
   <div>
-    <%= form.label :role, "Role", class: "block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2" %>
-    <%= form.select :role,
-      assignable_roles.map { |r| [AdminUser::ROLE_LABELS[r], r] },
-      { selected: user.role || "author" },
+    <%= form.label :role_id, "Role", class: "block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2" %>
+    <%= form.select :role_id,
+      Role.order(:name).map { |r| [r.name, r.id] },
+      { selected: user.role_id, include_blank: "— No role —" },
       class: "w-full border border-gray-200 px-3 py-2.5 text-sm focus:border-gray-900 focus:outline-none focus:ring-0 transition-colors bg-white" %>
-    <p class="mt-1.5 text-xs text-gray-400">
-      You can only assign roles up to your own level.
-    </p>
   </div>
 
   <%# Actions %>

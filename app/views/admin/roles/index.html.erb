@@ -1,0 +1,63 @@
+<% content_for :page_title, "Roles" %>
+<% content_for :header_action do %>
+  <%= link_to "+ New Role", new_admin_role_path,
+    class: "bg-gray-900 text-white text-xs font-semibold tracking-widest uppercase px-4 py-2 hover:bg-gray-700 transition-colors" %>
+<% end %>
+
+<div class="bg-white border border-gray-200">
+  <% if @roles.any? %>
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-gray-100 text-xs font-semibold tracking-widest uppercase text-gray-400">
+          <th class="text-left px-6 py-3">Name</th>
+          <th class="text-left px-6 py-3">Permissions</th>
+          <th class="text-left px-6 py-3">Users</th>
+          <th class="px-6 py-3"></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-50">
+        <% @roles.each do |role| %>
+          <tr class="hover:bg-gray-50 transition-colors">
+            <td class="px-6 py-4 font-medium text-gray-900"><%= role.name %></td>
+            <td class="px-6 py-4 text-gray-500">
+              <% if role.permissions.any? %>
+                <div class="flex flex-wrap gap-1">
+                  <% role.permissions.first(4).each do |perm| %>
+                    <span class="inline-flex items-center px-1.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase bg-gray-100 text-gray-600">
+                      <%= Role::PERMISSION_LABELS[perm] || perm %>
+                    </span>
+                  <% end %>
+                  <% if role.permissions.size > 4 %>
+                    <span class="inline-flex items-center px-1.5 py-0.5 text-[10px] text-gray-400">
+                      +<%= role.permissions.size - 4 %> more
+                    </span>
+                  <% end %>
+                </div>
+              <% else %>
+                <span class="text-gray-300 text-xs">No permissions</span>
+              <% end %>
+            </td>
+            <td class="px-6 py-4 text-gray-500">
+              <span class="text-sm"><%= role.admin_users.size %></span>
+            </td>
+            <td class="px-6 py-4 text-right whitespace-nowrap">
+              <%= link_to edit_admin_role_path(role),
+                class: "inline-flex items-center justify-center w-8 h-8 rounded bg-blue-50 text-blue-500 hover:bg-blue-100 hover:text-blue-700 transition-colors",
+                title: "Edit" do %>
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                </svg>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <div class="px-6 py-16 text-center">
+      <p class="text-gray-400 mb-3">No roles yet.</p>
+      <%= link_to "Create the first role →", new_admin_role_path,
+        class: "text-sm font-semibold text-gray-900 underline" %>
+    </div>
+  <% end %>
+</div>

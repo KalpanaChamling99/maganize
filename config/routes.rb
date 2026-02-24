@@ -32,6 +32,7 @@ Rails.application.routes.draw do
     resources :team_members
     resources :collections
     resources :users
+    resources :roles, only: [:index, :new, :create, :edit, :update]
   end
 
   get "up" => "rails/health#show", as: :rails_health_check

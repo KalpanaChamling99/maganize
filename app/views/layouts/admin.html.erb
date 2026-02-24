@@ -91,40 +91,54 @@
             <span class="ml-auto text-xs bg-white/10 px-2 py-0.5 rounded-full"><%= Collection.count %></span>
           <% end %>
 
-          <%# Users — admin+ only %>
-          <% if current_admin_user&.at_least?(:admin) %>
-            <%# Divider %>
+          <%# Access section — conditionally shown %>
+          <% if current_admin_user&.can?("manage_users") || current_admin_user&.can?("manage_roles") %>
             <div class="pt-4 pb-1 px-3">
               <p class="text-xs font-semibold tracking-widest uppercase text-gray-600">Access</p>
             </div>
 
-            <%= link_to admin_users_path,
-              class: "flex items-center gap-3 px-3 py-2.5 rounded text-sm font-medium transition-colors #{request.path.start_with?('/admin/users') ? 'bg-white/10 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'}" do %>
-              <%= lucide_icon "shield", class: "h-4 w-4 shrink-0" %>
-              Users
-              <span class="ml-auto text-xs bg-white/10 px-2 py-0.5 rounded-full"><%= AdminUser.count %></span>
+            <% if current_admin_user.can?("manage_users") %>
+              <%= link_to admin_users_path,
+                class: "flex items-center gap-3 px-3 py-2.5 rounded text-sm font-medium transition-colors #{request.path.start_with?('/admin/users') ? 'bg-white/10 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'}" do %>
+                <%= lucide_icon "shield", class: "h-4 w-4 shrink-0" %>
+                Users
+                <span class="ml-auto text-xs bg-white/10 px-2 py-0.5 rounded-full"><%= AdminUser.count %></span>
+              <% end %>
+            <% end %>
+
+            <% if current_admin_user.can?("manage_roles") %>
+              <%= link_to admin_roles_path,
+                class: "flex items-center gap-3 px-3 py-2.5 rounded text-sm font-medium transition-colors #{request.path.start_with?('/admin/roles') ? 'bg-white/10 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'}" do %>
+                <%= lucide_icon "key", class: "h-4 w-4 shrink-0" %>
+                Roles
+                <span class="ml-auto text-xs bg-white/10 px-2 py-0.5 rounded-full"><%= Role.count %></span>
+              <% end %>
             <% end %>
           <% end %>
 
-          <%# Quick Add — author+ only %>
-          <% if current_admin_user&.at_least?(:author) %>
+          <%# Quick Add — permission-gated %>
+          <% if current_admin_user&.can?("create_articles") || current_admin_user&.can?("manage_categories") || current_admin_user&.can?("manage_tags") %>
             <div class="pt-4 pb-1 px-3">
               <p class="text-xs font-semibold tracking-widest uppercase text-gray-600">Quick Add</p>
             </div>
 
-            <%= link_to new_admin_article_path,
-              class: "flex items-center gap-3 px-3 py-2.5 rounded text-sm font-medium text-gray-400 hover:bg-white/5 hover:text-white transition-colors" do %>
-              <%= lucide_icon "plus", class: "h-4 w-4 shrink-0" %>
-              New Article
+            <% if current_admin_user.can?("create_articles") %>
+              <%= link_to new_admin_article_path,
+                class: "flex items-center gap-3 px-3 py-2.5 rounded text-sm font-medium text-gray-400 hover:bg-white/5 hover:text-white transition-colors" do %>
+                <%= lucide_icon "plus", class: "h-4 w-4 shrink-0" %>
+                New Article
+              <% end %>
             <% end %>
 
-            <% if current_admin_user.at_least?(:editor) %>
+            <% if current_admin_user.can?("manage_categories") %>
               <%= link_to new_admin_category_path,
                 class: "flex items-center gap-3 px-3 py-2.5 rounded text-sm font-medium text-gray-400 hover:bg-white/5 hover:text-white transition-colors" do %>
                 <%= lucide_icon "plus", class: "h-4 w-4 shrink-0" %>
                 New Category
               <% end %>
+            <% end %>
 
+            <% if current_admin_user.can?("manage_tags") %>
               <%= link_to new_admin_tag_path,
                 class: "flex items-center gap-3 px-3 py-2.5 rounded text-sm font-medium text-gray-400 hover:bg-white/5 hover:text-white transition-colors" do %>
                 <%= lucide_icon "plus", class: "h-4 w-4 shrink-0" %>
@@ -146,7 +160,7 @@
               </div>
               <div class="min-w-0">
                 <p class="text-xs text-gray-300 truncate leading-tight"><%= current_admin_user.name %></p>
-                <p class="text-[10px] text-gray-500 uppercase tracking-widest leading-tight"><%= AdminUser::ROLE_LABELS[current_admin_user.role] %></p>
+                <p class="text-[10px] text-gray-500 uppercase tracking-widest leading-tight"><%= current_admin_user.role&.name %></p>
               </div>
             </div>
             <%= link_to admin_logout_path, data: { turbo_method: :delete },
