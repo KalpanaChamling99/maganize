@@ -27,7 +27,8 @@
       "Bash(bin/rails tailwindcss:build:*)",
       "Bash(bin/rails routes:*)",
       "Bash(xargs:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(bin/rails action_text:install:*)"
     ]
   }
 }

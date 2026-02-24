@@ -1,0 +1,127 @@
+/*
+ * Provides a drop-in pointer for the default Trix stylesheet that will format the toolbar and
+ * the trix-editor content (whether displayed or under editing). Feel free to incorporate this
+ * inclusion directly in any other asset bundle and remove this file.
+ *
+ *= require trix
+*/
+
+/*
+ * We need to override trix.css’s image gallery styles to accommodate the
+ * <action-text-attachment> element we wrap around attachments. Otherwise,
+ * images in galleries will be squished by the max-width: 33%; rule.
+*/
+.trix-content .attachment-gallery > action-text-attachment,
+.trix-content .attachment-gallery > .attachment {
+  flex: 1 0 33%;
+  padding: 0 0.5em;
+  max-width: 33%;
+}
+
+.trix-content .attachment-gallery.attachment-gallery--2 > action-text-attachment,
+.trix-content .attachment-gallery.attachment-gallery--2 > .attachment, .trix-content .attachment-gallery.attachment-gallery--4 > action-text-attachment,
+.trix-content .attachment-gallery.attachment-gallery--4 > .attachment {
+  flex-basis: 50%;
+  max-width: 50%;
+}
+
+.trix-content action-text-attachment .attachment {
+  padding: 0 !important;
+  max-width: 100% !important;
+}
+
+/* ── Admin Trix editor styling ────────────────────────── */
+trix-toolbar .trix-button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 6px 8px;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+trix-toolbar .trix-button-group {
+  border: 1px solid #e5e7eb;
+  border-radius: 3px;
+  overflow: hidden;
+  display: flex;
+  margin: 0 2px;
+}
+
+trix-toolbar .trix-button {
+  background: white;
+  border: none;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #6b7280;
+  line-height: 1.5;
+  transition: background 0.1s, color 0.1s;
+}
+
+trix-toolbar .trix-button:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+trix-toolbar .trix-button.trix-active {
+  background: #111827;
+  color: white;
+}
+
+trix-toolbar .trix-button--icon {
+  width: 32px;
+  height: 28px;
+  padding: 0;
+}
+
+trix-toolbar .trix-button--icon::before {
+  background-size: 60% !important;
+  opacity: 0.6;
+}
+
+trix-toolbar .trix-button--icon.trix-active::before {
+  opacity: 1;
+  filter: invert(1);
+}
+
+trix-editor {
+  display: block;
+  min-height: 420px;
+  padding: 16px;
+  font-size: 14px;
+  line-height: 1.75;
+  color: #111827;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-top: none;
+  outline: none;
+  font-family: inherit;
+}
+
+trix-editor:focus {
+  border-color: #111827;
+  box-shadow: none;
+}
+
+trix-editor p { margin-bottom: 0.875em; }
+trix-editor h1, trix-editor h2 { font-weight: 700; margin: 1.25em 0 0.5em; }
+trix-editor h1 { font-size: 1.5em; }
+trix-editor h2 { font-size: 1.25em; }
+trix-editor blockquote {
+  border-left: 3px solid #ef4444;
+  margin: 1em 0;
+  padding: 0.5em 1em;
+  color: #6b7280;
+  font-style: italic;
+}
+trix-editor ul, trix-editor ol { padding-left: 1.5em; margin-bottom: 0.875em; }
+trix-editor li { margin-bottom: 0.25em; }
+trix-editor pre {
+  background: #f3f4f6;
+  padding: 0.875em 1em;
+  font-size: 0.85em;
+  overflow-x: auto;
+  margin-bottom: 0.875em;
+}
+trix-editor a { color: #dc2626; }

@@ -32,7 +32,7 @@
           <% end %>
           <span class="text-white/40">·</span>
           <%= lucide_icon "clock", class: "w-4 h-4 shrink-0 text-white/60" %>
-          <span><%= [((@article.body.to_s.split.size) / 200.0).ceil, 1].max %> min read</span>
+          <span><%= [(@article.body.to_plain_text.split.size / 200.0).ceil, 1].max %> min read</span>
         </div>
       </div>
     </div>
@@ -64,7 +64,7 @@
       <% end %>
       <span>·</span>
       <%= lucide_icon "clock", class: "w-4 h-4 shrink-0" %>
-      <span><%= [((@article.body.to_s.split.size) / 200.0).ceil, 1].max %> min read</span>
+      <span><%= [(@article.body.to_plain_text.split.size / 200.0).ceil, 1].max %> min read</span>
     </div>
   </div>
 <% end %>
@@ -89,7 +89,7 @@
     prose-blockquote:border-l-4 prose-blockquote:border-red-500
     prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-500
     prose-img:rounded prose-img:shadow-md">
-    <%= raw @article.body %>
+    <%= @article.body %>
   </div>
 
   <%# ── Gallery images (skip first — used as cover) ────────── %>

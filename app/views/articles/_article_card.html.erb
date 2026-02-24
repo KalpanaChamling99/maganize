@@ -49,7 +49,7 @@
     <div class="absolute bottom-0 left-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
       <div class="bg-black bg-opacity-80 <%= badge_padding %> inline-flex items-center gap-2">
         <span class="text-white text-xs font-bold">Read Time:</span>
-        <span class="text-white text-xs font-medium"><%= [(article.body.to_s.split.size / 200.0).ceil, 1].max %> Min</span>
+        <span class="text-white text-xs font-medium"><%= [(article.body.to_plain_text.split.size / 200.0).ceil, 1].max %> Min</span>
       </div>
     </div>
 

@@ -6,6 +6,7 @@ class Article < ApplicationRecord
   has_many :collection_articles, dependent: :destroy
   has_many :collections, through: :collection_articles
 
+  has_rich_text :body
   has_many_attached :images
 
   validates :title, presence: true
