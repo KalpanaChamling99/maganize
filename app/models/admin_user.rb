@@ -2,6 +2,7 @@ class AdminUser < ApplicationRecord
   has_secure_password
 
   belongs_to :role, optional: true
+  has_one_attached :avatar
 
   validates :name,  presence: true
   validates :email, presence: true,

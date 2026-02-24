@@ -92,17 +92,59 @@
     <%= @article.body %>
   </div>
 
-  <%# ── Gallery images (skip first — used as cover) ────────── %>
+  <%# ── Gallery carousel (skip first — used as cover) ────────── %>
   <% if @article.images.count > 1 %>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
+    <style>
+      .article-gallery-swiper { padding-bottom: 40px !important; }
+      .article-gallery-swiper .swiper-pagination-bullet-active { background: #111827; }
+      .article-gallery-swiper .swiper-button-next,
+      .article-gallery-swiper .swiper-button-prev {
+        color: #111827;
+        background: white;
+        border: 1px solid #e5e7eb;
+        width: 36px;
+        height: 36px;
+        border-radius: 0;
+        top: 40%;
+      }
+      .article-gallery-swiper .swiper-button-next::after,
+      .article-gallery-swiper .swiper-button-prev::after { font-size: 14px; font-weight: 700; }
+    </style>
+
     <div class="mt-10 pt-8 border-t border-gray-200">
       <p class="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-4">Gallery</p>
-      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        <% @article.images[1..].each do |image| %>
-          <%= image_tag image, alt: @article.title,
-            class: "w-full h-48 object-cover border border-gray-100 hover:opacity-90 transition-opacity" %>
-        <% end %>
+
+      <div class="swiper article-gallery-swiper">
+        <div class="swiper-wrapper">
+          <% @article.images[1..].each do |image| %>
+            <div class="swiper-slide">
+              <%= image_tag image, alt: @article.title,
+                class: "w-full h-72 object-cover border border-gray-100" %>
+            </div>
+          <% end %>
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
       </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+      new Swiper(".article-gallery-swiper", {
+        loop: true,
+        slidesPerView: 1,
+        spaceBetween: 12,
+        pagination: { el: ".swiper-pagination", clickable: true },
+        navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
+        breakpoints: {
+          640:  { slidesPerView: 2 },
+          1024: { slidesPerView: 3 }
+        }
+      });
+    </script>
   <% end %>
 
   <%# ── Tags ──────────────────────────────────────────────── %>

@@ -3,7 +3,7 @@ class Admin::UsersController < Admin::BaseController
   before_action :set_user, only: [:edit, :update, :destroy]
 
   def index
-    @users = AdminUser.includes(:role).order(:name)
+    @users = AdminUser.includes(:role).with_attached_avatar.order(:name)
   end
 
   def new
@@ -46,6 +46,6 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def user_params
-    params.require(:admin_user).permit(:name, :email, :password, :role_id)
+    params.require(:admin_user).permit(:name, :email, :password, :role_id, :avatar)
   end
 end

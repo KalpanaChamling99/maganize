@@ -40,6 +40,8 @@ class Admin::CategoriesController < Admin::BaseController
   private
 
   def set_category
+    @category = Category.find_by!(slug: params[:id])
+  rescue ActiveRecord::RecordNotFound
     @category = Category.find(params[:id])
   end
 

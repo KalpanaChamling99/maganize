@@ -5,9 +5,25 @@ class Admin::ArticlesController < Admin::BaseController
   before_action -> { require_permission(:edit_articles) },   only: [:edit, :update, :purge_image]
   before_action -> { require_permission(:delete_articles) }, only: [:destroy]
 
+  SORT_MAP = {
+    "title"    => { col: "articles.title",        join: nil },
+    "author"   => { col: "team_members.name",     join: :author },
+    "category" => { col: "categories.name",       join: :category },
+    "status"   => { col: "articles.published_at", join: nil },
+    "date"     => { col: "articles.created_at",   join: nil },
+  }.freeze
+
   def index
-    per = [10, 20, 50, 100].include?(params[:per_page].to_i) ? params[:per_page].to_i : 10
-    @articles = Article.includes(:category, :tags, :author).order(created_at: :desc).page(params[:page]).per(per)
+    per        = [10, 20, 50, 100].include?(params[:per_page].to_i) ? params[:per_page].to_i : 10
+    @sort      = SORT_MAP.key?(params[:sort]) ? params[:sort] : "date"
+    @direction = %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
+
+    cfg   = SORT_MAP[@sort]
+    scope = Article.includes(:category, :tags, :author).with_attached_images
+    scope = scope.left_joins(cfg[:join]) if cfg[:join]
+
+    @articles = scope.order(Arel.sql("#{cfg[:col]} #{@direction} NULLS LAST"))
+                     .page(params[:page]).per(per)
   end
 
   def show

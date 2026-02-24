@@ -1,0 +1,83 @@
+<% content_for :page_title, "My Profile" %>
+
+<div class="max-w-2xl">
+  <%= form_with(model: current_admin_user, url: admin_profile_path, method: :patch, class: "space-y-8") do |form| %>
+
+    <% if current_admin_user.errors.any? %>
+      <div class="bg-red-50 border border-red-200 px-5 py-4">
+        <p class="text-sm font-semibold text-red-700 mb-2">
+          <%= pluralize(current_admin_user.errors.count, "error") %> prevented saving your profile:
+        </p>
+        <ul class="list-disc list-inside text-sm text-red-600 space-y-1">
+          <% current_admin_user.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <%# ── Avatar ──────────────────────────────────────────────── %>
+    <div class="bg-white border border-gray-200 p-6">
+      <h3 class="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-5">Profile Photo</h3>
+      <div class="flex items-center gap-6">
+        <div class="w-20 h-20 rounded-full overflow-hidden bg-gray-100 shrink-0 ring-2 ring-gray-200 flex items-center justify-center">
+          <% if current_admin_user.avatar.attached? %>
+            <%= image_tag current_admin_user.avatar, class: "w-full h-full object-cover" %>
+          <% else %>
+            <span class="text-2xl font-bold text-gray-400 font-heading">
+              <%= current_admin_user.name.split.map(&:first).first(2).join.upcase %>
+            </span>
+          <% end %>
+        </div>
+        <div class="flex-1">
+          <%= form.file_field :avatar, accept: "image/*",
+            class: "block w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-4 file:border file:border-gray-200 file:text-xs file:font-semibold file:tracking-widest file:uppercase file:bg-white file:text-gray-700 hover:file:bg-gray-50 file:cursor-pointer" %>
+          <p class="text-xs text-gray-400 mt-2">JPG, PNG or GIF. Shown in the sidebar and on your profile.</p>
+        </div>
+      </div>
+    </div>
+
+    <%# ── Account info ─────────────────────────────────────────── %>
+    <div class="bg-white border border-gray-200 p-6 space-y-5">
+      <h3 class="text-xs font-semibold tracking-widest uppercase text-gray-500">Account Info</h3>
+
+      <div>
+        <%= form.label :name, "Full Name", class: "block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2" %>
+        <%= form.text_field :name,
+          placeholder: "Your full name",
+          class: "w-full border border-gray-200 px-3 py-2.5 text-sm focus:border-gray-900 focus:outline-none focus:ring-0 transition-colors" %>
+      </div>
+
+      <div>
+        <%= form.label :email, "Email Address", class: "block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2" %>
+        <%= form.email_field :email,
+          placeholder: "you@example.com",
+          class: "w-full border border-gray-200 px-3 py-2.5 text-sm focus:border-gray-900 focus:outline-none focus:ring-0 transition-colors" %>
+      </div>
+
+      <div>
+        <p class="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-1">Role</p>
+        <p class="text-sm text-gray-500 py-2.5">
+          <%= current_admin_user.role&.name || "—" %>
+          <span class="text-xs text-gray-400 ml-1">(contact a super-admin to change)</span>
+        </p>
+      </div>
+    </div>
+
+    <%# ── Change password ──────────────────────────────────────── %>
+    <div class="bg-white border border-gray-200 p-6">
+      <h3 class="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-5">Change Password</h3>
+      <%= form.label :password, "New Password", class: "block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2" %>
+      <%= form.password_field :password,
+        placeholder: "Leave blank to keep current password",
+        class: "w-full border border-gray-200 px-3 py-2.5 text-sm focus:border-gray-900 focus:outline-none focus:ring-0 transition-colors" %>
+    </div>
+
+    <%# ── Actions ─────────────────────────────────────────────── %>
+    <div class="flex items-center gap-4">
+      <%= form.submit "Save Changes",
+        class: "bg-gray-900 text-white text-xs font-semibold tracking-widest uppercase px-6 py-2.5 hover:bg-gray-700 transition-colors cursor-pointer" %>
+    </div>
+
+  <% end %>
+</div>

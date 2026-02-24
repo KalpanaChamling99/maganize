@@ -15,6 +15,27 @@
     </div>
   <% end %>
 
+  <%# Avatar %>
+  <div>
+    <%= form.label :avatar, "Profile Photo", class: "block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2" %>
+    <div class="flex items-center gap-4">
+      <div class="w-16 h-16 rounded-full overflow-hidden bg-gray-100 shrink-0 ring-2 ring-gray-200 flex items-center justify-center">
+        <% if user.avatar.attached? %>
+          <%= image_tag user.avatar, class: "w-full h-full object-cover" %>
+        <% else %>
+          <span class="text-lg font-bold text-gray-400 font-heading">
+            <%= user.name.present? ? user.name.split.map(&:first).first(2).join.upcase : "?" %>
+          </span>
+        <% end %>
+      </div>
+      <div class="flex-1">
+        <%= form.file_field :avatar, accept: "image/*",
+          class: "block w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-4 file:border file:border-gray-200 file:text-xs file:font-semibold file:tracking-widest file:uppercase file:bg-white file:text-gray-700 hover:file:bg-gray-50 file:cursor-pointer" %>
+        <p class="text-xs text-gray-400 mt-1">JPG, PNG or GIF. Displayed as your profile photo.</p>
+      </div>
+    </div>
+  </div>
+
   <%# Name %>
   <div>
     <%= form.label :name, "Name", class: "block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2" %>
