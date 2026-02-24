@@ -3,6 +3,6 @@ class HomeController < ApplicationController
     @featured_articles = Article.published.featured.recent.includes(:category, :tags, :author).limit(3)
     @recent_articles = Article.published.recent.includes(:category, :tags, :author).limit(9)
     @categories = Category.all
-    @featured_collections = Collection.featured.includes(articles: [:category, :tags, :author])
+    @featured_collections = Collection.featured.with_attached_cover_image.includes(articles: [:category, :tags, :author])
   end
 end

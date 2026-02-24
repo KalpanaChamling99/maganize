@@ -1,18 +1,40 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["bar", "btn", "arc", "pct"]
+  static targets = ["bar", "btn", "arc", "pct", "nav", "sentinel", "spacer"]
 
   static values = { circumference: { type: Number, default: 119.38 } }
 
   connect() {
     this._update = this.update.bind(this)
     window.addEventListener("scroll", this._update, { passive: true })
+
+    if (this.hasSentinelTarget && this.hasNavTarget) {
+      this._observer = new IntersectionObserver(
+        ([entry]) => this._toggleFixed(!entry.isIntersecting),
+        { threshold: 0 }
+      )
+      this._observer.observe(this.sentinelTarget)
+    }
+
     this.update()
   }
 
   disconnect() {
     window.removeEventListener("scroll", this._update)
+    this._observer?.disconnect()
+  }
+
+  _toggleFixed(fixed) {
+    this.navTarget.classList.toggle("is-fixed", fixed)
+    const navH = this.navTarget.offsetHeight
+    if (this.hasSpacerTarget) {
+      this.spacerTarget.style.height = fixed ? navH + "px" : "0"
+    }
+    if (this.hasBarTarget) {
+      this.barTarget.style.top     = fixed ? navH + "px" : "0"
+      this.barTarget.style.display = fixed ? "block" : "none"
+    }
   }
 
   update() {
@@ -21,10 +43,10 @@ export default class extends Controller {
     const ratio     = docHeight > 0 ? scrollTop / docHeight : 0
     const percent   = Math.round(ratio * 100)
 
-    this.barTarget.style.width               = percent + "%"
-    this.arcTarget.style.strokeDashoffset    = this.circumferenceValue - ratio * this.circumferenceValue
-    this.pctTarget.textContent               = percent + "%"
-    this.btnTarget.style.display             = scrollTop > 300 ? "flex" : "none"
+    this.barTarget.style.transform        = `scaleX(${ratio})`
+    this.arcTarget.style.strokeDashoffset = this.circumferenceValue - ratio * this.circumferenceValue
+    this.pctTarget.textContent            = percent + "%"
+    this.btnTarget.style.display          = scrollTop > 300 ? "flex" : "none"
   }
 
   scrollToTop() {

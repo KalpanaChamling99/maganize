@@ -27,10 +27,8 @@
     </div>
 
     <%# Masthead %>
-    <header class="border-b border-gray-900">
+    <header class="border-b border-gray-200">
       <div class="max-w-7xl mx-auto px-4 sm:px-6">
-
-        <%# Logo row %>
         <div class="flex items-center justify-between py-5">
           <div class="text-xs tracking-widest text-gray-500 uppercase hidden sm:block">
             Est. 2024
@@ -46,44 +44,57 @@
               class: "bg-gray-900 text-white text-xs font-semibold tracking-widest uppercase px-5 py-2.5 hover:bg-gray-700 transition-colors" %>
           </div>
         </div>
-
-        <%# Nav %>
-        <nav class="border-t border-gray-200 overflow-x-auto">
-          <ul class="flex items-center gap-0 text-sm font-medium whitespace-nowrap w-full">
-            <li>
-              <%= link_to "Home", root_path,
-                class: "block px-4 py-3 hover:text-gray-500 border-b-2 border-gray-900 transition-colors" %>
-            </li>
-            <% Category.joins(:articles).merge(Article.published).distinct.limit(5).each do |cat| %>
-              <li>
-                <%= link_to cat.name, category_path(cat),
-                  class: "block px-4 py-3 hover:text-gray-500 border-b-2 border-transparent hover:border-gray-300 transition-colors" %>
-              </li>
-            <% end %>
-            <li>
-              <%= link_to "All Articles", articles_path,
-                class: "block px-4 py-3 hover:text-gray-500 border-b-2 border-transparent hover:border-gray-300 transition-colors" %>
-            </li>
-            <li>
-              <%= link_to "Tags", tags_path,
-                class: "block px-4 py-3 hover:text-gray-500 border-b-2 border-transparent hover:border-gray-300 transition-colors" %>
-            </li>
-            <li>
-              <%= link_to "About", about_path,
-                class: "block px-4 py-3 hover:text-gray-500 border-b-2 border-transparent hover:border-gray-300 transition-colors" %>
-            </li>
-            <li>
-              <%= link_to "Contact", contact_path,
-                class: "block px-4 py-3 hover:text-gray-500 border-b-2 border-transparent hover:border-gray-300 transition-colors" %>
-            </li>
-            <li>
-              <%= link_to "Collections", collections_path,
-                class: "block px-4 py-3 hover:text-gray-500 border-b-2 border-transparent hover:border-gray-300 transition-colors" %>
-            </li>
-          </ul>
-        </nav>
       </div>
     </header>
+
+    <%# Sentinel — sits just above the nav; when it leaves the viewport the nav turns dark %>
+    <div data-scroll-progress-target="sentinel" aria-hidden="true"></div>
+
+    <%# Nav — becomes fixed (dark) once sentinel leaves viewport %>
+    <nav class="site-nav overflow-x-auto" data-scroll-progress-target="nav">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <ul class="flex items-center gap-0 text-sm font-medium whitespace-nowrap w-full">
+          <li>
+            <%= link_to "Home", root_path,
+              class: "block px-4 py-3 border-b-2 border-gray-900 transition-colors" %>
+          </li>
+          <% Category.joins(:articles).merge(Article.published).distinct.limit(5).each do |cat| %>
+            <li>
+              <%= link_to cat.name, category_path(cat),
+                class: "block px-4 py-3 border-b-2 border-transparent hover:border-gray-300 transition-colors" %>
+            </li>
+          <% end %>
+          <li>
+            <%= link_to "All Articles", articles_path,
+              class: "block px-4 py-3 border-b-2 border-transparent hover:border-gray-300 transition-colors" %>
+          </li>
+          <li>
+            <%= link_to "Tags", tags_path,
+              class: "block px-4 py-3 border-b-2 border-transparent hover:border-gray-300 transition-colors" %>
+          </li>
+          <li>
+            <%= link_to "About", about_path,
+              class: "block px-4 py-3 border-b-2 border-transparent hover:border-gray-300 transition-colors" %>
+          </li>
+          <li>
+            <%= link_to "Contact", contact_path,
+              class: "block px-4 py-3 border-b-2 border-transparent hover:border-gray-300 transition-colors" %>
+          </li>
+          <li>
+            <%= link_to "Collections", collections_path,
+              class: "block px-4 py-3 border-b-2 border-transparent hover:border-gray-300 transition-colors" %>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <%# Spacer — takes the nav's height when nav becomes fixed, preventing content jump %>
+    <div data-scroll-progress-target="spacer" style="height:0;" aria-hidden="true"></div>
+
+    <%# Progress bar — fixed just below the nav when nav is fixed %>
+    <div data-scroll-progress-target="bar"
+         style="display:none;position:fixed;top:0;left:0;width:100%;height:3px;background:#ef4444;transform:scaleX(0);transform-origin:left;transition:transform 80ms linear;pointer-events:none;z-index:41;"
+         aria-hidden="true"></div>
 
     <%# Main content %>
     <main class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
@@ -125,11 +136,7 @@
       </div>
     </footer>
 
-    <%# ── Scroll progress bar + back-to-top ──────────────────── %>
-    <div data-scroll-progress-target="bar"
-         style="position:fixed;top:0;left:0;width:0%;height:3px;background:#ef4444;z-index:9999;transition:width 80ms linear;pointer-events:none;"
-         aria-hidden="true"></div>
-
+    <%# ── Back-to-top ──────────────────────────────────────── %>
     <button data-scroll-progress-target="btn"
             data-action="click->scroll-progress#scrollToTop"
             title="Back to top"
