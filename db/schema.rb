@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_02_23_072348) do
+ActiveRecord::Schema[7.1].define(version: 2026_02_24_043954) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -71,6 +71,21 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_23_072348) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "collection_articles", force: :cascade do |t|
+    t.integer "collection_id", null: false
+    t.integer "article_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["article_id"], name: "index_collection_articles_on_article_id"
+    t.index ["collection_id"], name: "index_collection_articles_on_collection_id"
+  end
+
+  create_table "collections", force: :cascade do |t|
+    t.string "title"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "tags", force: :cascade do |t|
     t.string "name"
     t.string "slug"
@@ -93,4 +108,6 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_23_072348) do
   add_foreign_key "article_tags", "tags"
   add_foreign_key "articles", "categories"
   add_foreign_key "articles", "team_members"
+  add_foreign_key "collection_articles", "articles"
+  add_foreign_key "collection_articles", "collections"
 end

@@ -1,0 +1,22 @@
+<div class="mb-10 border-b border-gray-200 pb-6 flex items-end justify-between gap-4">
+  <div>
+    <p class="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-1">
+      <%= link_to "Collections", collections_path, class: "hover:text-gray-700 transition-colors" %>
+      <span class="mx-1">›</span> Curated
+    </p>
+    <h1 class="font-heading text-4xl font-bold"><%= @collection.title %></h1>
+  </div>
+  <span class="text-sm text-gray-400 mb-1 shrink-0"><%= pluralize(@articles.size, "article") %></span>
+</div>
+
+<% if @articles.any? %>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @articles.each do |article| %>
+      <%= render "articles/article_card", article: article %>
+    <% end %>
+  </div>
+<% else %>
+  <div class="py-20 text-center border border-dashed border-gray-200">
+    <p class="text-gray-400">No articles in this collection yet.</p>
+  </div>
+<% end %>

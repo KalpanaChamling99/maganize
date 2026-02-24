@@ -24,7 +24,8 @@
       "Bash(git -C /home/kalpana/projects/magazine status)",
       "Bash(git -C /home/kalpana/projects/magazine diff --stat)",
       "Bash(git -C /home/kalpana/projects/magazine log --oneline -5)",
-      "Bash(bin/rails tailwindcss:build:*)"
+      "Bash(bin/rails tailwindcss:build:*)",
+      "Bash(bin/rails routes:*)"
     ]
   }
 }

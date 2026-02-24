@@ -1,0 +1,66 @@
+<% return if collection.none? || collection.total_pages <= 1 %>
+<% per_page_options = local_assigns.fetch(:per_page_options, [6, 12, 24]) %>
+<% current_per_page = collection.limit_value %>
+
+<div class="mt-14 flex items-center justify-between gap-4 flex-wrap">
+
+  <%# Left: page info %>
+  <span class="text-[10px] tracking-widest uppercase text-gray-400 whitespace-nowrap">
+    Page <%= collection.current_page %> of <%= collection.total_pages %>
+    &nbsp;·&nbsp;
+    <%= [collection.offset_value + collection.limit_value, collection.total_count].min %> / <%= collection.total_count %> articles
+  </span>
+
+  <%# Center: prev + page numbers + next %>
+  <nav class="flex items-center gap-1" aria-label="Pagination">
+
+    <%# Prev %>
+    <% if collection.first_page? %>
+      <span class="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold tracking-widest uppercase text-gray-300 cursor-not-allowed select-none border border-gray-100">
+        &larr; Prev
+      </span>
+    <% else %>
+      <%= link_to url_for(request.query_parameters.merge(page: collection.prev_page)),
+        class: "inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold tracking-widest uppercase text-gray-600 border border-gray-300 hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all" do %>
+        &larr; Prev
+      <% end %>
+    <% end %>
+
+    <%# Page numbers %>
+    <% paginate_range(collection).each do |item| %>
+      <% if item == :gap %>
+        <span class="w-10 h-10 inline-flex items-center justify-center text-sm text-gray-300 select-none">…</span>
+      <% elsif item == collection.current_page %>
+        <span class="w-10 h-10 inline-flex items-center justify-center text-sm font-bold bg-gray-900 text-white"><%= item %></span>
+      <% else %>
+        <%= link_to item, url_for(request.query_parameters.merge(page: item)),
+          class: "w-10 h-10 inline-flex items-center justify-center text-sm font-medium text-gray-500 border border-gray-200 hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all" %>
+      <% end %>
+    <% end %>
+
+    <%# Next %>
+    <% if collection.last_page? %>
+      <span class="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold tracking-widest uppercase text-gray-300 cursor-not-allowed select-none border border-gray-100">
+        Next &rarr;
+      </span>
+    <% else %>
+      <%= link_to url_for(request.query_parameters.merge(page: collection.next_page)),
+        class: "inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold tracking-widest uppercase text-gray-600 border border-gray-300 hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all" do %>
+        Next &rarr;
+      <% end %>
+    <% end %>
+
+  </nav>
+
+  <%# Right: per-page dropdown %>
+  <div class="flex items-center gap-2.5 whitespace-nowrap">
+    <label class="text-[10px] tracking-widest uppercase text-gray-400">Per page</label>
+    <select class="text-xs font-medium text-gray-700 border border-gray-300 bg-white px-8 py-1.5 focus:outline-none focus:border-gray-900 cursor-pointer transition-colors"
+            onchange="window.location = '<%= url_for(request.query_parameters.merge(page: 1, per_page: '__PER__')) %>'.replace('__PER__', this.value)">
+      <% per_page_options.each do |n| %>
+        <option value="<%= n %>" <%= 'selected' if n == current_per_page %>><%= n %></option>
+      <% end %>
+    </select>
+  </div>
+
+</div>

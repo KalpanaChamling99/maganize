@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
@@ -80,6 +81,14 @@
             <%= lucide_icon "users", class: "h-4 w-4 shrink-0" %>
             Team Members
             <span class="ml-auto text-xs bg-white/10 px-2 py-0.5 rounded-full"><%= TeamMember.count %></span>
+          <% end %>
+
+          <%# Collections %>
+          <%= link_to admin_collections_path,
+            class: "flex items-center gap-3 px-3 py-2.5 rounded text-sm font-medium transition-colors #{request.path.start_with?('/admin/collections') ? 'bg-white/10 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'}" do %>
+            <%= lucide_icon "bookmark", class: "h-4 w-4 shrink-0" %>
+            Collections
+            <span class="ml-auto text-xs bg-white/10 px-2 py-0.5 rounded-full"><%= Collection.count %></span>
           <% end %>
 
           <%# Divider %>

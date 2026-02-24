@@ -11,6 +11,9 @@ Rails.application.routes.draw do
   get "about",   to: "pages#about",   as: :about
   get "contact", to: "pages#contact", as: :contact
 
+  # Public collections
+  resources :collections, only: [:index, :show]
+
   # Admin section
   namespace :admin do
     root "dashboard#index"
@@ -23,6 +26,7 @@ Rails.application.routes.draw do
     resources :tags, only: [:index, :new, :create, :destroy]
     resources :media, only: [:index, :destroy]
     resources :team_members
+    resources :collections
   end
 
   get "up" => "rails/health#show", as: :rails_health_check
