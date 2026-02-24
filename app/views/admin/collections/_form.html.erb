@@ -21,6 +21,26 @@
       class: "w-full text-xl font-bold border-0 border-b-2 border-gray-200 focus:border-gray-900 focus:outline-none focus:ring-0 py-2 px-0 placeholder-gray-300 bg-transparent transition-colors" %>
   </div>
 
+  <%# Cover Image %>
+  <div>
+    <%= form.label :cover_image, "Cover Image", class: "block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-3" %>
+    <% if collection.cover_image.attached? %>
+      <div class="mb-3 relative">
+        <%= image_tag collection.cover_image, class: "h-40 w-full object-cover border border-gray-200" %>
+        <%= button_to purge_cover_admin_collection_path(collection), method: :delete,
+          data: { turbo_confirm: "Remove the cover image?" },
+          class: "absolute top-2 right-2 w-6 h-6 bg-white border border-gray-200 text-gray-500 hover:text-red-600 hover:border-red-300 flex items-center justify-center transition-colors cursor-pointer",
+          form: { style: "display:inline" },
+          title: "Remove cover image" do %>
+          &times;
+        <% end %>
+      </div>
+    <% end %>
+    <%= form.file_field :cover_image, accept: "image/*",
+      class: "block w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-4 file:border file:border-gray-200 file:text-xs file:font-semibold file:tracking-widest file:uppercase file:bg-white file:text-gray-700 hover:file:bg-gray-50 file:cursor-pointer" %>
+    <p class="text-xs text-gray-400 mt-1.5">Displayed as the collection header. JPG or PNG recommended.</p>
+  </div>
+
   <%# Articles dropdown (Tom Select) %>
   <div>
     <label class="block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2">Articles</label>

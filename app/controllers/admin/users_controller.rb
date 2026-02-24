@@ -35,6 +35,10 @@ class Admin::UsersController < Admin::BaseController
     unless current_admin_user.can_manage?(@user)
       return redirect_to admin_users_path, status: :see_other, alert: "You cannot delete this user."
     end
+    if last_super_admin?(@user)
+      return redirect_to admin_users_path, status: :see_other,
+        alert: "Cannot delete the last Root Admin. Assign the role to another user first."
+    end
     @user.destroy!
     redirect_to admin_users_path, status: :see_other, notice: "User deleted."
   end
@@ -47,5 +51,12 @@ class Admin::UsersController < Admin::BaseController
 
   def user_params
     params.require(:admin_user).permit(:name, :email, :password, :role_id, :avatar)
+  end
+
+  def last_super_admin?(user)
+    root_role = Role.find_by(name: "Root Admin")
+    return false unless root_role
+    user.role_id == root_role.id &&
+      AdminUser.where(role_id: root_role.id).count == 1
   end
 end

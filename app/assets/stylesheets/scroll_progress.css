@@ -1,0 +1,19 @@
+.scroll-top-btn {
+  display: none;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 50;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  background: transparent;
+}
+.scroll-top-btn:hover .scroll-pct { display: none !important; }
+.scroll-top-btn:hover .scroll-arr { display: flex !important; }
+.scroll-top-btn:hover #scroll-ring-arc { stroke: #dc2626; }

@@ -1,34 +1,42 @@
 # db/seeds.rb — idempotent seed data for magazine app
 
 # ── Roles ─────────────────────────────────────────────────────────────────────
-root_role = Role.find_or_create_by!(name: "Root Admin") do |r|
-  r.permissions = Role::ALL_PERMISSIONS
-end
+# Always sync permissions so adding new permission keys is picked up on re-seed.
+root_role = Role.find_or_initialize_by(name: "Root Admin")
+root_role.permissions = Role::ALL_PERMISSIONS
+root_role.save!
 
-Role.find_or_create_by!(name: "Admin") do |r|
-  r.permissions = Role::ALL_PERMISSIONS - ["manage_roles"]
-end
+admin_role = Role.find_or_initialize_by(name: "Admin")
+admin_role.permissions = Role::ALL_PERMISSIONS - ["manage_roles"]
+admin_role.save!
 
-Role.find_or_create_by!(name: "Editor") do |r|
-  r.permissions = %w[
-    view_articles create_articles edit_articles delete_articles
-    manage_categories manage_tags manage_collections delete_media
-  ]
-end
+editor_role = Role.find_or_initialize_by(name: "Editor")
+editor_role.permissions = %w[
+  view_articles create_articles edit_articles delete_articles
+  manage_categories manage_tags manage_collections delete_media
+]
+editor_role.save!
 
-Role.find_or_create_by!(name: "Viewer") do |r|
-  r.permissions = %w[view_articles]
-end
+viewer_role = Role.find_or_initialize_by(name: "Viewer")
+viewer_role.permissions = %w[view_articles]
+viewer_role.save!
 
 puts "Roles: #{Role.count} (#{Role.pluck(:name).join(', ')})"
 
-# ── Admin User ───────────────────────────────────────────────────────────────
+# ── Default Super Admin ───────────────────────────────────────────────────────
+# Ensures there is always at least one Root Admin account.
+# Password is only set on first creation — existing accounts are not overwritten.
 root = AdminUser.find_or_initialize_by(email: "admin@magazine.com")
-root.name     = "Admin"
-root.role     = root_role
-root.password = "password123" if root.new_record?
-root.save!
-puts "AdminUser ready  →  admin@magazine.com / password123  (Root Admin)"
+root.name = "Admin" if root.new_record?
+root.role = root_role
+if root.new_record?
+  root.password = "password123"
+  root.save!
+  puts "SuperAdmin created  →  admin@magazine.com / password123  (change this password!)"
+else
+  root.save!
+  puts "SuperAdmin present  →  admin@magazine.com  (Root Admin)"
+end
 
 # ── Categories ──────────────────────────────────────────────────────────────
 category_names = [

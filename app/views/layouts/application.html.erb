@@ -18,7 +18,8 @@
     <%= yield :head %>
   </head>
 
-  <body class="bg-white text-gray-900 font-sans antialiased">
+  <body class="bg-white text-gray-900 font-sans antialiased"
+        data-controller="scroll-progress">
 
     <%# Top banner %>
     <div class="border-b border-gray-200 bg-gray-50 py-1.5 text-center text-xs tracking-widest text-gray-500 uppercase">
@@ -123,6 +124,38 @@
         </p>
       </div>
     </footer>
+
+    <%# ── Scroll progress bar + back-to-top ──────────────────── %>
+    <div data-scroll-progress-target="bar"
+         style="position:fixed;top:0;left:0;width:0%;height:3px;background:#ef4444;z-index:9999;transition:width 80ms linear;pointer-events:none;"
+         aria-hidden="true"></div>
+
+    <button data-scroll-progress-target="btn"
+            data-action="click->scroll-progress#scrollToTop"
+            title="Back to top"
+            style="display:none;"
+            class="scroll-top-btn focus:outline-none">
+      <svg width="44" height="44" viewBox="0 0 44 44" style="display:block;transform:rotate(-90deg);">
+        <circle cx="22" cy="22" r="19" fill="#ffffff" stroke="#fecaca" stroke-width="2"/>
+        <circle data-scroll-progress-target="arc"
+                cx="22" cy="22" r="19"
+                fill="none" stroke="#ef4444" stroke-width="3"
+                stroke-linecap="round"
+                stroke-dasharray="119.38"
+                stroke-dashoffset="119.38"
+                style="transition:stroke-dashoffset 80ms linear;"/>
+      </svg>
+      <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+        <span data-scroll-progress-target="pct"
+              class="scroll-pct"
+              style="font-size:10px;font-weight:700;line-height:1;color:#ef4444;font-family:inherit;letter-spacing:0;">0%</span>
+        <span class="scroll-arr" style="display:none;align-items:center;justify-content:center;color:#ef4444;">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
+          </svg>
+        </span>
+      </span>
+    </button>
 
   </body>
 </html>

@@ -19,11 +19,24 @@
         <% @collections.each do |collection| %>
           <tr class="hover:bg-gray-50 transition-colors group">
             <td class="px-6 py-4">
-              <div class="flex items-center gap-2">
-                <p class="font-medium group-hover:text-gray-600"><%= collection.title %></p>
-                <% if collection.featured? %>
-                  <span class="inline-flex items-center px-1.5 py-0.5 text-[10px] font-bold tracking-widest uppercase bg-red-100 text-red-600">Featured</span>
-                <% end %>
+              <div class="flex items-center gap-3">
+                <div class="w-14 h-10 shrink-0 bg-gray-100 border border-gray-200 overflow-hidden">
+                  <% if collection.cover_image.attached? %>
+                    <%= image_tag collection.cover_image, class: "w-full h-full object-cover" %>
+                  <% else %>
+                    <div class="w-full h-full flex items-center justify-center">
+                      <svg class="w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                      </svg>
+                    </div>
+                  <% end %>
+                </div>
+                <div>
+                  <p class="font-medium group-hover:text-gray-600"><%= collection.title %></p>
+                  <% if collection.featured? %>
+                    <span class="inline-flex items-center px-1.5 py-0.5 text-[10px] font-bold tracking-widest uppercase bg-red-100 text-red-600">Featured</span>
+                  <% end %>
+                </div>
               </div>
             </td>
             <td class="px-6 py-4 hidden md:table-cell text-gray-500 text-xs">

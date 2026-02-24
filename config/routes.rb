@@ -30,7 +30,9 @@ Rails.application.routes.draw do
     resources :tags, only: [:index, :new, :create, :destroy]
     resources :media, only: [:index, :destroy]
     resources :team_members
-    resources :collections
+    resources :collections do
+      member { delete :purge_cover }
+    end
     resources :users
     resources :roles, only: [:index, :new, :create, :edit, :update]
     resource  :settings, only: [:show, :update]
