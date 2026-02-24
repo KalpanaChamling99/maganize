@@ -1,5 +1,12 @@
 # db/seeds.rb — idempotent seed data for magazine app
 
+# ── Admin User ───────────────────────────────────────────────────────────────
+AdminUser.find_or_create_by!(email: "admin@magazine.com") do |u|
+  u.name     = "Admin"
+  u.password = "password123"
+end
+puts "AdminUser ready  →  admin@magazine.com / password123"
+
 # ── Categories ──────────────────────────────────────────────────────────────
 category_names = [
   "Culture",

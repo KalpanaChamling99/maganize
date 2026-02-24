@@ -16,6 +16,10 @@ Rails.application.routes.draw do
 
   # Admin section
   namespace :admin do
+    get    "login",  to: "sessions#new",     as: :login
+    post   "login",  to: "sessions#create"
+    delete "logout", to: "sessions#destroy", as: :logout
+
     root "dashboard#index"
     resources :articles do
       member do
