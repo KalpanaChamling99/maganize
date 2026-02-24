@@ -40,7 +40,7 @@ class Admin::ArticlesController < Admin::BaseController
     if @article.update(article_params)
       attach_gallery_images
       replace_gallery_images
-      redirect_to admin_articles_path, notice: "Article updated."
+      redirect_to edit_admin_article_path(@article), notice: "Article updated."
     else
       set_form_data
       render :edit, status: :unprocessable_entity
