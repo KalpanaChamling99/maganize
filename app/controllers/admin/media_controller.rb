@@ -13,6 +13,6 @@ class Admin::MediaController < Admin::BaseController
   def destroy
     attachment = ActiveStorage::Attachment.find(params[:id])
     attachment.purge
-    redirect_to admin_media_path, notice: "Image deleted."
+    redirect_to admin_media_path, status: :see_other, notice: "Image deleted."
   end
 end

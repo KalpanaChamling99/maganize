@@ -34,7 +34,7 @@ class Admin::CategoriesController < Admin::BaseController
   def destroy
     name = @category.name
     @category.destroy!
-    redirect_to admin_categories_path, notice: "\"#{name}\" was deleted."
+    redirect_to admin_categories_path, status: :see_other, notice: "\"#{name}\" was deleted."
   end
 
   private

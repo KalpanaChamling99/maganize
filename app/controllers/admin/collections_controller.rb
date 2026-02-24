@@ -36,7 +36,7 @@ class Admin::CollectionsController < Admin::BaseController
 
   def destroy
     @collection.destroy
-    redirect_to admin_collections_path, notice: "Collection deleted."
+    redirect_to admin_collections_path, status: :see_other, notice: "Collection deleted."
   end
 
   private
@@ -46,6 +46,6 @@ class Admin::CollectionsController < Admin::BaseController
   end
 
   def collection_params
-    params.require(:collection).permit(:title, article_ids: [])
+    params.require(:collection).permit(:title, :featured, article_ids: [])
   end
 end

@@ -3,4 +3,6 @@ class Collection < ApplicationRecord
   has_many :articles, through: :collection_articles
 
   validates :title, presence: true
+
+  scope :featured, -> { where(featured: true) }
 end

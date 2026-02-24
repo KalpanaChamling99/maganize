@@ -50,7 +50,7 @@ class Admin::ArticlesController < Admin::BaseController
   def destroy
     title = @article.title
     @article.destroy!
-    redirect_to admin_articles_path, notice: "\"#{title}\" was deleted."
+    redirect_to admin_articles_path, status: :see_other, notice: "\"#{title}\" was deleted."
   end
 
   def purge_image

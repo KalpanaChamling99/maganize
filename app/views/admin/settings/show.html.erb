@@ -1,0 +1,54 @@
+<% content_for :page_title, "Settings" %>
+
+<div class="max-w-2xl space-y-8">
+
+  <%# ── Homepage ──────────────────────────────────────────────── %>
+  <div class="bg-white border border-gray-200">
+    <div class="px-6 py-4 border-b border-gray-100">
+      <h3 class="text-sm font-semibold text-gray-900">Homepage</h3>
+      <p class="text-xs text-gray-400 mt-0.5">Choose which collections appear on the public homepage.</p>
+    </div>
+
+    <%= form_with url: admin_settings_path, method: :patch, class: "px-6 py-5 space-y-5" do |f| %>
+      <%# Hidden field so an empty array is submitted when nothing is checked %>
+      <input type="hidden" name="settings[featured_collection_ids][]" value="">
+
+      <div>
+        <label class="block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-3">
+          Featured Collections
+        </label>
+
+        <% if @collections.any? %>
+          <div class="divide-y divide-gray-50 border border-gray-100">
+            <% @collections.each do |collection| %>
+              <label class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer">
+                <input type="checkbox"
+                  name="settings[featured_collection_ids][]"
+                  value="<%= collection.id %>"
+                  <%= "checked" if @featured_ids.include?(collection.id) %>
+                  class="w-4 h-4 rounded border-gray-300 text-gray-900 focus:ring-gray-900">
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-gray-900"><%= collection.title %></p>
+                  <p class="text-xs text-gray-400"><%= pluralize(collection.articles.size, "article") %></p>
+                </div>
+                <% if @featured_ids.include?(collection.id) %>
+                  <span class="text-[10px] font-bold tracking-widest uppercase text-red-500">Featured</span>
+                <% end %>
+              </label>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-sm text-gray-400">No collections yet. <%= link_to "Create one →", new_admin_collection_path, class: "font-semibold text-gray-900 underline" %></p>
+        <% end %>
+      </div>
+
+      <div class="pt-1">
+        <button type="submit"
+          class="bg-gray-900 text-white text-xs font-semibold tracking-widest uppercase px-6 py-2.5 hover:bg-gray-700 transition-colors">
+          Save Settings
+        </button>
+      </div>
+    <% end %>
+  </div>
+
+</div>

@@ -19,7 +19,12 @@
         <% @collections.each do |collection| %>
           <tr class="hover:bg-gray-50 transition-colors group">
             <td class="px-6 py-4">
-              <p class="font-medium group-hover:text-gray-600"><%= collection.title %></p>
+              <div class="flex items-center gap-2">
+                <p class="font-medium group-hover:text-gray-600"><%= collection.title %></p>
+                <% if collection.featured? %>
+                  <span class="inline-flex items-center px-1.5 py-0.5 text-[10px] font-bold tracking-widest uppercase bg-red-100 text-red-600">Featured</span>
+                <% end %>
+              </div>
             </td>
             <td class="px-6 py-4 hidden md:table-cell text-gray-500 text-xs">
               <%= pluralize(collection.articles.size, "article") %>

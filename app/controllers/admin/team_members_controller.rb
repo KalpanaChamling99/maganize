@@ -33,7 +33,7 @@ class Admin::TeamMembersController < Admin::BaseController
   def destroy
     name = @team_member.name
     @team_member.destroy!
-    redirect_to admin_team_members_path, notice: "\"#{name}\" was removed."
+    redirect_to admin_team_members_path, status: :see_other, notice: "\"#{name}\" was removed."
   end
 
   private

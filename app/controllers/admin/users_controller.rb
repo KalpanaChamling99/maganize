@@ -33,10 +33,10 @@ class Admin::UsersController < Admin::BaseController
 
   def destroy
     unless current_admin_user.can_manage?(@user)
-      return redirect_to admin_users_path, alert: "You cannot delete this user."
+      return redirect_to admin_users_path, status: :see_other, alert: "You cannot delete this user."
     end
     @user.destroy!
-    redirect_to admin_users_path, notice: "User deleted."
+    redirect_to admin_users_path, status: :see_other, notice: "User deleted."
   end
 
   private

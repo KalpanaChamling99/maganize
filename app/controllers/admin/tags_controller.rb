@@ -26,7 +26,7 @@ class Admin::TagsController < Admin::BaseController
     @tag = Tag.find(params[:id])
     name = @tag.name
     @tag.destroy!
-    redirect_to admin_tags_path, notice: "Tag \"#{name}\" was deleted."
+    redirect_to admin_tags_path, status: :see_other, notice: "Tag \"#{name}\" was deleted."
   end
 
   private
