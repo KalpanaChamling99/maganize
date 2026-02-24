@@ -12,7 +12,7 @@
       <%= render "articles/article_card", article: article %>
     <% end %>
   </div>
-  <%= render "shared/pagination", collection: @articles, label: "articles", per_page_options: [6, 12, 24] %>
+  <%= render "shared/pagination_public", collection: @articles, per_page_options: [6, 12, 24] %>
 <% else %>
   <div class="py-20 text-center border border-dashed border-gray-300">
     <p class="text-gray-400 mb-3">No articles published yet.</p>

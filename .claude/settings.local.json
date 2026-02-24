@@ -23,7 +23,8 @@
       "Bash(bin/rails db:migrate:status:*)",
       "Bash(git -C /home/kalpana/projects/magazine status)",
       "Bash(git -C /home/kalpana/projects/magazine diff --stat)",
-      "Bash(git -C /home/kalpana/projects/magazine log --oneline -5)"
+      "Bash(git -C /home/kalpana/projects/magazine log --oneline -5)",
+      "Bash(bin/rails tailwindcss:build:*)"
     ]
   }
 }
