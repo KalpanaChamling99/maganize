@@ -3,7 +3,8 @@
    Applied via html[data-theme="dark"]
    ───────────────────────────────────────────────────────── */
 
-/* ── Theme toggle — end of nav, icons inside track ──────── */
+/* ── Theme toggle — segmented 50/50 pill ─────────────────── */
+/* Track: 56px wide — each half = 28px                       */
 .theme-float {
   display: inline-flex;
   align-items: center;
@@ -13,7 +14,6 @@
   cursor: pointer;
 }
 
-/* Track: 56×26px pill */
 .theme-float-track {
   position: relative;
   width: 56px;
@@ -24,62 +24,62 @@
   transition: background 0.3s ease;
 }
 html[data-theme="dark"] .theme-float-track {
-  background: #334155;
+  background: #1e293b;
 }
 
-/* Sun icon — pinned left inside track, always visible */
+/* Sliding half-pill knob — covers the active half */
+.theme-float-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 24px;   /* 56/2 - 4px total padding */
+  height: 22px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  transition: left 0.3s ease;
+  z-index: 2;
+}
+html[data-theme="dark"] .theme-float-knob {
+  left: 30px;  /* 56/2 + 2 = 30px — covers right half */
+}
+
+/* Sun icon — centred in left half (28px wide) */
 .theme-float-sun-icon {
   display: block;
   position: absolute;
-  left: 5px;
+  left: 7px;   /* (28 - 14) / 2 = 7px */
   top: 50%;
   transform: translateY(-50%);
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   overflow: visible;
-  color: #fbbf24;
+  color: #374151;   /* dark on white knob in light mode */
   transition: color 0.25s;
-  z-index: 3;  /* above knob */
+  z-index: 3;
   pointer-events: none;
 }
 html[data-theme="dark"] .theme-float-sun-icon {
-  color: #6b7280;
+  color: #6b7280;   /* dim on dark track in dark mode */
 }
 
-/* Moon icon — pinned right inside track, always visible */
+/* Moon icon — centred in right half (28px wide) */
 .theme-float-moon-icon {
   display: block;
   position: absolute;
-  right: 5px;
+  right: 7px;  /* (28 - 14) / 2 = 7px from right */
   top: 50%;
   transform: translateY(-50%);
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   overflow: visible;
-  color: #6b7280;
+  color: #6b7280;   /* dim on dark track in light mode */
   transition: color 0.25s;
-  z-index: 3;  /* above knob */
+  z-index: 3;
   pointer-events: none;
 }
 html[data-theme="dark"] .theme-float-moon-icon {
-  color: #e2e8f0;
-}
-
-/* Sliding knob — left = light mode, right = dark mode */
-.theme-float-knob {
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
-  transition: left 0.3s ease;
-  z-index: 2;  /* below icons */
-}
-html[data-theme="dark"] .theme-float-knob {
-  left: calc(56px - 20px - 3px); /* = 33px */
+  color: #1e293b;   /* dark on white knob in dark mode */
 }
 
 /* ── Smooth transitions ───────────────────────────────────── */
@@ -209,7 +209,23 @@ html[data-theme="dark"] .featured-sidebar {
   background-color: #1e293b;
 }
 
-/* ── Category pills ──────────────────────────────────────── */
+/* ── Category pills + active filter state ────────────────── */
+.category-pill {
+  cursor: pointer;
+}
+.category-pill:hover,
+.filter-pill-active {
+  background-color: #111827;
+  border-color: #111827;
+  color: #fff;
+}
+/* Active pill gets a red left accent */
+.filter-pill-active {
+  border-color: #ef4444 !important;
+  background-color: #ef4444 !important;
+  color: #fff !important;
+}
+
 html[data-theme="dark"] .category-pill {
   color: #64748b;
   border-color: #334155;
@@ -218,6 +234,11 @@ html[data-theme="dark"] .category-pill:hover {
   border-color: #94a3b8;
   background-color: #94a3b8;
   color: #0f172a;
+}
+html[data-theme="dark"] .filter-pill-active {
+  border-color: #ef4444 !important;
+  background-color: #ef4444 !important;
+  color: #fff !important;
 }
 
 /* ── Article cards ───────────────────────────────────────── */
@@ -263,6 +284,55 @@ html[data-theme="dark"] .newsletter-section {
 html[data-theme="dark"] footer {
   background-color: #020617;
 }
+
+/* ── General content: text, bg, borders ─────────────────── */
+html[data-theme="dark"] main .text-gray-900 { color: #f1f5f9; }
+html[data-theme="dark"] main .text-gray-800 { color: #e2e8f0; }
+html[data-theme="dark"] main .text-gray-700 { color: #cbd5e1; }
+html[data-theme="dark"] main .text-gray-600 { color: #94a3b8; }
+html[data-theme="dark"] main .text-gray-500 { color: #94a3b8; }
+html[data-theme="dark"] main .text-gray-400 { color: #64748b; }
+html[data-theme="dark"] main .text-gray-300 { color: #475569; }
+
+html[data-theme="dark"] main .bg-white       { background-color: #1e293b; }
+html[data-theme="dark"] main .bg-gray-50     { background-color: #0f172a; }
+html[data-theme="dark"] main .bg-gray-100    { background-color: #1e293b; }
+html[data-theme="dark"] main .bg-gray-200    { background-color: #334155; }
+
+html[data-theme="dark"] main .border-gray-100 { border-color: #1e293b; }
+html[data-theme="dark"] main .border-gray-200 { border-color: #1e293b; }
+html[data-theme="dark"] main .border-gray-300 { border-color: #334155; }
+html[data-theme="dark"] main .divide-gray-100 > * + * { border-color: #1e293b; }
+html[data-theme="dark"] main .divide-gray-200 > * + * { border-color: #1e293b; }
+
+/* hover variants */
+html[data-theme="dark"] main .hover\:bg-gray-50:hover   { background-color: #1e293b; }
+html[data-theme="dark"] main .hover\:bg-gray-900:hover  { background-color: #f1f5f9; color: #0f172a; }
+html[data-theme="dark"] main .hover\:text-gray-500:hover { color: #94a3b8; }
+html[data-theme="dark"] main .hover\:text-gray-600:hover { color: #94a3b8; }
+html[data-theme="dark"] main .hover\:text-gray-700:hover { color: #cbd5e1; }
+html[data-theme="dark"] main .hover\:text-gray-900:hover { color: #f1f5f9; }
+
+/* ── Prose / article body ─────────────────────────────────── */
+html[data-theme="dark"] .prose                  { color: #cbd5e1; }
+html[data-theme="dark"] .prose p                { color: #cbd5e1; }
+html[data-theme="dark"] .prose li               { color: #cbd5e1; }
+html[data-theme="dark"] .prose h1,
+html[data-theme="dark"] .prose h2,
+html[data-theme="dark"] .prose h3,
+html[data-theme="dark"] .prose h4               { color: #f1f5f9; }
+html[data-theme="dark"] .prose strong           { color: #e2e8f0; }
+html[data-theme="dark"] .prose em               { color: #cbd5e1; }
+html[data-theme="dark"] .prose blockquote       { color: #94a3b8; border-color: #ef4444; }
+html[data-theme="dark"] .prose a                { color: #f87171; }
+html[data-theme="dark"] .prose code             { background-color: #334155; color: #e2e8f0; }
+html[data-theme="dark"] .prose pre              { background-color: #1e293b; }
+html[data-theme="dark"] .prose hr               { border-color: #1e293b; }
+html[data-theme="dark"] .prose thead            { border-color: #334155; color: #f1f5f9; }
+html[data-theme="dark"] .prose tbody tr         { border-color: #1e293b; }
+
+/* ── Article card meta (fix contrast) ───────────────────── */
+html[data-theme="dark"] .article-card .article-meta { color: #64748b; }
 
 /* ── Scroll-to-top button ────────────────────────────────── */
 html[data-theme="dark"] .scroll-top-btn circle[fill="#ffffff"] {

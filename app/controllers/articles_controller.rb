@@ -3,7 +3,11 @@ class ArticlesController < ApplicationController
 
   def index
     per = [6, 12, 24].include?(params[:per_page].to_i) ? params[:per_page].to_i : 12
-    @articles = Article.published.recent.includes(:category, :tags, :author).page(params[:page]).per(per)
+    @categories = Category.joins(:articles).merge(Article.published).distinct.order(:name)
+    @current_category = Category.find_by(id: params[:category_id]) if params[:category_id].present?
+    scope = Article.published.recent.includes(:category, :tags, :author)
+    scope = scope.where(category_id: @current_category.id) if @current_category
+    @articles = scope.page(params[:page]).per(per)
   end
 
   def show

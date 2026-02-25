@@ -61,41 +61,52 @@
   </section>
 <% end %>
 
-<%# ── Category pills ──────────────────────────────────────── %>
-<% if @categories.any? %>
-  <section class="mb-12">
-    <div class="flex flex-wrap gap-2">
-      <% @categories.each do |cat| %>
-        <%= link_to cat.name, category_path(cat),
-          class: "category-pill text-xs font-semibold tracking-widest uppercase px-4 py-2 border border-gray-300 hover:bg-gray-900 hover:text-white transition-all" %>
+<%# ── Latest Articles ──────────────────────────────────────── %>
+<section class="mb-16">
+
+  <%# Section header %>
+  <div class="flex items-center justify-between gap-4 mb-8 border-b border-gray-200 pb-5">
+    <div>
+      <p class="section-label text-xs font-semibold tracking-widest uppercase text-gray-400 mb-1">Recent</p>
+      <h2 class="font-serif text-2xl font-bold text-gray-900">Latest Articles</h2>
+    </div>
+    <%= link_to articles_path,
+      class: "shrink-0 inline-flex items-center gap-2 text-xs font-semibold tracking-widest uppercase px-5 py-2.5 border-2 border-red-500 text-red-600 hover:bg-red-500 hover:text-white transition-all group" do %>
+      View all posts
+      <svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+      </svg>
+    <% end %>
+  </div>
+
+  <%# Article grid %>
+  <% if @recent_articles.any? %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
+      <% @recent_articles.each do |article| %>
+        <%= render "articles/article_card", article: article %>
       <% end %>
     </div>
-  </section>
-<% end %>
 
-<%# ── Section divider ─────────────────────────────────────── %>
-<div class="section-divider flex items-center gap-3 mb-8">
-  <span class="section-label text-xs font-semibold tracking-widest uppercase text-gray-400">Latest Articles</span>
-  <div class="divider-line flex-1 h-px bg-gray-200"></div>
-  <%= link_to "View all →", articles_path, class: "view-all-link text-xs text-gray-400 hover:text-gray-900 transition-colors whitespace-nowrap" %>
-</div>
+    <%# Bottom CTA %>
+    <div class="text-center">
+      <%= link_to articles_path,
+        class: "inline-flex items-center gap-2 text-sm font-semibold tracking-widest uppercase px-8 py-3 border-2 border-red-500 text-red-600 hover:bg-red-500 hover:text-white transition-all group" do %>
+        View all posts
+        <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+        </svg>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="py-20 text-center border border-dashed border-gray-300">
+      <p class="font-serif text-5xl text-gray-200 mb-4">✎</p>
+      <p class="text-gray-500 mb-2">No articles published yet.</p>
+      <%= link_to "Write your first article →", new_admin_article_path,
+        class: "text-sm text-gray-900 font-semibold underline hover:no-underline" %>
+    </div>
+  <% end %>
 
-<%# ── Recent articles grid ────────────────────────────────── %>
-<% if @recent_articles.any? %>
-  <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-    <% @recent_articles.each do |article| %>
-      <%= render "articles/article_card", article: article %>
-    <% end %>
-  </section>
-<% else %>
-  <%# Empty state ── shown when no articles exist %>
-  <section class="py-20 text-center border border-dashed border-gray-300 mb-16">
-    <p class="font-serif text-5xl text-gray-200 mb-4">✎</p>
-    <p class="text-gray-500 mb-2">No articles published yet.</p>
-    <%= link_to "Write your first article →", new_admin_article_path,
-      class: "text-sm text-gray-900 font-semibold underline hover:no-underline" %>
-  </section>
-<% end %>
+</section>
 
 <%# ── Featured collections ────────────────────────────────── %>
 <% @featured_collections.each do |collection| %>
