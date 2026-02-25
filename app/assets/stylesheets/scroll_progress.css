@@ -21,8 +21,8 @@
 /* ── Nav ─────────────────────────────────────────────────── */
 .site-nav {
   position: relative;
-  background: #fff;
-  border-bottom: 1px solid #e5e7eb;
+  background: #111827;  /* always dark */
+  border-bottom: 1px solid #1f2937;
   transition: background 0.2s ease, border-color 0.2s ease;
 }
 .site-nav.is-fixed {
@@ -31,20 +31,13 @@
   left: 0;
   right: 0;
   z-index: 40;
-  background: #111827;
-  border-color: #111827;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  background: #030712;
+  border-color: #030712;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.4);
 }
-.site-nav.is-fixed a {
-  color: #d1d5db !important;
-  border-bottom-color: transparent !important;
+.site-nav.is-fixed .site-nav-link {
+  color: #9ca3af !important;
 }
-.site-nav.is-fixed a:hover {
+.site-nav.is-fixed .site-nav-link:hover {
   color: #fff !important;
-  border-bottom-color: #6b7280 !important;
-}
-.site-nav.is-fixed a[aria-current="page"],
-.site-nav.is-fixed a.active {
-  color: #fff !important;
-  border-bottom-color: #fff !important;
 }

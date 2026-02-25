@@ -21,7 +21,7 @@
       </span>
     <% else %>
       <%= link_to url_for(request.query_parameters.merge(page: collection.prev_page)),
-        class: "inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold tracking-widest uppercase text-gray-600 border border-gray-300 hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all" do %>
+        class: "inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold tracking-widest uppercase text-gray-600 border border-gray-300 hover:bg-gray-900 hover:text-white transition-all" do %>
         &larr; Prev
       <% end %>
     <% end %>
@@ -34,7 +34,7 @@
         <span class="w-10 h-10 inline-flex items-center justify-center text-sm font-bold bg-gray-900 text-white"><%= item %></span>
       <% else %>
         <%= link_to item, url_for(request.query_parameters.merge(page: item)),
-          class: "w-10 h-10 inline-flex items-center justify-center text-sm font-medium text-gray-500 border border-gray-200 hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all" %>
+          class: "w-10 h-10 inline-flex items-center justify-center text-sm font-medium text-gray-500 border border-gray-200 hover:bg-gray-900 hover:text-white transition-all" %>
       <% end %>
     <% end %>
 
@@ -45,7 +45,7 @@
       </span>
     <% else %>
       <%= link_to url_for(request.query_parameters.merge(page: collection.next_page)),
-        class: "inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold tracking-widest uppercase text-gray-600 border border-gray-300 hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all" do %>
+        class: "inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold tracking-widest uppercase text-gray-600 border border-gray-300 hover:bg-gray-900 hover:text-white transition-all" do %>
         Next &rarr;
       <% end %>
     <% end %>

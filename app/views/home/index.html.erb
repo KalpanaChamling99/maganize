@@ -1,23 +1,23 @@
 <%# ── Hero: Featured stories ──────────────────────────────── %>
 <% if @featured_articles.any? %>
   <section class="mb-14">
-    <div class="flex items-center gap-3 mb-6">
-      <span class="text-xs font-semibold tracking-widest uppercase text-gray-400">Featured</span>
-      <div class="flex-1 h-px bg-gray-200"></div>
+    <div class="section-divider flex items-center gap-3 mb-6">
+      <span class="section-label text-xs font-semibold tracking-widest uppercase text-gray-400">Featured</span>
+      <div class="divider-line flex-1 h-px bg-gray-200"></div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-px bg-gray-200 border border-gray-200">
+    <div class="featured-grid grid grid-cols-1 lg:grid-cols-3 gap-px bg-gray-200 border border-gray-200">
 
       <%# Primary hero card — takes 2 columns %>
       <% hero = @featured_articles.first %>
-      <article class="bg-white lg:col-span-2 group">
+      <article class="featured-hero bg-white lg:col-span-2 group">
         <% if hero.images.attached? %>
           <div class="h-[350px] overflow-hidden">
             <%= image_tag hero.images.first, alt: hero.title,
               class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" %>
           </div>
         <% else %>
-          <div class="h-[350px] bg-gray-100 flex items-center justify-center">
+          <div class="placeholder-bg h-[350px] bg-gray-100 flex items-center justify-center">
             <span class="text-gray-300 text-6xl font-serif">&#9733;</span>
           </div>
         <% end %>
@@ -29,7 +29,7 @@
             <%= link_to hero.title, article_path(hero),
               class: "hover:text-gray-600 transition-colors" %>
           </h2>
-          <p class="text-gray-500 text-sm leading-relaxed mb-4 line-clamp-3"><%= hero.excerpt %></p>
+          <p class="excerpt text-gray-500 text-sm leading-relaxed mb-4 line-clamp-3"><%= hero.excerpt %></p>
           <time class="text-xs text-gray-400 tracking-wide">
             <%= hero.published_at.strftime("%B %-d, %Y") %>
           </time>
@@ -37,9 +37,9 @@
       </article>
 
       <%# Secondary hero cards %>
-      <div class="flex flex-col gap-px bg-gray-200">
+      <div class="featured-sidebar flex flex-col gap-px bg-gray-200">
         <% @featured_articles[1..].each do |article| %>
-          <article class="bg-white flex-1 group p-6 flex flex-col justify-between">
+          <article class="featured-card bg-white flex-1 group p-6 flex flex-col justify-between">
             <div>
               <span class="inline-block text-xs font-semibold tracking-widest uppercase text-red-600 mb-2">
                 <%= article.category&.name %>
@@ -48,7 +48,7 @@
                 <%= link_to article.title, article_path(article),
                   class: "hover:text-gray-600 transition-colors" %>
               </h3>
-              <p class="text-gray-500 text-sm leading-relaxed line-clamp-2"><%= article.excerpt %></p>
+              <p class="excerpt text-gray-500 text-sm leading-relaxed line-clamp-2"><%= article.excerpt %></p>
             </div>
             <time class="text-xs text-gray-400 tracking-wide mt-4 block">
               <%= article.published_at.strftime("%B %-d, %Y") %>
@@ -67,17 +67,17 @@
     <div class="flex flex-wrap gap-2">
       <% @categories.each do |cat| %>
         <%= link_to cat.name, category_path(cat),
-          class: "text-xs font-semibold tracking-widest uppercase px-4 py-2 border border-gray-300 hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-all" %>
+          class: "category-pill text-xs font-semibold tracking-widest uppercase px-4 py-2 border border-gray-300 hover:bg-gray-900 hover:text-white transition-all" %>
       <% end %>
     </div>
   </section>
 <% end %>
 
 <%# ── Section divider ─────────────────────────────────────── %>
-<div class="flex items-center gap-3 mb-8">
-  <span class="text-xs font-semibold tracking-widest uppercase text-gray-400">Latest Articles</span>
-  <div class="flex-1 h-px bg-gray-200"></div>
-  <%= link_to "View all →", articles_path, class: "text-xs text-gray-400 hover:text-gray-900 transition-colors whitespace-nowrap" %>
+<div class="section-divider flex items-center gap-3 mb-8">
+  <span class="section-label text-xs font-semibold tracking-widest uppercase text-gray-400">Latest Articles</span>
+  <div class="divider-line flex-1 h-px bg-gray-200"></div>
+  <%= link_to "View all →", articles_path, class: "view-all-link text-xs text-gray-400 hover:text-gray-900 transition-colors whitespace-nowrap" %>
 </div>
 
 <%# ── Recent articles grid ────────────────────────────────── %>
@@ -100,12 +100,12 @@
 <%# ── Featured collections ────────────────────────────────── %>
 <% @featured_collections.each do |collection| %>
   <% next if collection.articles.empty? %>
-  <section class="mb-16">
-    <div class="flex items-center gap-3 mb-6">
-      <span class="text-xs font-semibold tracking-widest uppercase text-gray-900"><%= collection.title %></span>
-      <div class="flex-1 h-px bg-gray-200"></div>
+  <section class="collection-section mb-16">
+    <div class="section-divider flex items-center gap-3 mb-6">
+      <span class="section-title text-xs font-semibold tracking-widest uppercase text-gray-900"><%= collection.title %></span>
+      <div class="divider-line flex-1 h-px bg-gray-200"></div>
       <%= link_to collection_path(collection),
-        class: "inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-900 transition-colors whitespace-nowrap" do %>
+        class: "view-all-link inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-900 transition-colors whitespace-nowrap" do %>
         View all
         <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
@@ -149,7 +149,7 @@
 <% end %>
 
 <%# ── Newsletter banner ───────────────────────────────────── %>
-<section class="bg-gray-900 text-white px-8 py-12 text-center mb-4">
+<section class="newsletter-section bg-gray-900 text-white px-8 py-12 text-center mb-4">
   <p class="text-xs tracking-widest uppercase text-gray-400 mb-2">Newsletter</p>
   <h3 class="font-serif text-3xl font-bold mb-3">Never miss a story</h3>
   <p class="text-gray-400 text-sm mb-6 max-w-md mx-auto">

@@ -10,7 +10,7 @@
     <p class="text-gray-500 mt-2 text-sm">Browse articles by topic</p>
   </div>
   <%= link_to "+ New tag", new_admin_tag_path,
-    class: "shrink-0 text-xs font-semibold tracking-widest uppercase px-4 py-2 border border-gray-300 hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-all" %>
+    class: "shrink-0 text-xs font-semibold tracking-widest uppercase px-4 py-2 border border-gray-300 hover:bg-gray-900 hover:text-white transition-all" %>
 </div>
 
 <% if @tags.any? %>
@@ -28,7 +28,7 @@
           else             "text-lg px-6 py-2.5"
           end %>
         <%= link_to tag_path(tag),
-          class: "#{size_class} border border-gray-300 hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-all font-medium" do %>
+          class: "#{size_class} border border-gray-300 hover:bg-gray-900 hover:text-white transition-all font-medium" do %>
           <%= tag.name %>
           <span class="ml-1 opacity-40 text-xs">(<%= count %>)</span>
         <% end %>

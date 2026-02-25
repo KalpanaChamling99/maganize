@@ -47,7 +47,7 @@
       <% end %>
       <% @article.tags.each do |tag| %>
         <%= link_to "##{tag.name}", tag_path(tag),
-          class: "text-xs font-semibold px-2 py-0.5 border border-gray-300 text-gray-500 uppercase tracking-wide hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-colors" %>
+          class: "text-xs font-semibold px-2 py-0.5 border border-gray-300 text-gray-500 uppercase tracking-wide hover:bg-gray-900 hover:text-white transition-colors" %>
       <% end %>
     </div>
     <h1 class="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight mb-4">
@@ -154,7 +154,7 @@
       <div class="flex flex-wrap gap-2">
         <% @article.tags.each do |tag| %>
           <%= link_to "##{tag.name}", tag_path(tag),
-            class: "text-sm px-3 py-1.5 border border-gray-200 hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-all" %>
+            class: "text-sm px-3 py-1.5 border border-gray-200 hover:bg-gray-900 hover:text-white transition-all" %>
         <% end %>
       </div>
     </div>

@@ -8,7 +8,7 @@
 <% if @categories.any? %>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
     <% @categories.each do |category| %>
-      <article class="group border border-gray-200 hover:border-gray-900 transition-colors">
+      <article class="group border border-gray-200 transition-colors">
         <div class="p-6">
           <h2 class="font-serif text-2xl font-bold mb-2 group-hover:text-gray-600 transition-colors">
             <%= link_to category.name, category_path(category), class: "hover:text-gray-600" %>

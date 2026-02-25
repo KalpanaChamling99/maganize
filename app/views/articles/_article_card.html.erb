@@ -25,13 +25,13 @@
   placeholder_icon_size ||= "w-10 h-10"
   show_excerpt          = local_assigns.fetch(:show_excerpt, true)
 %>
-<article class="group bg-white border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+<article class="article-card group bg-white overflow-hidden hover:shadow-lg transition-shadow">
   <div class="relative <%= image_height %> overflow-hidden">
     <% if article.images.attached? %>
       <%= image_tag article.images.first, alt: article.title,
         class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" %>
     <% else %>
-      <div class="w-full h-full bg-gray-100 flex items-center justify-center">
+      <div class="placeholder-bg w-full h-full bg-gray-100 flex items-center justify-center">
         <%= lucide_icon "image", class: "#{placeholder_icon_size} text-gray-300" %>
       </div>
     <% end %>
@@ -59,10 +59,10 @@
   </div>
 
   <div class="<%= card_padding %>">
-    <div class="flex items-center gap-4 text-xs <%= date_color %> mb-3">
+    <div class="article-meta flex items-center gap-4 text-xs <%= date_color %> mb-3">
       <% if article.author %>
         <%= link_to team_member_path(article.author), class: "flex items-center gap-1.5 hover:opacity-80 transition-opacity min-w-0" do %>
-          <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-200 shrink-0 flex items-center justify-center border-2 border-gray-300">
+          <div class="author-avatar w-10 h-10 rounded-full overflow-hidden bg-gray-200 shrink-0 flex items-center justify-center border-2 border-gray-300">
             <% if article.author.avatar.attached? %>
               <%= image_tag article.author.avatar, class: "w-full h-full object-cover" %>
             <% else %>
@@ -82,9 +82,9 @@
         class: "font-heading text-red-600 hover:text-red-700 transition-colors" %>
     </h3>
     <% if show_excerpt %>
-      <p class="text-gray-500 text-sm leading-relaxed line-clamp-3 mb-4"><%= article.excerpt %></p>
+      <p class="article-excerpt text-gray-500 text-sm leading-relaxed line-clamp-3 mb-4"><%= article.excerpt %></p>
     <% end %>
-    <div class="pt-3 border-t border-gray-100">
+    <div class="card-footer pt-3 border-t border-gray-100">
       <%= link_to "Read More", article_path(article),
         class: "text-sm font-semibold px-4 py-2 bg-red-500 text-white hover:bg-red-600 transition-colors" %>
     </div>

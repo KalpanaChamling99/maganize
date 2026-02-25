@@ -14,7 +14,7 @@
 
   <%# Featured / first article %>
   <% hero = @articles.first %>
-  <article class="group mb-10 border border-gray-200 hover:border-gray-900 transition-colors">
+  <article class="group mb-10 border border-gray-200 transition-colors">
     <div class="grid grid-cols-1 md:grid-cols-5">
       <% if hero.images.attached? %>
         <div class="md:col-span-2 h-[350px] overflow-hidden">
@@ -64,7 +64,7 @@
     <div class="flex flex-wrap gap-2">
       <% other_tags.each do |tag| %>
         <%= link_to "##{tag.name}", tag_path(tag),
-          class: "text-xs px-3 py-1.5 border border-gray-200 hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-all" %>
+          class: "text-xs px-3 py-1.5 border border-gray-200 hover:bg-gray-900 hover:text-white transition-all" %>
       <% end %>
     </div>
   </div>

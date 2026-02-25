@@ -28,7 +28,9 @@
       "Bash(bin/rails routes:*)",
       "Bash(xargs:*)",
       "Bash(grep:*)",
-      "Bash(bin/rails action_text:install:*)"
+      "Bash(bin/rails action_text:install:*)",
+      "Bash(ls app/assets/stylesheets/ app/javascript/controllers/theme*)",
+      "WebFetch(domain:demo.themeinwp.com)"
     ]
   }
 }

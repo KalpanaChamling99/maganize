@@ -17,7 +17,7 @@
 
   <%# Hero — first article, full-width feature card %>
   <% hero = @articles.first %>
-  <article class="group mb-10 border border-gray-200 hover:border-gray-900 hover:shadow-lg transition-all">
+  <article class="group mb-10 border border-gray-200 hover:shadow-lg transition-all">
     <div class="grid grid-cols-1 md:grid-cols-5">
 
       <% if hero.images.attached? %>
@@ -92,7 +92,7 @@
     <div class="flex flex-wrap gap-2">
       <% other_cats.each do |cat| %>
         <%= link_to cat.name, category_path(cat),
-          class: "text-xs font-semibold px-4 py-2 border border-gray-200 hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-all" %>
+          class: "text-xs font-semibold px-4 py-2 border border-gray-200 hover:bg-gray-900 hover:text-white transition-all" %>
       <% end %>
     </div>
   </div>
