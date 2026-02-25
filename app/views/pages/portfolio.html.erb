@@ -1,0 +1,444 @@
+<%= content_for :head do %>
+<style>
+  /* ── Scroll-reveal ─────────────────────────────────────────── */
+  [data-animate] {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.65s cubic-bezier(0.4,0,0.2,1),
+                transform 0.65s cubic-bezier(0.4,0,0.2,1);
+  }
+  [data-animate].is-visible { opacity: 1; transform: none; }
+  [data-animate="d1"] { transition-delay: 0.1s; }
+  [data-animate="d2"] { transition-delay: 0.2s; }
+  [data-animate="d3"] { transition-delay: 0.3s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .h1 { animation: fadeUp 0.6s ease 0.05s both; }
+  .h2 { animation: fadeUp 0.6s ease 0.18s both; }
+  .h3 { animation: fadeUp 0.6s ease 0.31s both; }
+  .h4 { animation: fadeUp 0.6s ease 0.44s both; }
+  .h5 { animation: fadeUp 0.6s ease 0.57s both; }
+
+  /* ── Hero ──────────────────────────────────────────────────── */
+  .pf-hero { background: #09111f; position: relative; overflow: hidden; }
+  .pf-hero-dots {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image: radial-gradient(rgba(255,255,255,0.055) 1px, transparent 1px);
+    background-size: 30px 30px;
+    -webkit-mask-image: radial-gradient(ellipse 100% 100% at 50% 0%, black 40%, transparent 80%);
+    mask-image: radial-gradient(ellipse 100% 100% at 50% 0%, black 40%, transparent 80%);
+  }
+  .pf-hero-glow {
+    position: absolute; pointer-events: none;
+    width: 600px; height: 600px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(239,68,68,0.1) 0%, transparent 68%);
+    top: -220px; right: -160px;
+  }
+
+  /* Avatar ring */
+  .pf-avatar {
+    width: 96px; height: 96px; border-radius: 50%; flex-shrink: 0;
+    background: conic-gradient(from 180deg, #991b1b, #ef4444, #fca5a5, #ef4444, #991b1b);
+    padding: 2.5px;
+    box-shadow: 0 0 32px rgba(239,68,68,0.2);
+  }
+  .pf-avatar-inner {
+    width: 100%; height: 100%; border-radius: 50%;
+    background: #09111f;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* Stats box */
+  .pf-stats {
+    display: inline-grid; grid-template-columns: repeat(3,1fr);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .pf-stat {
+    padding: 14px 28px; text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.1);
+  }
+  .pf-stat:last-child { border-right: none; }
+
+  /* ── Section head ──────────────────────────────────────────── */
+  .pf-head { margin-bottom: 2.25rem; }
+  .pf-head-label {
+    font-size: 10px; font-weight: 800;
+    letter-spacing: 0.2em; text-transform: uppercase; color: #ef4444;
+    margin-bottom: 6px;
+  }
+  .pf-head-title {
+    font-size: 1.5rem; font-weight: 700; color: #111827; font-family: Georgia, serif;
+  }
+
+  /* ── Skill card ────────────────────────────────────────────── */
+  .skill-card {
+    background: #fff; border: 1px solid #f0f0f0; padding: 24px;
+    transition: box-shadow 0.25s, border-color 0.25s, transform 0.25s;
+  }
+  .skill-card:hover {
+    border-color: #e5e7eb;
+    box-shadow: 0 8px 30px -6px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+  }
+  .skill-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 10px; background: #f9fafb; border: 1px solid #ebebeb;
+    font-size: 11.5px; font-weight: 500; color: #374151;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .skill-tag:hover { background: #f3f4f6; border-color: #d1d5db; }
+  .skill-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── Project card ──────────────────────────────────────────── */
+  .pf-project {
+    overflow: hidden; border: 1px solid #f0f0f0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .pf-project:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 24px 48px -10px rgba(0,0,0,0.13);
+  }
+  .pf-proj-cover {
+    height: 130px; position: relative; overflow: hidden;
+    display: flex; align-items: flex-end; padding: 18px 20px;
+  }
+
+  /* ── Experience card ───────────────────────────────────────── */
+  .pf-exp {
+    background: #fff; border: 1px solid #f0f0f0;
+    border-left: 3px solid #e5e7eb;
+    transition: border-left-color 0.25s, box-shadow 0.25s;
+  }
+  .pf-exp-active { border-left-color: #ef4444; }
+  .pf-exp:hover  { box-shadow: 0 6px 24px -4px rgba(0,0,0,0.07); }
+  .pf-exp:hover:not(.pf-exp-active) { border-left-color: #9ca3af; }
+</style>
+<% end %>
+
+<div data-controller="animate">
+
+<%# ─────────────────────────────────────────── HERO ──── %>
+<div class="-mx-4 sm:-mx-6 -mt-10 pf-hero px-6 sm:px-12 py-16 sm:py-24 mb-16">
+  <div class="pf-hero-dots"></div>
+  <div class="pf-hero-glow"></div>
+  <div class="relative max-w-4xl">
+
+    <div class="h1 flex items-center gap-3 mb-10">
+      <span class="w-8 h-px bg-red-500"></span>
+      <span class="text-[10px] font-extrabold tracking-[0.22em] uppercase text-red-400">Portfolio</span>
+    </div>
+
+    <div class="h2 flex items-center gap-7 mb-8">
+      <div class="pf-avatar">
+        <div class="pf-avatar-inner">
+          <span class="font-serif text-4xl font-bold text-white select-none">K</span>
+        </div>
+      </div>
+      <div>
+        <h1 class="font-serif font-bold text-white tracking-tight leading-none" style="font-size:clamp(2.8rem,7vw,4.5rem)">
+          Kalpana Rai
+        </h1>
+        <p class="text-red-400 text-xs font-extrabold tracking-[0.18em] uppercase mt-3">
+          Web Designer &amp; Frontend Developer
+        </p>
+        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2.5 text-gray-500 text-xs">
+          <span class="flex items-center gap-1.5">
+            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            Kathmandu, Nepal
+          </span>
+          <span class="text-gray-700">·</span>
+          <a href="mailto:kalpanahamling99@gmail.com" class="hover:text-white transition-colors">kalpanahamling99@gmail.com</a>
+          <span class="text-gray-700">·</span>
+          <a href="tel:9808047141" class="hover:text-white transition-colors">+977 9808047141</a>
+        </div>
+      </div>
+    </div>
+
+    <p class="h3 text-gray-300 leading-relaxed max-w-xl mb-10 border-l-2 border-red-500 pl-5" style="font-size:15px">
+      Frontend Developer and Web Designer with <strong class="text-white font-semibold">8+ years</strong> of
+      experience building responsive, pixel-perfect web applications.
+      Specialist in <strong class="text-white font-semibold">ReactJS, Shopify, Tailwind CSS</strong> and modern JavaScript.
+    </p>
+
+    <div class="h4 flex flex-wrap gap-3 mb-12">
+      <a href="mailto:kalpanahamling99@gmail.com"
+         class="inline-flex items-center gap-2 text-[11px] font-extrabold tracking-[0.16em] uppercase px-7 py-3.5 bg-red-500 text-white hover:bg-red-400 transition-colors">
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        Email Me
+      </a>
+      <a href="https://github.com" target="_blank" rel="noopener"
+         class="inline-flex items-center gap-2 text-[11px] font-extrabold tracking-[0.16em] uppercase px-7 py-3.5 border border-white/15 text-gray-400 hover:bg-white/5 hover:border-white/30 hover:text-white transition-all">
+        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        GitHub
+      </a>
+    </div>
+
+    <div class="h5 pf-stats">
+      <% [
+        { num: "8+",  label: "Years" },
+        { num: "4+",  label: "Companies" },
+        { num: "15+", label: "Technologies" },
+      ].each do |s| %>
+        <div class="pf-stat">
+          <p class="font-serif text-2xl font-bold text-white"><%= s[:num] %></p>
+          <p class="text-[10px] font-bold tracking-widest uppercase text-gray-600 mt-1"><%= s[:label] %></p>
+        </div>
+      <% end %>
+    </div>
+
+  </div>
+</div>
+
+
+<%# ─────────────────────────────────────────── SKILLS ──── %>
+<section class="mb-20">
+  <div data-animate class="pf-head">
+    <p class="pf-head-label">What I Work With</p>
+    <h2 class="pf-head-title">Skills &amp; Technologies</h2>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+    <% [
+      {
+        num: "01", label: "Web Design",
+        skills: [
+          { name: "HTML5",        color: "#E44D26" },
+          { name: "CSS3 / SCSS",  color: "#264de4" },
+          { name: "JavaScript",   color: "#c9a800" },
+          { name: "Bootstrap",    color: "#7952B3" },
+          { name: "Tailwind CSS", color: "#06B6D4" },
+          { name: "Material UI",  color: "#007FFF" },
+          { name: "jQuery",       color: "#0769AD" },
+          { name: "ReactJS",      color: "#149eca" },
+        ],
+        delay: "",
+      },
+      {
+        num: "02", label: "Development",
+        skills: [
+          { name: "PHP",            color: "#777BB4" },
+          { name: "MySQL",          color: "#00758F" },
+          { name: "WordPress",      color: "#21759B" },
+          { name: "Shopify Liquid", color: "#5e8e3e" },
+        ],
+        delay: "d1",
+      },
+      {
+        num: "03", label: "Tools",
+        skills: [
+          { name: "Git",            color: "#F05032" },
+          { name: "Figma",          color: "#F24E1E" },
+          { name: "Photoshop",      color: "#31A8FF" },
+          { name: "JIRA / Trello",  color: "#0052CC" },
+        ],
+        delay: "d2",
+      },
+    ].each do |g| %>
+      <div data-animate="<%= g[:delay] %>" class="skill-card">
+        <div class="flex items-baseline gap-2.5 mb-5">
+          <span class="font-mono text-[10px] font-extrabold text-red-400"><%= g[:num] %></span>
+          <h3 class="text-[11px] font-extrabold tracking-[0.14em] uppercase text-gray-900"><%= g[:label] %></h3>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <% g[:skills].each do |s| %>
+            <span class="skill-tag">
+              <span class="skill-dot" style="background:<%= s[:color] %>"></span>
+              <%= s[:name] %>
+            </span>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+
+<%# ─────────────────────────────────────────── PROJECTS ──── %>
+<section class="mb-20">
+  <div data-animate class="pf-head">
+    <p class="pf-head-label">Selected Work</p>
+    <h2 class="pf-head-title">Featured Projects</h2>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+    <% [
+      {
+        title: "Eagle Vision",
+        role:  "Frontend Developer",
+        desc:  "Designed and developed responsive UI features, converted Figma designs to pixel-perfect pages, and ensured cross-browser compatibility.",
+        tags:  ["ReactJS", "JavaScript", "CSS", "Figma"],
+        dark:  "#1e1b2e",
+        mid:   "#7c3aed",
+        link:  "#",
+        delay: "",
+      },
+      {
+        title: "Fluid — Shopify",
+        role:  "Theme Developer",
+        desc:  "A custom sectionized Shopify theme with reusable, configurable sections for homepage, product, collection, and cart pages.",
+        tags:  ["Shopify Liquid", "HTML", "CSS", "JavaScript"],
+        dark:  "#052e16",
+        mid:   "#16a34a",
+        link:  "#",
+        delay: "d1",
+      },
+      {
+        title: "Olumo",
+        role:  "Frontend Developer",
+        desc:  "Employee engagement survey platform. Built reusable ReactJS and jQuery UI components from Figma designs.",
+        tags:  ["ReactJS", "jQuery", "CSS", "Figma"],
+        dark:  "#0c1a3a",
+        mid:   "#2563eb",
+        link:  "#",
+        delay: "d2",
+      },
+    ].each do |p| %>
+      <article data-animate="<%= p[:delay] %>" class="pf-project flex flex-col">
+        <div class="pf-proj-cover" style="background:linear-gradient(135deg, <%= p[:dark] %> 0%, <%= p[:mid] %>55 100%);">
+          <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%);"></div>
+          <div class="absolute top-0 right-0 w-32 h-32 rounded-full -translate-y-1/2 translate-x-1/2" style="background:radial-gradient(circle, <%= p[:mid] %>30 0%, transparent 70%);"></div>
+          <span class="absolute top-4 left-5 text-[10px] font-bold tracking-widest uppercase px-2 py-1" style="background:<%= p[:mid] %>30; color:<%= p[:mid] %>; border:1px solid <%= p[:mid] %>55;">
+            <%= p[:role] %>
+          </span>
+          <h3 class="relative font-serif text-xl font-bold text-white z-10 leading-none"><%= p[:title] %></h3>
+        </div>
+        <div class="flex flex-col flex-1 p-6 bg-white border border-t-0 border-gray-100">
+          <p class="text-sm text-gray-500 leading-relaxed flex-1 mb-5"><%= p[:desc] %></p>
+          <div class="flex flex-wrap gap-1.5 mb-5">
+            <% p[:tags].each do |tag| %>
+              <span class="text-[11px] font-semibold px-2 py-0.5 bg-gray-100 text-gray-600"><%= tag %></span>
+            <% end %>
+          </div>
+          <a href="<%= p[:link] %>"
+             class="inline-flex items-center gap-1.5 text-[11px] font-extrabold tracking-widest uppercase transition-all group/link"
+             style="color:<%= p[:mid] %>">
+            View Project
+            <svg class="w-3 h-3 group-hover/link:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+      </article>
+    <% end %>
+  </div>
+</section>
+
+
+<%# ─────────────────────────────────────────── EXPERIENCE ──── %>
+<section class="mb-20">
+  <div data-animate class="pf-head">
+    <p class="pf-head-label">Career History</p>
+    <h2 class="pf-head-title">Work Experience</h2>
+  </div>
+
+  <div class="space-y-4">
+    <% [
+      {
+        num:      "01",
+        role:     "Frontend Developer",
+        company:  "Danphe Software Labs",
+        location: "Kathmandu",
+        period:   "July 2022 – Present",
+        current:  true,
+        desc:     "Contributed across two main products — Fluid (Shopify theme) and Olumo (survey platform). Built sectionized Shopify themes, designed responsive layouts, converted Figma designs to pixel-perfect pages, and developed ReactJS/jQuery UI components.",
+        tags:     ["ReactJS", "jQuery", "Shopify Liquid", "HTML", "CSS", "Figma"],
+        delay:    "",
+      },
+      {
+        num:      "02",
+        role:     "Frontend Developer & Designer",
+        company:  "Freelance",
+        location: "Remote",
+        period:   "November 2021 – July 2022",
+        current:  false,
+        desc:     "Built frontend applications using ReactJS, React-Redux, Stripe, Material UI, and Google Maps API. Implemented JWT authentication, Stripe payments, eCommerce flows, and server-side data tables with pagination.",
+        tags:     ["ReactJS", "React-Redux", "Tailwind CSS", "Stripe", "JWT"],
+        delay:    "d1",
+      },
+      {
+        num:      "03",
+        role:     "Web Designer",
+        company:  "Home Loan Experts (HLE Nepal)",
+        location: "Kathmandu",
+        period:   "April 2021 – September 2021",
+        current:  false,
+        desc:     "Web design, page optimization, email templates, and website maintenance for Australia's leading mortgage broker outsourcing firm. Designed landing pages and custom blog pages.",
+        tags:     ["HTML", "CSS", "jQuery", "ReactJS", "WordPress"],
+        delay:    "d2",
+      },
+      {
+        num:      "04",
+        role:     "Web Designer",
+        company:  "ThemeInWP Pvt. Ltd",
+        location: "Kathmandu",
+        period:   "July 2019 – March 2021",
+        current:  false,
+        desc:     "Designed and developed WordPress themes and templates. Worked on theme customization, UI design, and frontend development for client websites.",
+        tags:     ["WordPress", "HTML", "CSS", "JavaScript", "Photoshop"],
+        delay:    "d3",
+      },
+    ].each do |exp| %>
+      <div data-animate="<%= exp[:delay] %>"
+           class="pf-exp p-6 sm:p-7 <%= 'pf-exp-active' if exp[:current] %>">
+        <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
+          <div class="flex items-start gap-4">
+            <span class="font-mono text-xs font-extrabold <%= exp[:current] ? 'text-red-400' : 'text-gray-300' %> mt-0.5 shrink-0 leading-tight">
+              <%= exp[:num] %>
+            </span>
+            <div>
+              <h3 class="font-serif text-base font-bold text-gray-900 leading-tight"><%= exp[:role] %></h3>
+              <p class="text-xs mt-1">
+                <span class="font-semibold <%= exp[:current] ? 'text-red-500' : 'text-gray-700' %>"><%= exp[:company] %></span>
+                <span class="text-gray-400"> · <%= exp[:location] %></span>
+              </p>
+            </div>
+          </div>
+          <span class="shrink-0 text-[11px] font-bold px-3 py-1.5 tracking-wide <%= exp[:current] ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-gray-100 text-gray-500' %>">
+            <%= exp[:period] %>
+            <% if exp[:current] %><span class="inline-block w-1.5 h-1.5 rounded-full bg-red-400 align-middle ml-1"></span><% end %>
+          </span>
+        </div>
+        <p class="text-sm text-gray-500 leading-relaxed mb-4 pl-8"><%= exp[:desc] %></p>
+        <div class="flex flex-wrap gap-1.5 pl-8">
+          <% exp[:tags].each do |tag| %>
+            <span class="text-[11px] font-medium px-2 py-0.5 bg-gray-100 text-gray-600"><%= tag %></span>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+
+<%# ─────────────────────────────────────────── CONTACT ──── %>
+<div data-animate class="-mx-4 sm:-mx-6 relative overflow-hidden px-8 py-20 text-center" style="background:#09111f;">
+  <div class="absolute inset-0 pointer-events-none"
+       style="background-image:radial-gradient(rgba(255,255,255,0.045) 1px, transparent 1px); background-size:26px 26px;"></div>
+  <div class="absolute pointer-events-none rounded-full"
+       style="width:500px; height:500px; background:radial-gradient(circle, rgba(239,68,68,0.1) 0%, transparent 65%); top:-250px; left:50%; transform:translateX(-50%);"></div>
+  <div class="relative">
+    <p class="text-[10px] font-extrabold tracking-[0.22em] uppercase text-red-500 mb-4">Open to Work</p>
+    <h2 class="font-serif font-bold text-white mb-5 tracking-tight" style="font-size:clamp(2rem,5vw,3.5rem); line-height:1.1">
+      Let's build<br>something great.
+    </h2>
+    <p class="text-gray-500 text-sm leading-relaxed mb-10 max-w-xs mx-auto">
+      Available for frontend roles and freelance projects.
+    </p>
+    <div class="flex flex-wrap justify-center gap-4">
+      <a href="mailto:kalpanahamling99@gmail.com"
+         class="inline-flex items-center gap-2 text-[11px] font-extrabold tracking-[0.16em] uppercase px-8 py-4 bg-red-500 text-white hover:bg-red-400 transition-colors">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        kalpanahamling99@gmail.com
+      </a>
+      <a href="tel:9808047141"
+         class="inline-flex items-center gap-2 text-[11px] font-extrabold tracking-[0.16em] uppercase px-8 py-4 border border-white/15 text-gray-400 hover:bg-white/5 hover:border-white/30 hover:text-white transition-all">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+        +977 9808047141
+      </a>
+    </div>
+  </div>
+</div>
+
+</div><%# end data-controller="animate" %>

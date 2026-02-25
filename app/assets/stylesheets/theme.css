@@ -4,7 +4,6 @@
    ───────────────────────────────────────────────────────── */
 
 /* ── Theme toggle — segmented 50/50 pill ─────────────────── */
-/* Track: 56px wide — each half = 28px                       */
 .theme-float {
   display: inline-flex;
   align-items: center;
@@ -27,12 +26,11 @@ html[data-theme="dark"] .theme-float-track {
   background: #1e293b;
 }
 
-/* Sliding half-pill knob — covers the active half */
 .theme-float-knob {
   position: absolute;
   top: 2px;
   left: 2px;
-  width: 24px;   /* 56/2 - 4px total padding */
+  width: 24px;
   height: 22px;
   border-radius: 999px;
   background: #fff;
@@ -41,45 +39,43 @@ html[data-theme="dark"] .theme-float-track {
   z-index: 2;
 }
 html[data-theme="dark"] .theme-float-knob {
-  left: 30px;  /* 56/2 + 2 = 30px — covers right half */
+  left: 30px;
 }
 
-/* Sun icon — centred in left half (28px wide) */
 .theme-float-sun-icon {
   display: block;
   position: absolute;
-  left: 7px;   /* (28 - 14) / 2 = 7px */
+  left: 7px;
   top: 50%;
   transform: translateY(-50%);
   width: 14px;
   height: 14px;
   overflow: visible;
-  color: #374151;   /* dark on white knob in light mode */
+  color: #374151;
   transition: color 0.25s;
   z-index: 3;
   pointer-events: none;
 }
 html[data-theme="dark"] .theme-float-sun-icon {
-  color: #6b7280;   /* dim on dark track in dark mode */
+  color: #6b7280;
 }
 
-/* Moon icon — centred in right half (28px wide) */
 .theme-float-moon-icon {
   display: block;
   position: absolute;
-  right: 7px;  /* (28 - 14) / 2 = 7px from right */
+  right: 7px;
   top: 50%;
   transform: translateY(-50%);
   width: 14px;
   height: 14px;
   overflow: visible;
-  color: #6b7280;   /* dim on dark track in light mode */
+  color: #6b7280;
   transition: color 0.25s;
   z-index: 3;
   pointer-events: none;
 }
 html[data-theme="dark"] .theme-float-moon-icon {
-  color: #1e293b;   /* dark on white knob in dark mode */
+  color: #1e293b;
 }
 
 /* ── Smooth transitions ───────────────────────────────────── */
@@ -109,12 +105,22 @@ html[data-theme="dark"] .site-banner {
 html[data-theme="dark"] .site-banner-date {
   color: #475569;
 }
-html[data-theme="dark"] .site-social-icon {
-  color: #475569;
+/* ── Social icons — brand colors, square container ───────── */
+.social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  color: #fff;
+  flex-shrink: 0;
+  transition: opacity 0.2s ease;
 }
-html[data-theme="dark"] .site-social-icon:hover {
-  color: #94a3b8;
-}
+.social-icon:hover { opacity: 0.8; }
+.social-facebook  { background-color: #1877F2; }
+.social-twitter   { background-color: #000000; }
+.social-instagram { background-color: #E1306C; }
+.social-youtube   { background-color: #FF0000; }
 
 /* ── Masthead ────────────────────────────────────────────── */
 html[data-theme="dark"] .site-header {

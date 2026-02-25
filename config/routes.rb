@@ -8,8 +8,9 @@ Rails.application.routes.draw do
   resources :team_members, only: [:show]
 
   # Static pages
-  get "about",   to: "pages#about",   as: :about
-  get "contact", to: "pages#contact", as: :contact
+  get "about",     to: "pages#about",     as: :about
+  get "contact",   to: "pages#contact",   as: :contact
+  get "portfolio", to: "pages#portfolio", as: :portfolio
 
   # Public collections
   resources :collections, only: [:index, :show]
