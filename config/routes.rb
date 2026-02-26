@@ -2,7 +2,9 @@ Rails.application.routes.draw do
   root "home#index"
 
   # Public magazine routes
-  resources :articles, only: [:index, :show]
+  resources :articles, only: [:index, :show] do
+    resources :comments, only: [:create]
+  end
   resources :categories, only: [:index, :show]
   resources :tags, only: [:index, :show]
   resources :team_members, only: [:show]

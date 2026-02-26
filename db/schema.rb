@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_02_24_095000) do
+ActiveRecord::Schema[7.1].define(version: 2026_02_26_120000) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -107,6 +107,17 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_24_095000) do
     t.boolean "featured", default: false, null: false
   end
 
+  create_table "comments", force: :cascade do |t|
+    t.integer "article_id", null: false
+    t.string "name", null: false
+    t.string "email"
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["article_id"], name: "index_comments_on_article_id"
+    t.index ["created_at"], name: "index_comments_on_created_at"
+  end
+
   create_table "roles", force: :cascade do |t|
     t.string "name", null: false
     t.text "permissions", default: "--- []\n", null: false
@@ -140,4 +151,5 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_24_095000) do
   add_foreign_key "articles", "team_members"
   add_foreign_key "collection_articles", "articles"
   add_foreign_key "collection_articles", "collections"
+  add_foreign_key "comments", "articles"
 end

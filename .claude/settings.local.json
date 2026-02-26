@@ -30,7 +30,12 @@
       "Bash(grep:*)",
       "Bash(bin/rails action_text:install:*)",
       "Bash(ls app/assets/stylesheets/ app/javascript/controllers/theme*)",
-      "WebFetch(domain:demo.themeinwp.com)"
+      "WebFetch(domain:demo.themeinwp.com)",
+      "Bash(gem update --system)",
+      "Bash(gem update --system 3.4.22)",
+      "Bash(gem install bundler:2.3.18)",
+      "Bash(gem --version)",
+      "Bash(bin/rails db:create)"
     ]
   }
 }
