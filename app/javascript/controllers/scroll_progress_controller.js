@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["bar", "btn", "arc", "pct", "nav", "sentinel", "spacer"]
+  static targets = ["bar", "btn", "arc", "pct", "nav", "sentinel", "spacer", "bookmark"]
 
   static values = { circumference: { type: Number, default: 119.38 } }
 
@@ -47,9 +47,17 @@ export default class extends Controller {
     this.arcTarget.style.strokeDashoffset = this.circumferenceValue - ratio * this.circumferenceValue
     this.pctTarget.textContent            = percent + "%"
     this.btnTarget.style.display          = scrollTop > 300 ? "flex" : "none"
+    if (this.hasBookmarkTarget) {
+      this.bookmarkTarget.classList.toggle("is-visible", scrollTop > 300)
+    }
   }
 
   scrollToTop() {
     window.scrollTo({ top: 0, behavior: "smooth" })
+  }
+
+  scrollToSubscribe(event) {
+    event.preventDefault()
+    document.getElementById("subscribe-cta")?.scrollIntoView({ behavior: "smooth" })
   }
 }

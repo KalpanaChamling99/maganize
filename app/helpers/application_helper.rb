@@ -22,6 +22,13 @@ module ApplicationHelper
     end
   end
 
+  # Returns an inline style string for a category badge using the stored hex color.
+  def category_badge_style(category)
+    color = category.color.presence rescue nil
+    color ||= "#ef4444"
+    "background-color: #{color}"
+  end
+
   # Returns an array of page numbers and :gap symbols for the pagination partial.
   # Always shows first/last page and a window of pages around the current page.
   def paginate_range(collection, window: 2)

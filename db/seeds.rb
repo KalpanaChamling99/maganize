@@ -290,11 +290,11 @@ articles_data.each do |data|
     title:        data[:title],
     excerpt:      data[:excerpt],
     body:         data[:body],
-    category:     categories[data[:category_index]],
     featured:     data[:featured],
     published_at: data[:published_at]
   )
 
+  article.categories = [categories[data[:category_index]]]
   article.tags = data[:tag_indexes].map { |i| tags[i] }
   created += 1
 end
@@ -599,6 +599,411 @@ additional_articles_data = [
     tag_indexes: [3, 18, 6],
     featured: false,
     published_at: 54.days.ago
+  },
+  {
+    title: "The Hidden Language of Hands",
+    excerpt: "Sign languages are not translations of spoken languages. They are complete, independent linguistic systems — and they are disappearing.",
+    body: "There are an estimated 300 distinct sign languages in the world, and most of them have no official recognition, no standardised writing system, and no more than a few thousand users. Linguists who study them are racing against a particular kind of extinction: the consolidation of Deaf communities into a handful of dominant sign languages, driven by globalisation and the dominance of national educational systems.\n\nThe loss would be significant beyond the Deaf communities directly affected. Sign languages have provided linguistics with some of its most important evidence about the universality of language structure. Because they evolved independently of spoken languages — on different substrates, using different modalities — they offer a kind of natural experiment in how language develops when the usual constraints are removed.\n\nThe findings have been striking. Sign languages have the same basic grammatical structures as spoken languages: subjects, objects, verbs, tense, aspect, mood. They have syntax, not just vocabulary. They tell jokes. They tell lies. They have accents and dialects and slang.\n\n\"Every sign language is a complete language,\" says linguist Diane Brentari. \"The surprise is not that they resemble spoken languages. The surprise is how deeply similar all languages are, spoken or signed, when you look below the surface.\"",
+    category_index: 0,
+    tag_indexes: [0, 2, 7],
+    featured: false,
+    published_at: 55.days.ago
+  },
+  {
+    title: "The Rise of the Amateur Scientist",
+    excerpt: "Citizen science has moved from birdwatching to galaxy mapping. What happens when millions of non-experts join the scientific enterprise?",
+    body: "In 2007, astronomers at Yale uploaded 893,212 images from the Sloan Digital Sky Survey to a website called Galaxy Zoo and asked members of the public to classify them. They expected to wait months for the results. In the first hour, volunteers were classifying 70,000 galaxies per hour. Within the year, more than 150,000 people had submitted classifications. The resulting dataset was more complete and more accurate than any automated system available at the time.\n\nGalaxy Zoo was neither the first nor the last citizen science project to produce results that professional researchers could not have achieved alone. The Christmas Bird Count, run by the Audubon Society, has been collecting bird population data since 1900 — the longest continuous wildlife survey in existence. iNaturalist, a platform where users upload observations of plants and animals with GPS coordinates, has accumulated more than 100 million observations from 3 million users and has become a primary data source for biodiversity research.\n\nThe implications for science are significant and not entirely comfortable. Citizen science is cheap, scalable, and produces data at resolutions that professional researchers cannot afford. It also introduces questions about data quality, incentive structures, and the relationship between expert and amateur knowledge that the scientific community is still working through.\n\n\"The line between professional and amateur has always been fuzzier than it appears,\" says science historian Steven Shapin. \"Citizen science is not new. What is new is the scale and the infrastructure.\"",
+    category_index: 3,
+    tag_indexes: [7, 9, 2],
+    featured: false,
+    published_at: 56.days.ago
+  },
+  {
+    title: "The Last Great Bookshops",
+    excerpt: "Independent booksellers have survived the internet, Amazon, and a pandemic. Here is how they did it.",
+    body: "Shakespeare and Company, on the Left Bank of Paris, was founded by Sylvia Beach in 1919. It closed during the German occupation and reopened, in a different location, in 1951. It has been there ever since, selling English-language books in a city where English-language books are not the natural commercial proposition, defying every prediction of its imminent demise.\n\nThe shop's survival is partly explained by its mythology — it is the bookshop where Hemingway browsed and Joyce was first published — but mythology alone does not pay rent. Shakespeare and Company has survived because it has consistently offered something that Amazon cannot: a place where books are curated by people who have read them, who can talk about them, who can connect a customer's vague description of what they are looking for to the exact book they didn't know existed.\n\nThis capacity — call it bibliographic serendipity — turns out to be extremely difficult to replicate algorithmically. Amazon's recommendation engine is good at telling you what people who bought what you bought also bought. It is not good at telling you what you should read next if you are feeling melancholy on a Tuesday afternoon and want something that will make the world feel larger.\n\n\"The great bookshop is a conversation,\" says bookseller Shaun Bythell. \"It requires a human on both sides.\"",
+    category_index: 12,
+    tag_indexes: [8, 7, 2],
+    featured: false,
+    published_at: 57.days.ago
+  },
+  {
+    title: "Inside the Mind of a Migratory Bird",
+    excerpt: "How birds navigate across continents without GPS, maps, or any external reference that scientists have been able to fully identify.",
+    body: "The bar-tailed godwit flies non-stop from Alaska to New Zealand — a journey of 11,000 kilometres over nine days, without eating, drinking, or landing. It does this every year. It navigates to within metres of its destination using systems that biologists are only beginning to understand.\n\nWhat we know is this: birds use multiple overlapping navigation systems, of which the magnetic compass is probably the most important. Cryptochrome proteins in the retina appear to allow birds to literally see the Earth's magnetic field — not as a visual phenomenon but as a directional sense overlaid on normal vision. They also use the position of the sun, the pattern of stars, and possibly infrasound — low-frequency sound waves produced by ocean waves and topographic features that travel thousands of kilometres.\n\nThe system is robust to perturbation in a way that GPS is not. Experiments that disrupt one navigation cue find that birds compensate by relying more heavily on others. The redundancy appears to be a feature rather than a bug — a reliability mechanism for a journey where failure is fatal.\n\n\"We have spent decades trying to understand how they do it,\" says ornithologist Richard Holland. \"Each answer reveals three more questions. The bird, apparently, does not find this complicated.\"",
+    category_index: 3,
+    tag_indexes: [0, 7, 11],
+    featured: false,
+    published_at: 58.days.ago
+  },
+  {
+    title: "The Fashion Houses That Last",
+    excerpt: "In an industry defined by novelty, a handful of houses have survived for more than a century. What do they know that others don't?",
+    body: "Hermès was founded in 1837 as a harness maker for the French cavalry. It became a luggage maker when the cavalry became obsolete. It became a silk scarf company when luggage became commodified. It became a handbag company — the Birkin, the Kelly — when silk became commodified. It is now worth approximately €240 billion and has a waiting list for its products measured in years.\n\nThe Hermès story is not unique. Chanel was founded in 1909 as a millinery. Louis Vuitton in 1854 as a trunk maker. These companies have survived world wars, depressions, social revolutions, and the disruption of every market they have operated in, and they have survived by doing the same thing each time: identifying what they do that cannot be copied, and retreating to it.\n\nWhat they do that cannot be copied, it turns out, is not the product. It is the story. The Birkin bag is made from leather and metal. The waiting list and the price — upward of $30,000 for basic models — are made from narrative. From the story of craft, exclusivity, and enduring value that Hermès has maintained with absolute consistency for nearly two centuries.\n\n\"Luxury is not about the object,\" says fashion historian Valerie Steele. \"It is about the belief in the object. The great houses sell that belief more reliably than anything else.\"",
+    category_index: 6,
+    tag_indexes: [17, 2, 7],
+    featured: false,
+    published_at: 59.days.ago
+  },
+  {
+    title: "What a Hospital at Night Sounds Like",
+    excerpt: "A nurse's account of the sounds, silences, and small dramas of the overnight shift.",
+    body: "The hospital changes at night. The administrators go home, the consultants go home, the visitors go home, the noise of the day — the trolleys, the announcements, the visiting hours — subsides, and what is left is the essential institution: the patients, the nurses, and the particular quality of silence that is never quite silent.\n\nI have worked the night shift for eleven years. I prefer it. There is a clarity to night nursing that the day obscures. The hierarchy flattens slightly. The paperwork recedes. You are, more nakedly than during the day, a person caring for another person.\n\nThe sounds of the night ward are distinctive: the rhythmic percussion of ventilators, the soft alert of IV pumps, the particular cry that means pain and the particular cry that means fear and the particular silence that means something else. You learn to read these sounds the way a musician reads a score. The information is in the variations.\n\nI think about what a hospital is, sometimes, in the quiet hours between two and four. It is the place where the body becomes the whole problem. Everything else — status, money, opinion — disappears. The body remains. We try to help it. Sometimes we succeed. Sometimes the night teaches you the limits of helping.",
+    category_index: 7,
+    tag_indexes: [16, 0, 14],
+    featured: false,
+    published_at: 60.days.ago
+  },
+  {
+    title: "The Paradox of Progress",
+    excerpt: "Every generation believes it is living through unprecedented change. For once, they may be right.",
+    body: "In 1900, a horse-drawn carriage could travel from New York to Chicago in approximately two weeks. By 1930, a car could make the journey in four days. By 1960, a commercial aircraft covered it in three hours. By 2000, the time had not changed — the airliner was already near its ceiling — and the principal experience of long-distance travel became not the journey but the airport.\n\nThis pattern — rapid initial transformation followed by a plateau — recurs throughout technological history. The steam engine, the telephone, the automobile, the computer: each produced a period of radical change followed by decades of incremental improvement within a stable paradigm.\n\nThe question for our own moment is where we are in this cycle. The optimists argue that we are at the beginning of a transformation — artificial intelligence, biotechnology, clean energy — that will dwarf the industrial revolution in its scope. The pessimists argue that we have been making this claim since at least the 1970s and that the productivity data does not support it.\n\nBoth sides agree on one thing: the question is more consequential than most questions we ask. If the optimists are right, the institutions we have built to manage technological change will be inadequate. If the pessimists are right, the institutions we have built on the assumption of unlimited growth face a reckoning.",
+    category_index: 8,
+    tag_indexes: [6, 2, 10],
+    featured: false,
+    published_at: 61.days.ago
+  },
+  {
+    title: "The Dancers Who Changed What Ballet Could Be",
+    excerpt: "How a generation of choreographers broke ballet's codes — and why the form they found keeps producing new work.",
+    body: "In 1913, The Rite of Spring caused a riot. The audience at the Théâtre des Champs-Élysées in Paris booed, hissed, and eventually exchanged blows over Stravinsky's music and Nijinsky's choreography. The spectacle of dancers moving with turned-in feet, hunched posture, and percussive force was, to the audience raised on the smooth vertical line of classical ballet, an act of violence against the form.\n\nBy 1960, The Rite of Spring was canonical. By 2000, its innovations were the basis of contemporary dance. The story of modernism in ballet is a story of repeated offenses that became conventions, of shocks that became traditions.\n\nThe current generation of choreographers has inherited this process and, in some ways, completed it. There is no longer a classical norm against which contemporary work defines itself as transgression. The question now is what ballet becomes when transgression is no longer available as an aesthetic strategy.\n\nThe answers have been various and often surprising. William Forsythe's geometrical deconstructions. Ohad Naharin's Gaga technique. Crystal Pite's synthesis of ballet vocabulary with physical theatre. All represent attempts to find, in the form's formal resources, new possibilities that are genuinely internal rather than reactions against a tradition.\n\n\"We are no longer against something,\" says choreographer Akram Khan. \"We have to be for something. That is harder.\"",
+    category_index: 0,
+    tag_indexes: [17, 3, 7],
+    featured: false,
+    published_at: 62.days.ago
+  },
+  {
+    title: "The Physics of a Perfect Cup",
+    excerpt: "Coffee science has become serious science. What researchers have discovered about extraction, temperature, and grind.",
+    body: "The perfect espresso is, from a physicist's perspective, a problem in fluid dynamics. Hot water under nine bars of pressure passes through a bed of compacted, finely ground coffee, extracting soluble compounds at different rates depending on particle size, water temperature, and the time the water spends in contact with the grounds. The ideal extraction — the one that produces the most desirable flavour balance — occurs in a window of roughly twenty to thirty seconds, in a temperature range of 90 to 96 degrees Celsius, with a grind distribution that optimises surface area while avoiding channels.\n\nThe science is not new — baristas have known most of this empirically for decades — but its formalisation has changed what is possible. Research published in the journal Matter in 2019 showed that using slightly coarser grind and slightly less coffee produces more consistent, better-tasting espresso — counterintuitive findings that led to a rethinking of extraction theory in commercial settings.\n\nThe coffee industry's engagement with science has also revealed how much of what people taste is contextual rather than chemical. Studies consistently show that coffee served in a pleasant environment, by an engaged barista, is rated more highly than identical coffee served in neutral conditions. The cup is only part of the experience.\n\n\"Coffee is chemistry,\" says food scientist Christopher Hendon. \"But whether you enjoy it is psychology. Both matter enormously.\"",
+    category_index: 5,
+    tag_indexes: [2, 11, 7],
+    featured: false,
+    published_at: 63.days.ago
+  },
+  {
+    title: "The Architecture of Power",
+    excerpt: "From Egyptian temples to modern parliaments, the way we build our political spaces shapes the politics conducted within them.",
+    body: "The United States Capitol was designed, in 1793, to communicate a specific idea: that American democracy was the legitimate heir of the Roman Republic. The building's dome, its columns, its formal axial symmetry — all derive from the architectural grammar of antiquity, chosen deliberately to associate the new nation with the greatest democracy the ancient world had produced.\n\nThe buildings in which politics is conducted are never neutral. The cramped debating chamber of the UK House of Commons — a rectangle so narrow that government and opposition benches are two sword-lengths apart, a design inherited from a medieval chapel — produces a confrontational, adversarial style of debate that is genuinely different from the semicircular arrangement of the European Parliament, which tends toward negotiation and coalition-building.\n\nThe research on this is surprisingly robust. Experimental studies show that people make different decisions depending on the height of the ceiling above them, the ambient noise level, the presence or absence of natural light, and the arrangement of furniture in the room. Political decisions are not made in a vacuum — they are made in buildings, and buildings have consequences.\n\n\"Architecture is the most political of the arts,\" says architect Deyan Sudjic. \"It cannot be experienced privately. It is always public, always shared, always an argument about how we should live together.\"",
+    category_index: 16,
+    tag_indexes: [2, 7, 17],
+    featured: false,
+    published_at: 64.days.ago
+  },
+  {
+    title: "The Afterlife of Images",
+    excerpt: "Most photographs are never seen. What happens to the billions of images produced every year that vanish into hard drives and cloud servers?",
+    body: "In 2023, approximately 1.72 trillion photographs were taken worldwide. The number is almost impossible to apprehend. It is roughly 217,000 images per second, or 1.8 billion per day, or enough photographs, printed as 4x6 prints, to cover the surface of the Earth sixteen times.\n\nMost of them will never be seen by anyone other than the person who took them. A substantial proportion will be seen only once — glanced at, dismissed, forgotten. The great majority will be absorbed into the perpetual archive of cloud storage and survive indefinitely, though unviewed, in server farms consuming vast quantities of electricity in service of collective amnesia.\n\nThe photographer and theorist Joan Fontcuberta has called this the \"post-photographic condition\" — a world in which the production of images has become so effortless and so universal that the image has lost its evidential and emotional weight. When everyone photographs everything, what does it mean to photograph something?\n\nThe paradox, Fontcuberta argues, is that the proliferation of images has made individual images more rather than less significant — not because of their rarity but because of the difficulty of making any single image stand out from the torrent. The challenge of contemporary photography is not to make images. It is to make images that matter.",
+    category_index: 15,
+    tag_indexes: [6, 2, 19],
+    featured: false,
+    published_at: 65.days.ago
+  },
+  {
+    title: "The Teenagers Saving Languages",
+    excerpt: "Around the world, young people are using social media to document and revive endangered languages that their grandparents still speak.",
+    body: "Māmaka Kahanamoku is twenty-three years old and speaks Hawaiian as her first language. This makes her unusual: Hawaiian was effectively extinct as a community language by the 1980s, with fewer than a thousand speakers remaining, almost all elderly. Today there are approximately 18,000 speakers, and the number is growing. Kahanamoku is part of the generation that grew up in Hawaiian-language immersion schools, and she is now using TikTok to teach the language to a generation that didn't.\n\nThe phenomenon is not confined to Hawaiian. Welsh teenagers are making YouTube videos in Welsh. Young Māori are using Instagram to document traditional knowledge in te reo Māori. Young speakers of Occitan, Cornish, Basque, and dozens of other minority languages are using platforms designed for English-language content to create spaces in which their languages can live.\n\nThe results are mixed but encouraging. Social media reaches young people in ways that formal language education cannot. It destigmatises minority languages by associating them with contemporary content. And it creates, for the first time, a record of everyday language use — jokes, arguments, slang, code-switching — that linguists have never before had access to at scale.\n\n\"Languages need speakers,\" says linguist David Crystal. \"The internet doesn't save languages. Speakers do. But the internet connects speakers who might otherwise never have met.\"",
+    category_index: 0,
+    tag_indexes: [7, 9, 13],
+    featured: false,
+    published_at: 66.days.ago
+  },
+  {
+    title: "When Algorithms Write the News",
+    excerpt: "Automated journalism is already producing millions of articles per year. What does it mean for the practice of reporting?",
+    body: "The Associated Press has been using automated journalism software to produce earnings reports since 2014. The software — built by a company called Automated Insights — takes structured financial data and converts it into prose at a rate of approximately 4,400 stories per quarter, a volume that would require dozens of human journalists to match.\n\nThe stories are accurate, appropriately hedged, and indistinguishable, in most readers' experience, from stories written by humans. They are also, critics argue, narrowly useful. They convey information that the numbers already contained. They do not ask why the numbers are what they are, what they mean in context, whether the company is telling the truth, or what a worker on the floor of the factory thinks about the quarterly results.\n\nThe distinction maps onto a distinction in journalism that has always existed but was previously theoretical: the difference between information transfer and accountability. Automated journalism is excellent at the former. It is, by definition, incapable of the latter.\n\nThis would matter less if automated journalism were replacing only the most mechanical forms of human journalism. The concern, among reporters and editors, is that it is replacing the journalism that pays for accountability journalism — the commodity content that subsidises the expensive, time-consuming work of investigation.\n\n\"The economics are simple,\" says media analyst Ken Doctor. \"Why pay a journalist to write an earnings report when a machine does it better? The problem is what you lose when you stop paying journalists for anything.\"",
+    category_index: 19,
+    tag_indexes: [2, 10, 9],
+    featured: false,
+    published_at: 67.days.ago
+  },
+  {
+    title: "The Neuroscience of Creativity",
+    excerpt: "For decades, we thought creativity lived in the right brain. The truth is stranger and more distributed.",
+    body: "The left brain / right brain theory of creativity is wrong. It was never well supported by the evidence — the research it was drawn from concerned the coordination of hand movements, not the production of ideas — and decades of neuroimaging have not found the clean hemispheric division that the popular account requires.\n\nWhat neuroscience has found is more interesting. Creativity appears to involve the interaction of three large-scale brain networks: the default mode network (which produces spontaneous, associative thought), the executive control network (which focuses attention and evaluates ideas), and the salience network (which switches between the two).\n\nHighly creative people appear to have stronger connections between these networks — particularly between the default mode and executive control networks, which in most people are anticorrelated: when one is active, the other is quiet. The creative brain, it seems, is one that can hold spontaneous generation and critical evaluation simultaneously rather than sequentially.\n\nThis explains a phenomenon that creative people often describe: the feeling of being an observer of their own creativity, of ideas arriving unbidden and being assessed by what feels like a separate faculty. It also has practical implications: the conditions that suppress the default mode network — stress, distraction, the pressure to perform — are precisely the conditions that suppress creativity.\n\n\"You cannot think your way to a good idea,\" says neuroscientist Rex Jung. \"You can only create conditions in which good ideas are likely to arrive.\"",
+    category_index: 3,
+    tag_indexes: [2, 11, 7],
+    featured: false,
+    published_at: 68.days.ago
+  },
+  {
+    title: "The Quiet Power of Textile Art",
+    excerpt: "Weaving, embroidery, and quilting have been dismissed as craft. A generation of artists is changing that.",
+    body: "The Feminist Art movement of the 1970s made a strategic decision to rehabilitate craft as art — to argue that the quilts, needlework, and weaving that women had produced for centuries deserved the same critical attention as the painting and sculpture that men had produced. The argument was both aesthetic and political: these were significant works that had been rendered invisible by a critical establishment that associated the handmade with the domestic.\n\nFifty years later, the rehabilitation is incomplete but proceeding. The Bard Graduate Center in New York has a department dedicated to the decorative arts. The Metropolitan Museum of Art has textile galleries with serious scholarly apparatus. Major contemporary artists — Kara Walker, Grayson Perry, El Anatsui — work with textiles or in textile traditions and show in the most prestigious contemporary art contexts.\n\nWhat textile art offers, that painting and sculpture do not always offer, is a particular relationship between maker and material. Thread must be handled differently from paint. Warp and weft impose constraints that the canvas does not. The history of the material — who made cloth like this, and why, and under what conditions — is present in a way that the history of paint pigments usually is not.\n\n\"Textiles carry culture in a way that almost no other material does,\" says curator Glenn Adamson. \"You cannot look at a Kente cloth and ignore the society that produced it. The social is woven in.\"",
+    category_index: 10,
+    tag_indexes: [17, 7, 6],
+    featured: false,
+    published_at: 69.days.ago
+  },
+  {
+    title: "Notes on Leaving Home",
+    excerpt: "More people are living outside their country of birth than at any point in recorded history. What does diaspora mean in the age of WhatsApp?",
+    body: "My grandmother left Kerala for London in 1969. She carried two suitcases and a shortwave radio through which she could, on good nights, hear Malayalam-language broadcasts from All India Radio. Contact with home required letters that took three weeks and international telephone calls that cost the equivalent of a day's wages per minute.\n\nMy cousins left Kerala for London, Dubai, and Toronto between 2015 and 2020. They communicate with family through WhatsApp groups, watch Malayalam films on streaming services, order food from websites that deliver imported groceries, and are never, in any meaningful sense, out of contact with home.\n\nThe experience of diaspora has been transformed by connectivity in ways that social scientists are still measuring. Traditional models of immigrant assimilation assumed that contact with the homeland would diminish over time as migrants integrated into the host country. The data suggests this is no longer true: sustained digital contact with home communities is associated with slower cultural assimilation and stronger maintenance of home-country identity — which may be good or bad depending on your perspective.\n\nWhat is clear is that the psychology of leaving — the grief of departure, the disorientation of arrival, the gradual building of a life in a new place — is being fundamentally altered by the fact that departure is no longer absolute. Home is always a phone call away. The question is what that does to the idea of home itself.",
+    category_index: 4,
+    tag_indexes: [16, 6, 0],
+    featured: false,
+    published_at: 70.days.ago
+  },
+  {
+    title: "The Slow Death of the Office",
+    excerpt: "The pandemic accelerated a crisis that was already coming. What happens to cities built around commuting?",
+    body: "In the summer of 2023, the occupancy rate of office buildings in San Francisco's financial district averaged 43 percent. In Manhattan, it was 47 percent. In London, 51 percent. In Tokyo, which has the highest office occupancy rate of any major city, it was 68 percent — still substantially below pre-pandemic levels.\n\nThese numbers represent a structural shift in urban economies that mayors, developers, and transit authorities are only beginning to reckon with. The commercial real estate model that has underpinned urban development for a century — office buildings full five days a week, workers eating lunch and shopping and using transit services that wouldn't exist without them — is under stress in every major Western city.\n\nThe consequences extend beyond empty office towers. Transit systems built on the assumption of predictable weekday peaks are haemorrhaging revenue. Small businesses that catered to office workers — sandwich shops, dry cleaners, coffee shops near office districts — have closed in large numbers and have not been replaced. Tax revenues from commercial property have declined significantly in the cities most affected.\n\n\"The city is a network of networks,\" says urban economist Ed Glaeser. \"When you remove one of the central nodes — the office — the whole network changes. Some of the changes will be beneficial. Most will be complicated.\"",
+    category_index: 8,
+    tag_indexes: [2, 9, 11],
+    featured: false,
+    published_at: 71.days.ago
+  },
+  {
+    title: "The Poet Who Became a Diplomat",
+    excerpt: "Pablo Neruda, Léopold Sédar Senghor, Wole Soyinka — the tradition of the writer in public life has a complicated history.",
+    body: "Pablo Neruda served as Chilean consul in Rangoon, Barcelona, and Madrid before becoming a senator and ambassador. Léopold Sédar Senghor founded a school of African literary thought before becoming the first president of Senegal and serving for two decades. Wole Soyinka, Nigeria's first Nobel laureate, spent two years in solitary confinement under the Gowon regime for attempting to negotiate peace during the Biafran war.\n\nThe tradition of the politically engaged writer — the writer who enters public life not as a commentator but as a participant — is ancient and has produced some of history's most significant literature and some of its most sobering cautionary tales. The question of whether political engagement improves or damages creative work has no clear answer; the evidence for both positions is extensive.\n\nWhat is clear is that the cultural authority of writers in public life has declined in most Western democracies. The age of the public intellectual — when figures like Sartre, Camus, or Bertrand Russell could command genuine public attention on political questions — has passed, replaced by the age of the pundit, whose authority derives from institutional affiliation rather than literary achievement.\n\n\"The writer's authority is moral, not institutional,\" says critic James Wood. \"When writers enter political institutions, they trade one kind of authority for another, and usually get the worse deal.\"",
+    category_index: 12,
+    tag_indexes: [6, 17, 2],
+    featured: false,
+    published_at: 72.days.ago
+  },
+  {
+    title: "The Science of Soil",
+    excerpt: "A teaspoon of healthy soil contains more organisms than there are people on Earth. We are only beginning to understand what they do.",
+    body: "The agricultural revolution was built on a misunderstanding. For ten thousand years, farmers have treated soil as a medium — a substrate in which to anchor plant roots and deliver nutrients. The Green Revolution of the twentieth century intensified this misunderstanding: by providing plants with synthetic fertilisers, it made the biological activity of soil seem unnecessary.\n\nThe science of the past three decades has revealed what was lost. Healthy soil is not a substrate but an ecosystem — a complex community of bacteria, fungi, nematodes, earthworms, and thousands of other organisms that create the conditions for plant growth through interactions so intricate that we have mapped only a fraction of them.\n\nThe mycorrhizal networks — the web of fungal filaments that connects plant roots across hectares of forest floor — are perhaps the most discussed of these interactions. Plants trade sugars for minerals with their fungal partners; the exchange is so significant that a forest's carbon economy cannot be understood without accounting for it.\n\nBut the mycorrhizae are one component of a system of almost incomprehensible complexity. Agricultural soils, stripped of biodiversity by tillage, chemical treatment, and monoculture, may be producing food at the cost of their own long-term capacity to produce food.\n\n\"We have been mining soil,\" says agroecologist David Montgomery. \"Not farming it. The distinction will matter very much in the coming decades.\"",
+    category_index: 9,
+    tag_indexes: [7, 11, 9],
+    featured: false,
+    published_at: 73.days.ago
+  },
+  {
+    title: "The Rise of Endurance Sport",
+    excerpt: "More people are running marathons, cycling centuries, and swimming channels than at any point in history. Why?",
+    body: "In 1972, approximately 1,000 people ran the New York City Marathon. In 2024, the lottery to enter received 145,000 applications for 50,000 slots. The marathon — once a specialist athletic event that required years of dedicated training — has become a mass participation phenomenon.\n\nThe same shift has occurred across endurance sport. Iron-distance triathlons, which require a 2.4-mile swim, 112-mile bike ride, and 26.2-mile run in a single day, now attract participants who are not competitive athletes and have no ambition to win — only to finish. Ultra-marathons, which cover distances of 50 to 100 miles or more through mountainous terrain, have grown from a fringe interest to a mainstream aspiration.\n\nThe explanations for this are several. Endurance sport provides a legible structure for achievement in a world where many traditional structures — career advancement, property ownership, family formation — have become less accessible or less reliable as sources of meaning. The marathon is hard in a measurable, trainable way: effort is rewarded, progress is visible, completion is unambiguous.\n\nThere is also, researchers suggest, a social dimension. Endurance events are communities as much as competitions — communities defined by shared effort, common suffering, and an identity that is immediately meaningful to others who share it.\n\n\"We evolved to run,\" says evolutionary biologist Daniel Lieberman. \"The question is not why so many people are doing it. It is why it took so long to happen.\"",
+    category_index: 11,
+    tag_indexes: [7, 9, 2],
+    featured: false,
+    published_at: 74.days.ago
+  },
+  {
+    title: "What Happens After the Algorithm",
+    excerpt: "Social media companies built systems to maximise engagement. Now they are discovering what they created.",
+    body: "In 2016, a Facebook engineer sent a memo to the company's leadership. It noted that the recommendation algorithms were producing what the memo called \"content with high arousal value\" — content that provoked anger, fear, and outrage. It noted that users engaged with this content more than with calming or neutral content. It recommended changes to the recommendation system that would reduce the prioritisation of high-arousal content. The recommendation was not adopted.\n\nThe memo, leaked in the 2021 Facebook Papers, is one data point in a growing body of evidence about the relationship between algorithmic recommendation and political polarisation, mental health, and the information environment. The evidence is contested — the causal links are difficult to establish, and some studies find smaller effects than others — but the direction is consistent.\n\nWhat is less contested is the mechanism. Recommendation algorithms optimise for engagement. Engagement is maximised by content that provokes strong emotional responses. Strong emotional responses are, disproportionately, negative: anger, fear, and outrage engage more reliably and more intensely than their positive counterparts. A system that maximises engagement will, ceteris paribus, maximise the distribution of content that makes people angry and afraid.\n\n\"No one designed the outrage machine,\" says technology critic Tristan Harris. \"It emerged from incentives. Changing it requires changing the incentives — which means changing the business model.\"",
+    category_index: 1,
+    tag_indexes: [2, 10, 9],
+    featured: false,
+    published_at: 75.days.ago
+  },
+  {
+    title: "The Civilisation Inside a Coral Reef",
+    excerpt: "The Great Barrier Reef is the largest living structure on Earth. Understanding it is one of science's great ongoing projects.",
+    body: "The Great Barrier Reef extends for 2,300 kilometres along the northeast coast of Australia, covering an area larger than Italy. It is composed of approximately 600 types of hard and soft coral, 4,000 species of mollusc, 1,625 species of fish, 133 species of shark and ray, and six of the world's seven species of sea turtle. It is also, in a more fundamental sense, a single organism — a community of relationships so interwoven that removing one element changes everything else.\n\nThe reef has been bleaching — a stress response in which coral expels its symbiotic algae and turns white, eventually dying if conditions do not improve — with increasing frequency and severity. The cause is ocean warming driven by climate change. The 2016 and 2017 bleaching events killed more than half of the coral in the northern reef system. The 2020 and 2022 events extended the damage further south.\n\nMarine biologists at the Australian Institute of Marine Science are working on interventions that range from assisted evolution — selectively breeding heat-tolerant coral — to large-scale cooling of reef areas using fog-generation systems. The work is extraordinary in its ambition and uncertain in its prospects.\n\n\"We are trying to manage the consequences of a problem we have not yet solved,\" says reef scientist Ove Hoegh-Guldberg. \"Buying time is not the same as solving the problem. But buying time may be all we can do right now.\"",
+    category_index: 9,
+    tag_indexes: [7, 9, 0],
+    featured: true,
+    published_at: 76.days.ago
+  },
+  {
+    title: "The Winemakers Chasing Altitude",
+    excerpt: "As climate change warms traditional wine regions, vintners are planting higher and further north than ever before.",
+    body: "The vineyards of Burgundy have been producing wine since the monks of the Cistercian order began planting them in the twelfth century. The monks chose their locations with extraordinary care — mapping the soil, the microclimate, the drainage, and the angle of the sun over generations — and the result is the most precisely mapped wine terroir in the world, a patchwork of individual plots each producing wine of distinct character.\n\nThe problem is that the climate the monks calibrated for no longer exists. Average temperatures in the Côte d'Or have risen by approximately 2 degrees Celsius since 1950. Grapes are ripening earlier, producing higher sugar levels and lower acidity — making wines that are less structured, less age-worthy, and, in the judgement of many wine critics, less interesting.\n\nThe response has been varied. Some producers are harvesting earlier to preserve acidity. Some are planting on north-facing slopes that were previously too cold. Some are experimenting with grape varieties that would have been unsuitable for their appellations twenty years ago.\n\nAnd some are moving to higher altitudes — planting in the Alps, in the Pyrenees, in the mountains of northern Spain and Portugal — chasing the temperatures that the lowland vineyards have lost. The wines produced in these places are different from the classics they are not trying to replace. Whether they are as good is a question that will take decades to answer.",
+    category_index: 5,
+    tag_indexes: [7, 9, 2],
+    featured: false,
+    published_at: 77.days.ago
+  },
+  {
+    title: "The Men Who Make Watches by Hand",
+    excerpt: "In a world of mass production and disposable goods, a handful of craftspeople still make watches that take a year to build.",
+    body: "The movement of a mechanical watch — the assembly of gears, springs, levers, and jewels that converts the energy of a wound mainspring into the regular tick of seconds — is one of the most intricate objects that human hands have produced. A complicated watch may contain five hundred separate components, each machined to tolerances measured in microns, assembled in a sequence that requires years of training to master.\n\nThe industrial revolution automated most of this work. Swiss manufacturers like Rolex and Patek Philippe retain hand-finishing — the polishing of surfaces, the bevelling of edges — as a mark of quality, but the components are machined, not handmade. True hand-production, from raw metal to finished watch, is the province of a tiny number of independent watchmakers who produce perhaps twenty watches per year and have waiting lists of a decade or more.\n\nThese makers — George Daniels, who died in 2011, was the most celebrated; his successors include Roger Smith and a handful of others — are motivated by something that market forces do not explain. They could earn more, work less, and live more comfortably doing almost anything else.\n\n\"A watch is a philosophical object,\" says watchmaker Philippe Dufour. \"It is a machine that measures time using only mechanical means, with no external reference. To make one is to understand what time is — which is to say, to understand how little we know about what time is.\"",
+    category_index: 10,
+    tag_indexes: [8, 14, 7],
+    featured: false,
+    published_at: 78.days.ago
+  },
+  {
+    title: "The Election That Changed Everything",
+    excerpt: "How a single referendum reshaped a country's political landscape for a generation — and what it teaches about democratic decision-making.",
+    body: "The Brexit referendum of 2016 was, by most measures, a democratic event of unusual clarity. A clear question — Leave or Remain — was put to the electorate. A clear answer was returned. A decision was made.\n\nThe consequences have been correspondingly clear: significant disruption to trade with the United Kingdom's largest trading partners, a loss of freedom of movement for British citizens in Europe and European citizens in Britain, a political realignment that reshuffled the major parties, and a constitutional crisis in Northern Ireland that is still unresolved.\n\nWhat the Brexit case illustrates — and what democratic theorists have been debating since it happened — is the tension between democratic procedure and democratic outcome. The referendum was procedurally democratic. Whether the outcome has been democratically beneficial is a question on which the evidence continues to accumulate, and on which reasonable people continue to disagree.\n\nThe deeper question concerns the appropriate scope of referendums as instruments of democratic decision-making. Complex, multi-dimensional questions — Should this country leave this particular political and economic union, with all the trade-offs that entails? — may be poorly suited to binary choice mechanisms designed for simpler decisions.\n\n\"The referendum answered one question,\" says political scientist Matthew Goodwin. \"It raised a hundred others. That ratio is not ideal.\"",
+    category_index: 2,
+    tag_indexes: [2, 10, 9],
+    featured: false,
+    published_at: 79.days.ago
+  },
+  {
+    title: "How Cities Decide What to Demolish",
+    excerpt: "The politics of architectural preservation — who gets to say what survives, and what disappears.",
+    body: "In 1963, New York's Pennsylvania Station was demolished. The building — a beaux-arts monument modelled on the Baths of Caracalla in Rome, one of the grandest public spaces in American history — was replaced by the existing Penn Station, widely regarded as one of the worst public buildings in the world. The demolition was carried out over the protests of a handful of architects and preservationists, and it prompted the passage of New York City's Landmarks Law in 1965, which created the framework for architectural preservation that now protects more than 35,000 buildings.\n\n\"We will probably be judged not by the monuments we build,\" wrote Ada Louise Huxtable in the New York Times after the demolition, \"but by those we have destroyed.\"\n\nThe politics of preservation are never simple. Buildings exist in cities, which are not museums. They occupy valuable land. They consume energy. They were designed for functions that change. The argument for demolishing a historic building is always that the city needs something the building cannot provide. The argument for preserving it is always that the city needs what the building cannot be replaced.\n\nThe resolution of this argument varies by city, by moment, and by who controls the process. London has lost more of its Victorian industrial buildings in the past thirty years than in the Victorian era's entire period of construction. Tokyo, which has no strong preservation movement, rebuilds its urban fabric almost entirely within a generation.",
+    category_index: 16,
+    tag_indexes: [17, 2, 7],
+    featured: false,
+    published_at: 80.days.ago
+  },
+  {
+    title: "The Future of Work Is Already Here",
+    excerpt: "In the gig economy's most extreme forms, workers have lost the protections of employment without gaining the freedom of self-employment.",
+    body: "In 2024, approximately 59 million Americans — 36 percent of the workforce — reported doing some form of gig or freelance work. The number has grown steadily since the Great Recession of 2008, accelerated by the pandemic, and shows no sign of plateauing. The conventional employment relationship — one employer, stable hours, benefits, and the legal protections that come with employee status — is becoming a minority experience for younger workers in many sectors.\n\nThe optimistic case for gig work — freedom, flexibility, entrepreneurship — is well established in company communications and less well established in the research literature. Studies consistently show that most gig workers would prefer conventional employment if it were available at comparable wages. The \"flexibility\" of gig work frequently means availability at irregular hours for unpredictable income, which is not flexibility in any meaningful sense.\n\nThe policy response has been varied. California's Proposition 22, in 2020, created a third employment category — \"independent contractor plus\" — for app-based workers, providing some benefits without employment protections. The EU has proposed legislation that would reclassify most platform workers as employees. Neither approach has fully resolved the underlying tension between platform economics and worker welfare.\n\n\"The gig economy is not a new kind of work,\" says labour economist Lawrence Katz. \"It is a very old kind of work — piecework, casualisation, irregular income — with better branding.\"",
+    category_index: 8,
+    tag_indexes: [2, 10, 9],
+    featured: false,
+    published_at: 81.days.ago
+  },
+  {
+    title: "The Mountain at the Edge of the World",
+    excerpt: "Climbing Everest has become a managed commercial operation. What that means for the mountain — and for what mountaineering was.",
+    body: "In 1953, Edmund Hillary and Tenzing Norgay reached the summit of Everest after months of logistical preparation, multiple high-altitude camps, and a final push that required everything they had. They were the first people to stand at the highest point on Earth.\n\nIn 2024, several hundred people reached the same summit during the spring climbing season. They were guided by professional operators, supported by fixed ropes installed by Sherpa climbers, and equipped with equipment calibrated by decades of industrial development. The wait at the Hillary Step — the technical crux of the standard route — can be measured in hours.\n\nThe commercialisation of Everest has been criticised extensively, and the criticisms are valid: it has led to overcrowding that creates its own dangers, generated enormous waste at altitude that is difficult to remove, and created a market dynamic in which operators compete for clients by reducing safety margins. It has also brought significant economic benefits to Sherpa communities and made possible a diversity of ascents that the elitism of traditional mountaineering would not have allowed.\n\nWhat it has definitively ended is the possibility of the summit as a measure of exceptional individual achievement. When the mountain is accessible to anyone with the money to pay for it and the physical condition to endure it, it is no longer an extreme environment but a managed experience.\n\n\"The mountain hasn't changed,\" says mountaineer Ed Viesturs. \"The experience of climbing it has.\"",
+    category_index: 4,
+    tag_indexes: [0, 13, 7],
+    featured: false,
+    published_at: 82.days.ago
+  },
+  {
+    title: "The Grammar of Game Design",
+    excerpt: "Video games have developed a vocabulary of meaning that their designers often cannot articulate. A critic tries to map it.",
+    body: "The first time a player enters a new area in Dark Souls, they encounter a message on the ground, written by another player: \"Try jumping.\" It is, almost certainly, advice that will result in the player jumping off a ledge and dying. This is considered, within the game's community, hilarious.\n\nBut consider what the joke requires. It requires that the player understands that messages are written by other players, that some of those players are malicious, that jumping from height causes death, and that the humour of the situation depends on the gap between the advice's apparent helpfulness and its actual consequence. It requires, in other words, a sophisticated understanding of the game's mechanics, its social ecosystem, and its aesthetics of suffering.\n\nVideo games have developed a grammar — a system of conventions, expectations, and references that creates meaning through combination — that is as complex as the grammar of cinema or literature, and about which far less critical work has been done. The reasons for this are partly sociological (the people who study culture are not always the people who play games) and partly inherent to the form: games are interactive in ways that make the usual tools of criticism — close reading, textual analysis — difficult to apply.\n\n\"We have been making games for fifty years,\" says game designer Will Wright. \"We have been thinking about what they mean for about ten.\"",
+    category_index: 0,
+    tag_indexes: [17, 3, 2],
+    featured: false,
+    published_at: 83.days.ago
+  },
+  {
+    title: "The Doctors Without Borders",
+    excerpt: "Médecins Sans Frontières operates in active war zones, epidemic zones, and disaster sites. What it takes to do that work.",
+    body: "The hospital in Bangui, capital of the Central African Republic, is run by Médecins Sans Frontières in a city that has been in varying states of civil conflict for more than a decade. The building — solid concrete, generator-powered, staffed by a combination of international volunteers and local employees — handles surgical cases, trauma, infectious disease, and maternal health for a population that has effectively no other option.\n\nMSF was founded in 1971 by a group of French physicians who had worked in Biafra and concluded that traditional humanitarian neutrality — the Red Cross model of silence in exchange for access — was morally untenable when confronted with atrocity. The organisation would provide medical care in conflict zones, and it would also bear witness to what it saw and report it publicly. The principle of témoignage — witnessing — has occasionally cost MSF access and has invariably created friction with the governments and militias on whose territory it operates.\n\nThe work requires a particular kind of person — or rather, it attracts people for whom the alternative is, in some sense, impossible to contemplate. MSF doctors do not earn large salaries, do not have comfortable postings, and do not return home intact.\n\n\"People ask me why I do this,\" says Dr. Amani Toure, who has worked with MSF in South Sudan, Libya, and Yemen. \"I find it hard to explain the question. This is what medicine is for.\"",
+    category_index: 7,
+    tag_indexes: [0, 13, 8],
+    featured: true,
+    published_at: 84.days.ago
+  },
+  {
+    title: "How Countries Recover From Dictatorship",
+    excerpt: "The transition from authoritarian rule to democracy is one of political science's central puzzles. The record is mixed.",
+    body: "In 1989, the Berlin Wall fell. Between 1989 and 1991, approximately thirty countries transitioned from communist or authoritarian rule to some form of electoral democracy. The transition was the largest simultaneous democratic wave in history, and it produced radically different outcomes. Some countries — Poland, the Czech Republic, Estonia — became stable, prosperous liberal democracies. Others — Russia, Belarus, Hungary — transitioned to new forms of authoritarianism within a decade.\n\nThe political science of democratic transition has identified several factors that appear to matter. The strength of civil society institutions — trade unions, churches, professional associations, universities — that existed prior to the transition. The existence of a broad coalition behind the transition, rather than a narrow elite agreement. The economic conditions in the transition period. The legacy of previous democratic experience.\n\nBut the predictive power of these factors is limited. The Eastern European transitions of 1989 confounded most expert predictions. The Arab Spring of 2011 produced durable democracy only in Tunisia. South Africa's peaceful transition in 1994 succeeded despite predictions of catastrophic ethnic violence.\n\n\"Democratic transitions are not processes that can be engineered from outside,\" says political scientist Samuel Huntington. \"They are political events that happen when the conditions are right. The scholar's job is to understand why the conditions are sometimes right and sometimes not. We remain some distance from a satisfactory answer.\"",
+    category_index: 2,
+    tag_indexes: [17, 2, 9],
+    featured: false,
+    published_at: 85.days.ago
+  },
+  {
+    title: "The Furniture Makers of Oaxaca",
+    excerpt: "In the villages around the Mexican city, woodworking traditions that predate the Spanish conquest are thriving in new forms.",
+    body: "The workshop of Ernesto Vargas is in a village called San Martín Tilcajete, twenty kilometres from Oaxaca city, and it is so full of colour that walking into it is a kind of optical event. Every surface — every table, every shelf, every carving in progress — is covered in the intricate geometric patterns of the alebrijes tradition, the painted wooden figures that have become one of the most recognised forms of Mexican folk art.\n\nVargas is the third generation of his family to carve alebrijes, and he has expanded the tradition beyond the small figures his grandfather made into furniture, architectural installations, and large-scale public sculpture. The patterns — derived from pre-Columbian geometric design, filtered through centuries of craft development — are applied by hand using brushes with single horsehairs, a process that requires weeks for a single piece.\n\nThe alebrijes tradition is, in one sense, a success story: it has maintained artistic vitality across generations, attracted significant collector and museum interest, and provided economic stability for the village communities that produce it. In another sense, it is under the same pressures as every traditional craft in the age of globalisation: cheap mass-produced imitations, competition from factory-made goods, and the difficulty of passing skills to a generation that has other options.\n\n\"The tradition is alive,\" says Vargas. \"But it requires care. Like any living thing.\"",
+    category_index: 10,
+    tag_indexes: [7, 4, 14],
+    featured: false,
+    published_at: 86.days.ago
+  },
+  {
+    title: "The Long Game of Climate Policy",
+    excerpt: "Decades of climate negotiations have produced agreements, commitments, and targets. The temperature keeps rising.",
+    body: "The first World Climate Conference was held in Geneva in 1979. It produced a declaration calling for international cooperation on climate change. The second was held in 1990 and produced a framework for the negotiations that would eventually become the UN Framework Convention on Climate Change, signed in 1992. The Kyoto Protocol followed in 1997. The Copenhagen Accord in 2009. The Paris Agreement in 2015.\n\nIn the same period, global average temperatures rose by approximately 0.8 degrees Celsius above pre-industrial levels. CO2 concentrations in the atmosphere rose from 336 parts per million in 1979 to 421 parts per million in 2023. Annual global greenhouse gas emissions rose from approximately 30 billion tonnes to approximately 55 billion tonnes.\n\nThe gap between the diplomatic output and the physical reality is one of the defining features of the climate crisis. The politics have produced agreements; the agreements have produced commitments; the commitments have produced insufficient action. Each annual Conference of Parties produces a final communiqué that is, from the perspective of the physical climate, largely meaningless.\n\nThe reasons for this gap are structural and not unique to climate: the collective action problem, the time horizons of electoral politics, the power of incumbent industries, and the asymmetry between those who benefit from fossil fuels and those who bear the cost of their combustion.\n\n\"We have known what needs to happen for fifty years,\" says climate scientist James Hansen. \"The problem was never ignorance. It was interests.\"",
+    category_index: 9,
+    tag_indexes: [2, 10, 9],
+    featured: false,
+    published_at: 87.days.ago
+  },
+  {
+    title: "The Readers Who Saved the Book",
+    excerpt: "Book clubs have been unfashionable for most of literary history. They may now be the most important institution in publishing.",
+    body: "Oprah Winfrey's Book Club, which launched in 1996, could move a novel from obscurity to bestseller status within a week. The effect — immediate, measurable, and reproducible — demonstrated something that publishers had suspected but never quantified: that reading is a social activity, that recommendations from trusted sources matter more than advertising, and that the book market, like most markets, is driven by a small number of influential intermediaries.\n\nOprah's club was the most visible version of a much broader phenomenon. Book clubs — reading groups, as they are more commonly called in the UK — have existed since the seventeenth century, but their penetration of the general reading public expanded dramatically in the 1990s and has continued to grow. Current estimates suggest that approximately five million people in the UK and fifteen million in the United States participate in some form of organised reading group.\n\nThe publishing industry's relationship with book clubs has evolved from suspicious condescension — serious literary fiction was considered above the book-club market — to enthusiastic cultivation. Publishers now produce reading group editions with discussion questions. Authors give book-club video calls. Literary prizes are partially calibrated to the tastes of reading group members.\n\n\"The book club reader is not a category of reader,\" says publisher Sarah Savitt. \"She is the reader. She is the person who makes publishing economically viable. She should have been taken seriously thirty years ago.\"",
+    category_index: 12,
+    tag_indexes: [11, 7, 2],
+    featured: false,
+    published_at: 88.days.ago
+  },
+  {
+    title: "Running on Empty: The Ultra-Marathon of Modern Life",
+    excerpt: "Burnout was classified as a medical condition in 2019. Why did it take so long, and what does its recognition change?",
+    body: "The World Health Organization added burnout to its International Classification of Diseases in 2019, defining it as \"a syndrome conceptualized as resulting from chronic workplace stress that has not been successfully managed.\" The recognition was significant: for decades, burnout had been described as a lifestyle issue, a character failing, or simply the price of ambition. The ICD classification placed it in the medical register, giving it the status of a condition rather than a complaint.\n\nThe research on burnout had been accumulating for decades before the classification. Christina Maslach, the psychologist who developed the primary measurement tool for burnout in the 1970s, documented three components: exhaustion (the depletion of emotional and physical resources), depersonalisation (a growing distance and cynicism toward the people one serves), and reduced sense of personal accomplishment. The triad appears consistently across cultures, professions, and time periods.\n\nWhat changed in the period leading up to the ICD classification was the scale. Burnout rates in healthcare, teaching, law, and finance had been rising for a decade before 2019. The pandemic dramatically accelerated the process, particularly in healthcare, where surveys conducted in 2021 and 2022 found burnout rates of 60 to 70 percent among hospital staff in many countries.\n\n\"Burnout is what happens when the demand for care exceeds the capacity to provide it, indefinitely,\" says psychologist Emily Nagoski. \"It is not a personal failure. It is a system operating beyond its design limits.\"",
+    category_index: 7,
+    tag_indexes: [11, 2, 7],
+    featured: false,
+    published_at: 89.days.ago
+  },
+  {
+    title: "The Art of Doing Nothing",
+    excerpt: "In South Korea, idle hands are becoming a form of resistance. What the 'doing nothing' movement says about modern life.",
+    body: "The Space Out Competition began in 2014 in Seoul. Participants are required to do nothing — no smartphones, no conversation, no reading — for ninety minutes. Heart rate is monitored; the person whose heart rate is most consistent and closest to resting is declared the winner. In 2024, approximately two thousand people entered.\n\nThe competition is a joke that is also not a joke. It reflects a genuine cultural reckoning with the costs of South Korea's notorious productivity culture — the country with the longest working hours in the OECD, the highest rates of academic pressure on children, and a suicide rate that consistently ranks among the highest in the developed world.\n\nThe hwadu — the Korean concept of \"doing nothing,\" drawn from Buddhist practice — has become a shorthand for a broader social conversation about the relationship between productivity and wellbeing. The bbali bbali (hurry hurry) culture that drove South Korea's economic miracle has produced a backlash: a growing movement, particularly among young Koreans, that celebrates slowness, aimlessness, and the deliberate rejection of optimisation.\n\nThe movement has its counterparts elsewhere — Italy's dolce far niente, the Danish concept of hygge — but in South Korea it carries a specifically political charge. It is not merely a preference for leisure. It is an argument that the society's priorities are wrong.\n\n\"Rest is not the absence of productivity,\" says philosopher Byung-Chul Han. \"It is the condition of all genuine thought.\"",
+    category_index: 0,
+    tag_indexes: [6, 2, 10],
+    featured: false,
+    published_at: 90.days.ago
+  },
+  {
+    title: "The Future of the Museum",
+    excerpt: "Institutions built for one era are being asked to serve another. What museums are becoming — and what they risk losing.",
+    body: "The Louvre receives approximately 9 million visitors per year. A significant proportion of them come for a single purpose: to see the Mona Lisa. They stand in a crowd twenty people deep, raise their smartphones above their heads, take a photograph of a painting they can barely see, and leave. The time they spend in front of the painting averages six seconds.\n\nThis is not the museum experience the Louvre was designed for. The institution's founders envisioned a space for sustained contemplation, for the encounter with objects that reward close attention. The encounter that actually occurs — brief, mediated by a screen, shared with hundreds of strangers — is something different.\n\nMuseums are engaged in a deep conversation with themselves about what they are for and who they serve. The traditional answers — preservation, scholarship, education — remain valid but insufficient. The new answers being proposed — community engagement, accessibility, social justice, economic development — are sometimes in tension with the traditional ones.\n\nThe specific question of the Mona Lisa is, in one sense, trivial. In another sense, it is exemplary. The painting cannot be moved to a larger space without destroying the intimate galleries that make the rest of the Louvre what it is. It cannot be shown without the crowd. The crowd cannot be managed without the photograph. The photograph makes the visit meaningless in the original sense while giving it a different meaning.\n\n\"The museum's job is to create encounters between people and objects,\" says museum director Anne Baldassari. \"The encounter has changed. The job has not.\"",
+    category_index: 10,
+    tag_indexes: [7, 2, 6],
+    featured: false,
+    published_at: 91.days.ago
+  },
+  {
+    title: "The Ethics of Space Tourism",
+    excerpt: "Private companies are sending civilians into space. The environmental and ethical questions are only beginning to be asked.",
+    body: "In July 2021, Jeff Bezos, the world's second-richest person, flew to the edge of space in a vehicle built by his company Blue Origin. The flight lasted eleven minutes. The carbon footprint, per passenger, was estimated at approximately 100 times that of a transatlantic flight. The press coverage was approximately one hundred times that of any IPCC report published in the same year.\n\nSpace tourism is in its infancy, and the numbers are small enough that its current environmental impact is negligible. Virgin Galactic, Blue Origin, and SpaceX have conducted dozens of civilian flights between them. The carbon cost is real but minor compared with the aviation industry's annual emissions.\n\nThe questions that matter are prospective. The industry's stated ambition is to make suborbital and eventually orbital flight accessible to many thousands of passengers per year. At that scale, the environmental calculations change significantly. High-altitude combustion products — black carbon, water vapour, and nitrogen oxides injected directly into the upper atmosphere — have impacts that ground-level emissions do not.\n\nThe deeper question is about priority. The resources — intellectual, financial, physical — being directed toward space tourism are not available for other uses. Whether those resources would produce more benefit deployed differently is a genuinely open question, and one that the industry has no particular interest in encouraging people to ask.\n\n\"Space is not the answer to any problem that exists on Earth,\" says astrophysicist Martin Rees. \"It is, at best, an addition to the problems.\"",
+    category_index: 3,
+    tag_indexes: [10, 2, 6],
+    featured: false,
+    published_at: 92.days.ago
+  },
+  {
+    title: "The Growers Who Feed the World's Best Restaurants",
+    excerpt: "Behind every celebrated chef is a network of small producers whose names appear only in thank-you notes.",
+    body: "The tomatoes at the three-Michelin-starred restaurant in Copenhagen are grown on an island in the Øresund by a family who have been farming the same land for four generations. The chef visits twice a year. The grower visits the restaurant never — she doesn't like cities. But she and the chef talk weekly about variety selection, harvest timing, and flavour development, in conversations that are, from the outside, indistinguishable from conversations between colleagues of equal standing.\n\nThis relationship — intimate, reciprocal, sustained over years — is the model that the best restaurants in the world have adopted for their most important ingredients. The chef-farmer relationship has moved from transactional (the chef orders what the market supplies) to collaborative (the chef and farmer co-develop what the restaurant needs).\n\nThe shift has had effects that extend beyond flavour. It has created economic stability for small-scale producers who operate outside the commodity market, where margins are too thin to sustain quality. It has preserved varieties of fruit, vegetable, and grain that would otherwise have been displaced by higher-yielding, lower-quality alternatives. And it has changed the economics of fine dining in ways that are beginning to be visible in the prices.\n\n\"The ingredient is the cooking,\" says chef René Redzepi. \"Everything else is technique. Technique can be learned quickly. Growing a perfect ingredient takes a lifetime.\"",
+    category_index: 5,
+    tag_indexes: [0, 7, 14],
+    featured: false,
+    published_at: 93.days.ago
+  },
+  {
+    title: "The Psychologists Who Study Evil",
+    excerpt: "What does research on atrocity, obedience, and moral disengagement tell us about ordinary human capacity for harm?",
+    body: "Philip Zimbardo's Stanford Prison Experiment of 1971 is one of the most famous — and most methodologically contested — studies in psychology. In the experiment, students randomly assigned to play \"guards\" in a simulated prison began, within days, treating students assigned to play \"prisoners\" with genuine cruelty. Zimbardo halted the experiment after six days, and concluded that the situation, not the disposition, was the primary driver of the behaviour.\n\nThe experiment has been substantially revised in subsequent scholarship. A 2018 investigation revealed that Zimbardo had coached the guard participants to be authoritarian, undermining his own conclusions about situational forces. The experiment's findings, always overstated, became even more difficult to sustain.\n\nBut the underlying question — under what conditions do ordinary people commit atrocities? — remains the most important question in moral psychology, and the research that has accumulated since Zimbardo is more rigorous and more disturbing than his conclusions.\n\nHannah Arendt's observation about the \"banality of evil\" — made about Adolf Eichmann's trial — has been partially vindicated and partially complicated by decades of research. Evil, the evidence suggests, is not banal: it requires active processes of moral disengagement, dehumanisation, and ideological justification. But neither is it the exclusive province of monsters. The conditions for its emergence are more common than we would like.\n\n\"Understanding how atrocity is possible is not the same as excusing it,\" says social psychologist James Waller. \"It is the prerequisite for preventing it.\"",
+    category_index: 3,
+    tag_indexes: [6, 2, 0],
+    featured: false,
+    published_at: 94.days.ago
+  },
+  {
+    title: "The Architects of the Refugee Camp",
+    excerpt: "More than 100 million people live in humanitarian settlements. What design can do — and what it cannot — for people in crisis.",
+    body: "The Za'atari refugee camp in northern Jordan opened in 2012 to receive Syrians fleeing civil war. It was designed, by UNHCR standards, as a temporary facility for a few thousand people for a few months. By 2013, it held 150,000 people and was the fourth-largest city in Jordan. In 2024, it had a permanent population of approximately 80,000 people, a permanent marketplace, schools, hospitals, and what its residents call, with dark precision, their neighbourhood.\n\nThe architecture of humanitarian settlements has been transformed by this experience — the discovery that \"temporary\" means decades, that \"emergency\" means permanence, and that the solutions designed for brief crises are being asked to bear the weight of indefinite habitation.\n\nOrganisations like Architecture for Humanity and MASS Design Group have spent years developing approaches that treat refugees not as passive recipients of aid but as participants in the design of their own environments. Modular systems that can be configured differently as family compositions change. Materials that can be sourced and fabricated locally. Public spaces that support the social life that makes long-term settlement bearable.\n\nThe results are incremental and imperfect. The deeper problem — that the international system has failed to resolve the conflicts and inequalities that produce refugees — is not within architecture's power to address.\n\n\"Good design in a camp is better than bad design in a camp,\" says architect Cameron Sinclair. \"It is not a substitute for not having a camp at all.\"",
+    category_index: 16,
+    tag_indexes: [7, 0, 13],
+    featured: false,
+    published_at: 95.days.ago
+  },
+  {
+    title: "Learning to Fail Well",
+    excerpt: "Schools teach students to avoid mistakes. New research suggests the opposite approach produces better learning.",
+    body: "The concept of desirable difficulty — the idea that learning is enhanced by conditions that make initial acquisition harder — has been accumulating evidence for three decades. Spaced practice is more effective than massed practice. Testing is more effective than re-reading. Interleaving different types of problems is more effective than blocking them. All of these findings violate the intuition that learning should feel smooth and successful.\n\nThe most counterintuitive finding, and the most difficult to implement, concerns failure. Research by Manu Kapur at ETH Zurich has shown consistently that students who are asked to attempt problems before being taught how to solve them — and who therefore produce incorrect or incomplete answers — learn the material more deeply than students who are taught the solution first and then practise it.\n\nThe mechanism appears to involve the construction of understanding through the experience of not-knowing. Students who fail first have a mental model of the problem — a scaffold, however broken — onto which the correct solution can be placed. Students who receive the solution first have to build the scaffold and place the solution simultaneously, which is more cognitively demanding and produces shallower encoding.\n\nThe implications for education are significant and largely unadopted. Schools are structured to minimise failure: tests are preceded by teaching, exercises follow instruction, marks reward correct answers. A system structured around productive failure would look very different — and would require persuading parents, students, and administrators that wrong answers on the way to right answers are not failures but features.\n\n\"The education system optimises for performance,\" says psychologist Robert Bjork. \"It should optimise for learning. These are not the same thing.\"",
+    category_index: 18,
+    tag_indexes: [2, 11, 7],
+    featured: false,
+    published_at: 96.days.ago
+  },
+  {
+    title: "The Jazz Musician Who Changed America",
+    excerpt: "Miles Davis reinvented his music every decade. What the arc of his career reveals about artistic evolution.",
+    body: "Miles Davis was born in 1926 in Alton, Illinois, and died in 1991 in Santa Monica, California. In the intervening sixty-five years, he played bebop, cool jazz, hard bop, modal jazz, jazz fusion, and electro-funk, reinventing his sound so completely at each transition that critics who had praised his previous work often refused to accept the new direction.\n\nThe reinventions were not driven by market considerations — they often cost Davis commercial ground. They were driven by a restlessness that colleagues describe as almost pathological: an inability to be comfortable with what he had already achieved, a compulsion toward the next thing before the current thing was exhausted.\n\nKind of Blue, recorded in 1959, is the best-selling jazz album in history. Davis moved away from its modal sound within three years, toward the denser, more European-influenced work of the 1960s. Bitches Brew, recorded in 1969, created jazz fusion and alienated a generation of jazz purists. He then stopped recording for five years, returned with On the Corner, and continued inventing through the decade before his death.\n\nThe career is sometimes cited as an argument for artistic courage and against the comfort of success. It can equally be read as evidence of how completely great artists are in the grip of forces they cannot fully articulate.\n\n\"I don't know what will happen next,\" Davis said in an interview in 1985. \"I never have. That's why I keep playing.\"",
+    category_index: 14,
+    tag_indexes: [0, 8, 17],
+    featured: true,
+    published_at: 97.days.ago
+  },
+  {
+    title: "The Complicated Legacy of Green Cities",
+    excerpt: "Urban greening projects are transforming cities worldwide. Who benefits — and who gets displaced?",
+    body: "The High Line, opened in 2009 on a disused elevated railway in Manhattan's meatpacking district, is one of the most celebrated urban design interventions of the century. It transformed a derelict structure into a linear park that attracts eight million visitors per year, catalysed more than $2 billion in private development, and became a model for similar projects in Chicago, Philadelphia, Atlanta, and dozens of cities around the world.\n\nIt also displaced low-income residents. Property values in the surrounding neighbourhood rose sharply after the High Line opened, making previously affordable housing unaffordable and pushing out the working-class and immigrant communities that had made the neighbourhood viable for decades. The people who were displaced are not visible in the park's visitor statistics, but they are visible in the demographic transformation of the neighbourhood's census data.\n\nThe High Line's story is not unique. Urban greening projects — parks, green corridors, urban forests, community gardens — consistently produce positive environmental and health outcomes for cities overall, and consistently produce displacement of low-income populations in the immediate vicinity. The phenomenon has been named \"green gentrification\" by researchers, and it has been documented in cities across North America, Europe, and Asia.\n\nThe policy challenge is to capture the benefits of urban greening while distributing them more equitably — which requires, at minimum, anti-displacement measures that are more robust than those currently applied in most cities.\n\n\"The park is good,\" says urban ecologist Isabelle Anguelovski. \"The question is good for whom.\"",
+    category_index: 9,
+    tag_indexes: [2, 10, 9],
+    featured: false,
+    published_at: 98.days.ago
+  },
+  {
+    title: "The Surgeons Learning in a Simulation Lab",
+    excerpt: "Medical training has always required practicing on real patients. Virtual reality and simulation are changing that — slowly.",
+    body: "The first time a surgical resident makes an incision in a human abdomen, they have typically made the same incision in a pig, a cadaver, and a synthetic model dozens or hundreds of times. The progression — from simulation to corpse to living patient — is the established pedagogy of surgical training, and it has remained largely unchanged since William Halsted developed it at Johns Hopkins in the 1890s.\n\nWhat is changing is the fidelity and accessibility of the simulation layer. VR surgical training systems can now replicate the haptic resistance of tissue, the dynamics of bleeding, the behaviour of organs under retraction, with enough accuracy that performance in the simulation predicts performance in the operating room. Studies show that residents trained with high-fidelity simulation reach proficiency faster and make fewer errors in their first independent procedures.\n\nThe implications extend beyond training. In a world where simulation can substitute for practice on patients, the justification for \"learning curves\" — the period during which a surgeon is developing skills at the patient's expense — becomes less defensible. Patients have a legitimate interest in operating-room procedures performed by experienced surgeons, and simulation can bring the threshold of experience earlier in a career.\n\nThe barriers to adoption are primarily economic and cultural. High-fidelity simulators are expensive. Surgical training programs are conservative. And the culture of surgical education — in which learning by doing, even when doing means making mistakes on patients, has been the norm for a century — changes slowly.\n\n\"We can do better,\" says simulation researcher Roger Kneebone. \"The technology exists. The question is whether the will does.\"",
+    category_index: 7,
+    tag_indexes: [1, 2, 11],
+    featured: false,
+    published_at: 99.days.ago
   }
 ]
 
@@ -610,11 +1015,11 @@ additional_articles_data.each do |data|
     title:        data[:title],
     excerpt:      data[:excerpt],
     body:         data[:body],
-    category:     categories[data[:category_index]],
     featured:     data[:featured],
     published_at: data[:published_at]
   )
 
+  article.categories = [categories[data[:category_index]]]
   article.tags = data[:tag_indexes].map { |i| tags[i] }
   additional_created += 1
 end
@@ -674,7 +1079,7 @@ attached_count = 0
 Article.find_each do |article|
   next if article.images.attached?
 
-  category_idx = categories.index(article.category) || 0
+  category_idx = categories.index(article.categories.first) || 0
   image_ids = image_sources[category_idx] || image_sources[0]
   image_id = image_ids[article.id % image_ids.length]
   url = "https://images.unsplash.com/#{image_id}?w=800&q=80"
@@ -699,124 +1104,59 @@ puts "Images attached: #{attached_count} / #{Article.count} articles"
 # ── Team Members ──────────────────────────────────────────────────────────────
 team_members_data = [
   {
-    name: "Eleanor Voss",
+    name: "Niti Khatiwada",
     role: "Editor in Chief",
-    bio: "Eleanor Voss has spent twenty years in longform journalism, first at The Atlantic and later as founding editor of two independent magazines. She joined The Magazine as Editor in Chief in 2019 and oversees all editorial strategy. Her essays on media, culture, and the future of print have appeared in publications on four continents.",
-    avatar_id: "photo-1494790108377-be9c29b29330"
+    slug: "niti-khatiwada",
+    bio: "Co-founder and Editor in Chief at Danphe Software Labs. Award-winning journalist with 20 years of experience in long-form narrative writing and investigative reporting.",
+    avatar_img: 5
   },
   {
-    name: "Marcus Webb",
+    name: "Saroj Khatiwada",
     role: "Deputy Editor",
-    bio: "Marcus Webb came to editing by way of reporting, having covered European politics for a decade before transitioning to the desk. He specialises in long narrative features and manages the magazine's print production schedule. He lives in Edinburgh and is working on a book about the decline and revival of local news.",
-    avatar_id: "photo-1500648767791-00dcc994a43e"
+    bio: "Deputy Editor at Danphe Software Labs. Former foreign correspondent covering politics and conflict across South Asia. Now overseeing investigative and science coverage.",
+    avatar_img: 12
   },
   {
-    name: "Priya Nair",
-    role: "Senior Editor, Culture",
-    bio: "Priya Nair edits the magazine's culture section with a focus on visual arts, film, and design. Before joining the magazine, she was arts editor at a major broadsheet and a regular contributor to international art publications. She holds a doctorate in art history from the Courtauld Institute.",
-    avatar_id: "photo-1534528741775-53994a69daeb"
+    name: "Yana Rai",
+    role: "Arts & Culture Editor",
+    bio: "Arts & Culture Editor at Danphe Software Labs. Critic and essayist whose work spans film, architecture, and contemporary art.",
+    avatar_img: 9
   },
   {
-    name: "Daniel Osei",
-    role: "Senior Editor, Science & Technology",
-    bio: "Daniel Osei trained as a biochemist before realising he preferred writing about science to doing it. He has been covering the life sciences and technology for fifteen years and joined The Magazine as science editor in 2021. He is particularly interested in the intersection of biology, ethics, and public policy.",
-    avatar_id: "photo-1507003211169-0a1dd7228f2d"
-  },
-  {
-    name: "Isabelle Marchetti",
-    role: "Senior Editor, Environment",
-    bio: "Isabelle Marchetti has reported from more than forty countries on climate change, biodiversity, and natural resource politics. Her long-form investigations have won national and international press awards. She joined the magazine from a stint as a field correspondent and edits all environment coverage.",
-    avatar_id: "photo-1531746020798-e6953c6e8e04"
-  },
-  {
-    name: "Tom Furlong",
-    role: "Staff Writer",
-    bio: "Tom Furlong writes primarily about cities, architecture, and urban policy. His features have ranged from profiles of radical mayors to investigations of housing policy failures. He was previously a correspondent for a national daily and a visiting fellow at the London School of Economics.",
-    avatar_id: "photo-1472099645785-5658abf4ff4e"
-  },
-  {
-    name: "Amara Diallo",
-    role: "Staff Writer",
-    bio: "Amara Diallo specialises in narrative features about West African politics, culture, and economics. She has reported from twenty countries on the continent and brings a rigorous analytical eye to longform stories that defy easy categorisation. Her work has been shortlisted for the Overseas Press Club Award.",
-    avatar_id: "photo-1580489944761-15a19d654956"
-  },
-  {
-    name: "Kenji Nakashima",
-    role: "Staff Writer",
-    bio: "Kenji Nakashima writes about Japan, East Asia, and the global technology industry. He spent a decade in Tokyo as a correspondent and now divides his time between London and Tokyo. His writing combines deep cultural knowledge with rigorous reporting on business and geopolitics.",
-    avatar_id: "photo-1506794778202-cad84cf45f1d"
-  },
-  {
-    name: "Sofía Reyes",
-    role: "Contributing Editor",
-    bio: "Sofía Reyes is a contributing editor whose work focuses on Latin America, migration, and identity. She is the author of two critically acclaimed books of narrative journalism and has taught at the Columbia Journalism School. Her contributions to the magazine appear quarterly.",
-    avatar_id: "photo-1438761681033-6461ffad8d80"
-  },
-  {
-    name: "Liam O'Connell",
-    role: "Contributing Editor",
-    bio: "Liam O'Connell is a contributing editor specialising in politics, economics, and European affairs. He was previously political editor of a major Irish newspaper and has been a regular commentator on BBC and RTÉ. His analysis combines deep institutional knowledge with a talent for clear explanation.",
-    avatar_id: "photo-1519085360753-af0119f7cbe7"
-  },
-  {
-    name: "Yuki Tanaka",
-    role: "Photo Editor",
-    bio: "Yuki Tanaka oversees all visual content at The Magazine, commissioning photographers and directing the magazine's distinctive approach to documentary and portrait photography. She trained at the International Center of Photography in New York and spent eight years as a photojournalist before moving to the editorial side.",
-    avatar_id: "photo-1487412720507-e7ab37603c6f"
-  },
-  {
-    name: "Rahul Sharma",
+    name: "Sanjay Karki",
     role: "Digital Editor",
-    bio: "Rahul Sharma leads the magazine's digital operations, overseeing the website, newsletter, and social media strategy. He came from a background in product management before making the transition to editorial technology. He is passionate about finding new ways to present longform journalism to digital audiences without compromising its depth.",
-    avatar_id: "photo-1463453091185-61582044d556"
+    bio: "Digital Editor at Danphe Software Labs. Leads online presence and audience development. Specialist in data journalism and newsletter publishing.",
+    avatar_img: 33
   },
   {
-    name: "Nadia Okonkwo",
-    role: "Commissioning Editor",
-    bio: "Nadia Okonkwo commissions features across all sections of the magazine with a particular interest in discovering new voices. She previously worked as a literary agent and brings an unusual eye for narrative potential to the commissioning process. She is a trustee of the Jerwood Foundation and mentors emerging journalists.",
-    avatar_id: "photo-1508214751196-bcfd4ca60f91"
+    name: "Sanzay Manandhar",
+    role: "Senior Writer",
+    bio: "Senior Writer at Danphe Software Labs. Long-form narrative journalist specialising in human interest stories and social issues.",
+    avatar_img: 15
   },
   {
-    name: "Ethan Caldwell",
-    role: "Features Writer",
-    bio: "Ethan Caldwell writes long narrative features for the magazine, with a focus on the American interior — its economies, cultures, and communities that rarely feature in coastal media. He has spent years driving the highways and byways of states that journalists seldom visit and writing about what he finds with precision and empathy.",
-    avatar_id: "photo-1492562080023-ab3db95bfbce"
+    name: "Raghav Thapa",
+    role: "Science & Technology Editor",
+    bio: "Science & Technology Editor at Danphe Software Labs. Former researcher turned journalist covering emerging technology, climate science, and health policy.",
+    avatar_img: 68
   },
   {
-    name: "Chiara Fontana",
-    role: "Features Writer",
-    bio: "Chiara Fontana writes about food, agriculture, and the politics of what we eat. She trained as a chef before becoming a food writer, and her work combines technical knowledge with broad cultural and economic analysis. Her longform investigation into the olive oil industry won the Guild of Food Writers award.",
-    avatar_id: "photo-1544005313-94ddf0286df2"
-  },
-  {
-    name: "James Okafor",
+    name: "Saja Shakya",
     role: "Investigative Reporter",
-    bio: "James Okafor leads The Magazine's investigative unit, specialising in financial crime, institutional corruption, and the failures of regulatory systems. His investigations have prompted parliamentary inquiries and led to regulatory changes in three countries. He works slowly and publishes rarely, but when he does, the impact is significant.",
-    avatar_id: "photo-1531427186611-ecfd6d936c79"
+    bio: "Investigative Reporter at Danphe Software Labs. Specialises in accountability journalism, following the money in politics and public institutions.",
+    avatar_img: 47
   },
   {
-    name: "Mei Lin Chen",
-    role: "Arts & Books Editor",
-    bio: "Mei Lin Chen edits the magazine's books and arts coverage and writes regularly about literature, translation, and the publishing industry. She was previously an editor at a major literary publisher and brings a publisher's eye to the question of which books and artworks deserve serious critical attention.",
-    avatar_id: "photo-1489424731084-a5d8b219a5bb"
+    name: "Ravi Bhusal",
+    role: "Photo Editor",
+    bio: "Photo Editor at Danphe Software Labs. Documentary photographer and visual storyteller who brings depth and humanity to every piece we publish.",
+    avatar_img: 52
   },
   {
-    name: "Patrick Moreau",
-    role: "Travel Editor",
-    bio: "Patrick Moreau edits the magazine's travel section with a philosophy radically different from the tourist brochure: he commissions writers to spend serious time in places and write about them with the depth of a foreign correspondent rather than the superficiality of a lifestyle journalist. He is a former war correspondent who found peace.",
-    avatar_id: "photo-1539571696357-5a69c17a67c6"
-  },
-  {
-    name: "Anika Wren",
-    role: "Health & Science Writer",
-    bio: "Anika Wren covers health, medicine, and the life sciences for the magazine. She trained as a nurse before studying science communication, and her writing is notable for its clinical precision combined with deep human sympathy. Her feature on the long-term effects of pandemic isolation won the British Medical Association media award.",
-    avatar_id: "photo-1517841905240-472988babdf9"
-  },
-  {
-    name: "Oscar Fleming",
-    role: "Sports & Culture Writer",
-    bio: "Oscar Fleming writes about sport not as scores and statistics but as culture and politics. His longform features have explored the economics of player transfers, the sociology of football fandom, and the history of sport as a vehicle for national identity. He is a contributing editor at two European sports magazines.",
-    avatar_id: "photo-1560250097-0b93528c311a"
+    name: "Nitesh Khatiwada",
+    role: "IT Specialist",
+    bio: "IT Specialist at Danphe Software Labs. Manages digital infrastructure, security, and technical operations across all platforms.",
+    avatar_img: 64
   }
 ]
 
@@ -827,10 +1167,11 @@ team_members_data.each do |data|
   member = TeamMember.find_or_initialize_by(name: data[:name])
   member.role = data[:role]
   member.bio  = data[:bio]
+  member.slug = data[:slug] if data[:slug].present?
   member.save!
 
   unless member.avatar.attached?
-    url = "https://images.unsplash.com/#{data[:avatar_id]}?w=400&q=80"
+    url = "https://i.pravatar.cc/300?img=#{data[:avatar_img]}"
     begin
       downloaded = URI.open(url, "User-Agent" => "Mozilla/5.0 (seed script)", read_timeout: 15)
       member.avatar.attach(

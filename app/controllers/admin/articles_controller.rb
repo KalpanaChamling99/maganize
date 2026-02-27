@@ -8,7 +8,7 @@ class Admin::ArticlesController < Admin::BaseController
   SORT_MAP = {
     "title"    => { col: "articles.title",        join: nil },
     "author"   => { col: "team_members.name",     join: :author },
-    "category" => { col: "categories.name",       join: :category },
+    "category" => { col: "categories.name",       join: :categories },
     "status"   => { col: "articles.published_at", join: nil },
     "date"     => { col: "articles.created_at",   join: nil },
   }.freeze
@@ -19,10 +19,11 @@ class Admin::ArticlesController < Admin::BaseController
     @direction = %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
 
     cfg   = SORT_MAP[@sort]
-    scope = Article.includes(:category, :tags, :author).with_attached_images
+    scope = Article.includes(:categories, :tags, :author).with_attached_images
     scope = scope.left_joins(cfg[:join]) if cfg[:join]
 
     @articles = scope.order(Arel.sql("#{cfg[:col]} #{@direction} NULLS LAST"))
+                     .distinct
                      .page(params[:page]).per(per)
   end
 
@@ -31,7 +32,10 @@ class Admin::ArticlesController < Admin::BaseController
   end
 
   def new
-    @article = Article.new(published_at: Time.current)
+    @article = Article.new(
+      published_at: Time.current,
+      team_member_id: current_admin_user.team_member_id
+    )
   end
 
   def edit
@@ -39,7 +43,9 @@ class Admin::ArticlesController < Admin::BaseController
 
   def create
     @article = Article.new(article_params)
-    @article.tag_ids = tag_ids_from_params
+    @article.team_member_id = current_admin_user.team_member_id unless root_admin?
+    @article.tag_ids      = tag_ids_from_params
+    @article.category_ids = category_ids_from_params
 
     if @article.save
       attach_gallery_images
@@ -51,7 +57,8 @@ class Admin::ArticlesController < Admin::BaseController
   end
 
   def update
-    @article.tag_ids = tag_ids_from_params
+    @article.tag_ids      = tag_ids_from_params
+    @article.category_ids = category_ids_from_params
 
     if @article.update(article_params)
       attach_gallery_images
@@ -81,12 +88,16 @@ class Admin::ArticlesController < Admin::BaseController
   end
 
   def set_form_data
-    @categories = Category.all
+    @categories = Category.order(:name)
     @tags = Tag.all
   end
 
   def tag_ids_from_params
     Array(params.dig(:article, :tag_ids)).reject(&:blank?).map(&:to_i)
+  end
+
+  def category_ids_from_params
+    Array(params.dig(:article, :category_ids)).reject(&:blank?).map(&:to_i)
   end
 
   def attach_gallery_images
@@ -111,6 +122,12 @@ class Admin::ArticlesController < Admin::BaseController
   end
 
   def article_params
-    params.require(:article).permit(:title, :excerpt, :body, :published_at, :featured, :category_id, :team_member_id)
+    permitted = [:title, :excerpt, :body, :published_at, :featured]
+    permitted << :team_member_id if root_admin?
+    params.require(:article).permit(*permitted)
+  end
+
+  def root_admin?
+    current_admin_user.role&.name == "Root Admin"
   end
 end

@@ -16,29 +16,156 @@
   <%# Avatar upload %>
   <div>
     <%= form.label :avatar, "Profile Photo", class: "block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-3" %>
-    <div class="flex items-center gap-5">
-      <%# Current avatar preview %>
-      <div id="avatar-preview" class="w-16 h-16 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center shrink-0">
+
+    <div class="flex items-center gap-6">
+
+      <%# Avatar circle + action buttons %>
+      <div class="shrink-0 flex flex-col items-center gap-2">
+        <div id="avatar-preview"
+             class="w-24 h-24 rounded-full overflow-hidden bg-gray-100 border-2 border-gray-200 flex items-center justify-center shadow-sm">
+          <% if team_member.avatar.attached? %>
+            <%= image_tag team_member.avatar, class: "w-full h-full object-cover" %>
+          <% else %>
+            <% if team_member.name.present? %>
+              <span class="text-gray-400 font-serif font-bold text-2xl select-none" id="avatar-initials">
+                <%= team_member.name.split.map(&:first).first(2).join.upcase %>
+              </span>
+            <% else %>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-gray-300" viewBox="0 0 24 24" fill="currentColor">
+                <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd"/>
+              </svg>
+            <% end %>
+          <% end %>
+        </div>
+
+        <button type="button" onclick="openAvatarModal()"
+                class="mt-1 flex items-center gap-1.5 text-xs font-semibold text-gray-600 hover:text-gray-900 border border-gray-300 hover:border-gray-500 px-3 py-1.5 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+          </svg>
+          Upload
+        </button>
+
         <% if team_member.avatar.attached? %>
-          <%= image_tag team_member.avatar, class: "w-full h-full object-cover" %>
-        <% else %>
-          <span class="text-gray-400 font-serif font-bold text-lg" id="avatar-initials">
-            <%= team_member.name.present? ? team_member.name.split.map(&:first).first(2).join.upcase : "?" %>
-          </span>
+          <%= form.hidden_field :remove_avatar, value: "0", id: "remove_avatar_field" %>
+          <button type="button" id="remove_avatar_btn"
+                  class="flex items-center gap-1 text-xs text-red-400 hover:text-red-600 transition-colors"
+                  onclick="removeAvatarConfirm(this)">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
+            </svg>
+            Remove
+          </button>
         <% end %>
       </div>
-      <div class="flex-1">
-        <%= form.file_field :avatar, accept: "image/*",
-          class: "block w-full text-xs text-gray-500 file:mr-3 file:py-2 file:px-4 file:border-0 file:text-xs file:font-semibold file:bg-gray-900 file:text-white hover:file:bg-gray-700 file:cursor-pointer cursor-pointer",
-          onchange: "previewAvatar(this)" %>
-        <p class="text-xs text-gray-400 mt-1.5">JPG, PNG or WebP — recommended 200×200 px or larger.</p>
-        <% if team_member.avatar.attached? %>
-          <label class="inline-flex items-center gap-1.5 mt-2 text-xs text-red-400 hover:text-red-600 cursor-pointer">
-            <%= form.check_box :avatar, { checked: false, class: "hidden", id: "remove_avatar" }, "0", "0" %>
-            <span onclick="document.getElementById('remove_avatar').click()">Remove photo</span>
-          </label>
-        <% end %>
+
+      <%# Hint text %>
+      <p class="flex-1 text-xs text-gray-400 leading-relaxed">
+        Upload a clear, square portrait photo.<br>
+        Recommended: 200&times;200 px or larger.<br>
+        JPG, PNG or WebP accepted.
+      </p>
+
+    </div>
+
+    <%# Hidden file input wired to the form %>
+    <%= form.file_field :avatar, accept: "image/*",
+          id: "avatar_file_input",
+          class: "sr-only",
+          onchange: "onAvatarFileChange(this)" %>
+  </div>
+
+  <%# ── Upload Modal ── %>
+  <div id="avatar-modal" style="display:none"
+       class="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+
+    <%# Backdrop %>
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"
+         onclick="closeAvatarModal(true)"></div>
+
+    <%# Card %>
+    <div class="relative z-10 bg-white w-full max-w-sm shadow-2xl">
+
+      <%# Header %>
+      <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+        <h3 class="text-xs font-semibold tracking-widest uppercase text-gray-700">Upload Profile Photo</h3>
+        <button type="button" onclick="closeAvatarModal(true)"
+                class="text-gray-400 hover:text-gray-600 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
       </div>
+
+      <%# Body %>
+      <div class="p-5 space-y-4">
+
+        <%# Drop zone %>
+        <div id="modal-drop-zone"
+             class="border-2 border-dashed border-gray-200 rounded-sm transition-colors"
+             ondragover="event.preventDefault(); this.classList.add('border-gray-500','bg-gray-50')"
+             ondragleave="this.classList.remove('border-gray-500','bg-gray-50')"
+             ondrop="handleAvatarDrop(event)">
+
+          <%# Placeholder %>
+          <div id="modal-drop-hint"
+               class="flex flex-col items-center justify-center gap-3 py-10 px-6 text-center">
+            <div class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-medium text-gray-600">Drag &amp; drop your photo here</p>
+              <p class="text-xs text-gray-400 mt-0.5">or click Choose file below</p>
+            </div>
+            <p class="text-xs text-gray-300">JPG, PNG or WebP</p>
+          </div>
+
+          <%# Preview (shown after file is picked) %>
+          <div id="modal-preview-section" style="display:none"
+               class="flex flex-col items-center gap-3 py-8 px-6">
+            <div class="w-24 h-24 rounded-full overflow-hidden border-2 border-gray-200 shadow-sm">
+              <img id="modal-preview-img" class="w-full h-full object-cover" src="" alt="Preview">
+            </div>
+            <p id="modal-file-name" class="text-xs text-gray-400 max-w-full truncate"></p>
+            <button type="button"
+                    onclick="document.getElementById('avatar_file_input').click()"
+                    class="text-xs text-gray-400 hover:text-gray-700 underline underline-offset-2 transition-colors">
+              Edit
+            </button>
+          </div>
+
+        </div>
+
+        <%# Choose file button (shown in hint state) %>
+        <div id="modal-choose-wrap" class="flex justify-center">
+          <button type="button"
+                  onclick="document.getElementById('avatar_file_input').click()"
+                  class="flex items-center gap-2 text-xs font-semibold text-gray-600 hover:text-gray-900 border border-gray-300 hover:border-gray-500 px-4 py-2 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
+            </svg>
+            Choose file
+          </button>
+        </div>
+
+      </div>
+
+      <%# Footer %>
+      <div class="flex items-center justify-between px-5 py-4 border-t border-gray-100">
+        <button type="button" onclick="closeAvatarModal(true)"
+                class="text-sm text-gray-400 hover:text-gray-700 transition-colors">
+          Cancel
+        </button>
+        <button type="button" id="use-photo-btn"
+                onclick="confirmAvatarPhoto()"
+                style="display:none"
+                class="px-5 py-2 text-sm font-semibold bg-gray-900 text-white hover:bg-gray-700 transition-colors">
+          Update
+        </button>
+      </div>
+
     </div>
   </div>
 
@@ -69,9 +196,61 @@
     <%= form.label :slug, "Slug", class: "block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2" %>
     <%= form.text_field :slug,
       placeholder: "auto-generated from name if left blank",
+      id: "tm_slug",
       class: "w-full border border-gray-200 focus:border-gray-900 focus:outline-none focus:ring-0 px-3 py-2.5 text-sm font-mono bg-white transition-colors text-gray-500" %>
-    <p class="text-xs text-gray-400 mt-1">Used in the public URL: /team_members/slug</p>
+    <p class="text-xs text-gray-400 mt-1">Used in the public URL: /team/<span id="tm_slug_preview"><%= team_member.slug.presence || "slug" %></span></p>
+    <% if team_member.persisted? %>
+      <label class="inline-flex items-center gap-2 mt-2 cursor-pointer select-none">
+        <%= check_box_tag :regenerate_slug, "1", false,
+              id: "regenerate_slug_cb",
+              class: "w-3.5 h-3.5 accent-gray-900 cursor-pointer" %>
+        <span class="text-xs text-gray-500">Regenerate URL from current name</span>
+      </label>
+    <% end %>
   </div>
+  <script>
+    document.addEventListener('turbo:load', function () {
+      var nameEl = document.querySelector('input[name="team_member[name]"]');
+      var slugEl = document.getElementById('tm_slug');
+      var preview = document.getElementById('tm_slug_preview');
+      var cb = document.getElementById('regenerate_slug_cb');
+      if (!cb || !nameEl || !slugEl) return;
+
+      var originalSlug = slugEl.value;
+
+      function toSlug(str) {
+        return str.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+      }
+
+      cb.addEventListener('change', function () {
+        if (cb.checked) {
+          var generated = toSlug(nameEl.value || '');
+          slugEl.value = generated;
+          slugEl.readOnly = true;
+          slugEl.classList.add('bg-gray-50', 'text-gray-400');
+          if (preview) preview.textContent = generated || 'slug';
+        } else {
+          slugEl.value = originalSlug;
+          slugEl.readOnly = false;
+          slugEl.classList.remove('bg-gray-50', 'text-gray-400');
+          if (preview) preview.textContent = originalSlug || 'slug';
+        }
+      });
+
+      nameEl.addEventListener('input', function () {
+        if (preview && !cb.checked) preview.textContent = slugEl.value || 'slug';
+        if (cb && cb.checked) {
+          var generated = toSlug(nameEl.value || '');
+          slugEl.value = generated;
+          if (preview) preview.textContent = generated || 'slug';
+        }
+      });
+
+      slugEl.addEventListener('input', function () {
+        if (preview) preview.textContent = slugEl.value || 'slug';
+      });
+    });
+  </script>
 
   <div class="flex items-center justify-between border-t border-gray-200 pt-6">
     <%= link_to "Discard", admin_team_members_path, class: "text-sm text-gray-400 hover:text-gray-700 transition-colors" %>
@@ -82,13 +261,83 @@
 <% end %>
 
 <script>
-  function previewAvatar(input) {
+  var _avatarFileStaged = false;
+
+  function openAvatarModal() {
+    document.getElementById('avatar-modal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeAvatarModal(cancel) {
+    if (cancel && _avatarFileStaged) {
+      document.getElementById('avatar_file_input').value = '';
+      _avatarFileStaged = false;
+      resetModalUI();
+    }
+    document.getElementById('avatar-modal').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  function resetModalUI() {
+    document.getElementById('modal-drop-hint').style.display = '';
+    document.getElementById('modal-preview-section').style.display = 'none';
+    document.getElementById('modal-choose-wrap').style.display = '';
+    document.getElementById('use-photo-btn').style.display = 'none';
+  }
+
+  function onAvatarFileChange(input) {
     if (!input.files || !input.files[0]) return;
+    if (document.getElementById('avatar-modal').style.display !== 'none') {
+      showModalPreview(input.files[0]);
+    }
+  }
+
+  function handleAvatarDrop(event) {
+    event.preventDefault();
+    var zone = document.getElementById('modal-drop-zone');
+    zone.classList.remove('border-gray-500', 'bg-gray-50');
+    var files = event.dataTransfer.files;
+    if (files && files[0]) {
+      try {
+        var dt = new DataTransfer();
+        dt.items.add(files[0]);
+        document.getElementById('avatar_file_input').files = dt.files;
+      } catch(e) {}
+      showModalPreview(files[0]);
+    }
+  }
+
+  function showModalPreview(file) {
+    _avatarFileStaged = true;
     var reader = new FileReader();
     reader.onload = function(e) {
-      var preview = document.getElementById('avatar-preview');
-      preview.innerHTML = '<img src="' + e.target.result + '" class="w-full h-full object-cover">';
+      document.getElementById('modal-preview-img').src = e.target.result;
+      document.getElementById('modal-file-name').textContent = file.name;
+      document.getElementById('modal-drop-hint').style.display = 'none';
+      document.getElementById('modal-preview-section').style.display = 'flex';
+      document.getElementById('modal-choose-wrap').style.display = 'none';
+      document.getElementById('use-photo-btn').style.display = 'inline-flex';
     };
-    reader.readAsDataURL(input.files[0]);
+    reader.readAsDataURL(file);
+  }
+
+  function confirmAvatarPhoto() {
+    var src = document.getElementById('modal-preview-img').src;
+    var preview = document.getElementById('avatar-preview');
+    preview.innerHTML = '<img src="' + src + '" class="w-full h-full object-cover" style="animation:avatarFadeIn .2s ease">';
+    _avatarFileStaged = false;
+    resetModalUI();
+    closeAvatarModal(false);
+  }
+
+  function removeAvatarConfirm(btn) {
+    document.getElementById('remove_avatar_field').value = '1';
+    document.getElementById('avatar-preview').innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-gray-300" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd"/></svg>';
+    btn.innerHTML = '<span class="text-red-300">&#10003; Will be removed</span>';
+    btn.disabled = true;
+    btn.classList.add('opacity-60', 'cursor-not-allowed');
   }
 </script>
+<style>
+  @keyframes avatarFadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+</style>

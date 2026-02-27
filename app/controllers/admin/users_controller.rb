@@ -50,7 +50,7 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def user_params
-    params.require(:admin_user).permit(:name, :email, :password, :role_id, :avatar)
+    params.require(:admin_user).permit(:name, :email, :password, :role_id, :avatar, :team_member_id)
   end
 
   def last_super_admin?(user)

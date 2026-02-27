@@ -19,7 +19,7 @@
   </head>
 
   <body class="bg-white text-gray-900 font-sans antialiased"
-        data-controller="scroll-progress theme">
+        data-controller="scroll-progress theme mobile-nav">
 
     <%# ── Top bar: date | social + toggle + subscribe ─────── %>
     <div class="site-banner border-b border-gray-200 bg-white">
@@ -63,7 +63,8 @@
           <span class="hidden sm:block w-px h-4 bg-gray-200"></span>
           <%# Subscribe %>
           <%= link_to "Subscribe", "#",
-            class: "subscribe-btn bg-gray-900 text-white text-xs font-semibold tracking-widest uppercase px-4 py-1.5 hover:bg-gray-700 transition-colors" %>
+            class: "subscribe-btn bg-gray-900 text-white text-xs font-semibold tracking-widest uppercase px-4 py-1.5 hover:bg-gray-700 transition-colors",
+            data: { action: "click->scroll-progress#scrollToSubscribe" } %>
         </div>
       </div>
     </div>
@@ -90,8 +91,7 @@
     <div data-scroll-progress-target="sentinel" aria-hidden="true"></div>
 
     <%# Nav — dark background, becomes fixed once sentinel leaves viewport %>
-    <nav class="site-nav bg-gray-900" data-scroll-progress-target="nav"
-         data-controller="mobile-nav">
+    <nav class="site-nav bg-gray-900" data-scroll-progress-target="nav">
       <div class="max-w-7xl mx-auto px-4 sm:px-6">
 
         <%# ── Desktop nav (md and above) ──────────────────────── %>
@@ -209,50 +209,56 @@
           </div>
         </div>
 
-        <%# ── Mobile dropdown menu ──────────────────────────────── %>
-        <div data-mobile-nav-target="menu"
-             class="hidden md:hidden border-t border-gray-700 py-2">
-          <% mobile_nav_class = "flex items-center px-2 py-3 text-sm font-medium transition-colors rounded" %>
-
-          <%= link_to root_path,
-            class: "#{mobile_nav_class} #{current_page?(root_path) ? 'text-white bg-white/10' : 'text-gray-300 hover:text-white hover:bg-white/5'}",
-            data: { action: "click->mobile-nav#close" } do %>
-            All Stories
-          <% end %>
-
-          <% Category.joins(:articles).merge(Article.published).distinct.limit(5).each do |cat| %>
-            <%= link_to cat.name, category_path(cat),
-              class: "#{mobile_nav_class} #{current_page?(category_path(cat)) ? 'text-white bg-white/10' : 'text-gray-300 hover:text-white hover:bg-white/5'}",
-              data: { action: "click->mobile-nav#close" } %>
-          <% end %>
-
-          <%= link_to "All Articles", articles_path,
-            class: "#{mobile_nav_class} #{current_page?(articles_path) ? 'text-white bg-white/10' : 'text-gray-300 hover:text-white hover:bg-white/5'}",
-            data: { action: "click->mobile-nav#close" } %>
-
-          <%= link_to "Tags", tags_path,
-            class: "#{mobile_nav_class} #{current_page?(tags_path) ? 'text-white bg-white/10' : 'text-gray-300 hover:text-white hover:bg-white/5'}",
-            data: { action: "click->mobile-nav#close" } %>
-
-          <%= link_to "About", about_path,
-            class: "#{mobile_nav_class} #{current_page?(about_path) ? 'text-white bg-white/10' : 'text-gray-300 hover:text-white hover:bg-white/5'}",
-            data: { action: "click->mobile-nav#close" } %>
-
-          <%= link_to "Portfolio", portfolio_path,
-            class: "#{mobile_nav_class} #{current_page?(portfolio_path) ? 'text-white bg-white/10' : 'text-gray-300 hover:text-white hover:bg-white/5'}",
-            data: { action: "click->mobile-nav#close" } %>
-
-          <%= link_to "Contact", contact_path,
-            class: "#{mobile_nav_class} #{current_page?(contact_path) ? 'text-white bg-white/10' : 'text-gray-300 hover:text-white hover:bg-white/5'}",
-            data: { action: "click->mobile-nav#close" } %>
-
-          <%= link_to "Collections", collections_path,
-            class: "#{mobile_nav_class} #{current_page?(collections_path) ? 'text-white bg-white/10' : 'text-gray-300 hover:text-white hover:bg-white/5'}",
-            data: { action: "click->mobile-nav#close" } %>
-        </div>
-
       </div>
     </nav>
+
+    <%# ── Mobile full-screen overlay — separate component ────── %>
+    <div data-mobile-nav-target="menu" class="mobile-menu-overlay hidden">
+      <div class="flex items-center justify-between px-5 py-4 border-b border-white/10">
+        <%= link_to root_path, class: "font-serif text-white font-bold text-xl tracking-tight",
+            data: { action: "click->mobile-nav#close" } do %>
+          The Magazine
+        <% end %>
+        <button class="flex items-center justify-center w-9 h-9 text-gray-400 hover:text-white transition-colors"
+                data-action="click->mobile-nav#close"
+                aria-label="Close menu">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6"  y2="18"/>
+            <line x1="6"  y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <nav class="px-5 pt-4 pb-8 flex flex-col">
+        <% mobile_link = "mobile-menu-link" %>
+        <%= link_to "Home", root_path,
+          class: "#{mobile_link} #{current_page?(root_path) ? 'text-white' : ''}",
+          data: { action: "click->mobile-nav#close" } %>
+        <% Category.joins(:articles).merge(Article.published).distinct.limit(5).each do |cat| %>
+          <%= link_to cat.name, category_path(cat),
+            class: "#{mobile_link} #{current_page?(category_path(cat)) ? 'text-white' : ''}",
+            data: { action: "click->mobile-nav#close" } %>
+        <% end %>
+        <%= link_to "All Articles", articles_path,
+          class: "#{mobile_link} #{current_page?(articles_path) ? 'text-white' : ''}",
+          data: { action: "click->mobile-nav#close" } %>
+        <%= link_to "Tags", tags_path,
+          class: "#{mobile_link} #{current_page?(tags_path) ? 'text-white' : ''}",
+          data: { action: "click->mobile-nav#close" } %>
+        <%= link_to "About", about_path,
+          class: "#{mobile_link} #{current_page?(about_path) ? 'text-white' : ''}",
+          data: { action: "click->mobile-nav#close" } %>
+        <%= link_to "Portfolio", portfolio_path,
+          class: "#{mobile_link} #{current_page?(portfolio_path) ? 'text-white' : ''}",
+          data: { action: "click->mobile-nav#close" } %>
+        <%= link_to "Contact", contact_path,
+          class: "#{mobile_link} #{current_page?(contact_path) ? 'text-white' : ''}",
+          data: { action: "click->mobile-nav#close" } %>
+        <%= link_to "Collections", collections_path,
+          class: "#{mobile_link} #{current_page?(collections_path) ? 'text-white' : ''}",
+          data: { action: "click->mobile-nav#close" } %>
+      </nav>
+    </div>
+
 
     <%# Spacer — takes the nav's height when nav becomes fixed, preventing content jump %>
     <div data-scroll-progress-target="spacer" style="height:0;" aria-hidden="true"></div>
@@ -267,10 +273,35 @@
       <%= yield %>
     </main>
 
+    <%# ── Subscribe CTA ──────────────────────────────────────── %>
+    <section id="subscribe-cta" class="bg-gray-900 mt-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-16 flex flex-col md:flex-row items-center justify-between gap-8">
+        <div class="text-center md:text-left">
+          <p class="text-xs font-bold tracking-[0.25em] uppercase text-red-400 mb-2">Newsletter</p>
+          <h2 class="font-serif text-3xl sm:text-4xl font-bold text-white leading-tight mb-3">
+            Stories delivered to<br class="hidden sm:block"> your inbox.
+          </h2>
+          <p class="text-gray-400 text-sm leading-relaxed max-w-md">
+            Get the best articles, interviews, and ideas from The Magazine — curated weekly, no spam.
+          </p>
+        </div>
+        <form class="flex flex-col sm:flex-row gap-3 w-full md:w-auto md:min-w-[380px]"
+              onsubmit="return false;">
+          <input type="email"
+                 placeholder="Your email address"
+                 class="flex-1 px-4 py-3 text-sm bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-red-400 transition-colors min-w-0">
+          <button type="submit"
+                  class="px-6 py-3 text-sm font-bold tracking-wide uppercase bg-red-500 text-white hover:bg-red-600 transition-colors shrink-0">
+            Subscribe
+          </button>
+        </form>
+      </div>
+    </section>
+
     <%# Footer %>
-    <footer class="bg-gray-900 text-gray-300 mt-16">
+    <footer class="bg-gray-900 text-gray-300 border-t border-white/10">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 border-b border-gray-700 pb-10">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-10 border-b border-gray-700 pb-10">
           <div>
             <h2 class="font-serif text-2xl font-bold text-white mb-3">The Magazine</h2>
             <p class="text-sm leading-relaxed text-gray-400">
@@ -278,7 +309,7 @@
             </p>
           </div>
           <div>
-            <h4 class="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">Sections</h4>
+            <h4 class="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">Categories</h4>
             <% footer_cats = Category.joins(:articles).merge(Article.published).distinct.to_a %>
             <ul class="space-y-2 text-sm">
               <% footer_cats.each_with_index do |cat, i| %>
@@ -320,7 +351,16 @@
             <% end %>
           </div>
           <div>
-            <h4 class="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">About</h4>
+            <h4 class="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">Tags</h4>
+            <div class="flex flex-wrap gap-1.5">
+              <% Tag.joins(:articles).merge(Article.published).distinct.limit(20).each do |tag| %>
+                <%= link_to "##{tag.name}", tag_path(tag),
+                      class: "text-xs text-gray-400 hover:text-white transition-colors" %>
+              <% end %>
+            </div>
+          </div>
+          <div>
+            <h4 class="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">Quick Links</h4>
             <ul class="space-y-2 text-sm">
               <li><%= link_to "About Us", about_path, class: "hover:text-white transition-colors" %></li>
               <li><%= link_to "Contact", contact_path, class: "hover:text-white transition-colors" %></li>
@@ -362,6 +402,19 @@
         </span>
       </span>
     </button>
+
+    <%# ── Bookmark float button ───────────────────────────── %>
+    <%= link_to bookmarks_path,
+          data: { controller: "bookmark-float", scroll_progress_target: "bookmark" },
+          class: "article-bookmark-float",
+          aria: { label: "View bookmarks" } do %>
+      <svg class="bookmark-icon-empty" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+      </svg>
+      <svg class="bookmark-icon-filled" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+      </svg>
+    <% end %>
 
   </body>
 </html>

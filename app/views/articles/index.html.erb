@@ -22,16 +22,15 @@
   <% end %>
 </div>
 
-<% if @articles.any? %>
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    <% @articles.each do |article| %>
-      <%= render "articles/article_card", article: article %>
-    <% end %>
-  </div>
-  <%= render "shared/pagination_public", collection: @articles, per_page_options: [6, 12, 24] %>
-<% else %>
-  <div class="py-20 text-center border border-dashed border-gray-300">
-    <p class="text-gray-400 mb-3">No articles published yet.</p>
-    <%= link_to "Go to admin →", admin_root_path, class: "text-sm font-semibold text-gray-900 underline" %>
+<%# Active date filter banner %>
+<% if @current_date %>
+  <div class="flex items-center justify-between mb-6 px-4 py-2.5 bg-red-50 border border-red-200">
+    <span class="text-sm text-red-700 font-medium">
+      Showing articles from <strong><%= @current_date.strftime("%B %Y") %></strong>
+    </span>
+    <%= link_to "Clear filter", articles_path(per_page: params[:per_page]),
+          class: "text-xs font-semibold text-red-500 hover:text-red-700 transition-colors" %>
   </div>
 <% end %>
+
+<%= render "shared/article_grid", articles: @articles %>

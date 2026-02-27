@@ -8,7 +8,7 @@ class CategoriesController < ApplicationController
 
   # GET /categories/1 or /categories/1.json
   def show
-    @articles = @category.articles.published.recent.includes(:category, :tags, :author)
+    @articles = @category.articles.published.recent.includes(:categories, :tags, :author)
   end
 
   # GET /categories/new

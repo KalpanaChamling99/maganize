@@ -17,6 +17,9 @@ Rails.application.routes.draw do
   # Public collections
   resources :collections, only: [:index, :show]
 
+  # Bookmarks (localStorage IDs passed as params; server-side rendered)
+  get "bookmarks", to: "bookmarks#index", as: :bookmarks
+
   # Admin section
   namespace :admin do
     get    "login",  to: "sessions#new",     as: :login

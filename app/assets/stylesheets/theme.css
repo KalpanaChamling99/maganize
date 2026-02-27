@@ -3,6 +3,8 @@
    Applied via html[data-theme="dark"]
    ───────────────────────────────────────────────────────── */
 
+html { scroll-behavior: smooth; }
+
 /* ── Theme toggle — segmented 50/50 pill ─────────────────── */
 .theme-float {
   display: inline-flex;
@@ -77,6 +79,44 @@ html[data-theme="dark"] .theme-float-sun-icon {
 html[data-theme="dark"] .theme-float-moon-icon {
   color: #1e293b;
 }
+
+/* ── Mobile full-screen overlay menu ────────────────────── */
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  max-width: 400px;
+  height: 100vh;
+  background: #0a0f1e;
+  z-index: 200;
+  overflow-y: auto;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+}
+.mobile-menu-overlay:not(.hidden) {
+  display: flex;
+  flex-direction: column;
+  animation: mobileMenuIn 0.22s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+@keyframes mobileMenuIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.mobile-menu-link {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: inherit;
+  color: #d1d5db;
+  padding: 11px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  transition: color 0.15s;
+  text-decoration: none;
+  letter-spacing: 0;
+}
+.mobile-menu-link:last-child { border-bottom: none; }
+.mobile-menu-link:hover { color: #fff; }
+.mobile-menu-link.text-white { color: #fff; border-left: 2px solid #ef4444; padding-left: 10px; }
 
 /* ── Smooth transitions ───────────────────────────────────── */
 body,
@@ -339,6 +379,94 @@ html[data-theme="dark"] .prose tbody tr         { border-color: #1e293b; }
 
 /* ── Article card meta (fix contrast) ───────────────────── */
 html[data-theme="dark"] .article-card .article-meta { color: #64748b; }
+
+/* ── Bookmark button ─────────────────────────────────────── */
+.bookmark-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: #9ca3af;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.18s, transform 0.15s;
+  flex-shrink: 0;
+}
+.bookmark-btn:hover { color: #ef4444; transform: scale(1.12); }
+
+/* Filled icon visibility driven by data-saved attribute */
+.bookmark-btn .bookmark-icon-filled { display: none; }
+.bookmark-btn[data-saved="true"]  .bookmark-icon-empty  { display: none; }
+.bookmark-btn[data-saved="true"]  .bookmark-icon-filled { display: block; color: #ef4444; }
+
+/* Larger variant used on the article show page */
+.bookmark-btn--show { width: 36px; height: 36px; }
+
+/* Remove button on bookmarks page always shows filled red */
+.bookmark-remove-btn { color: #ef4444; }
+.bookmark-remove-btn:hover { color: #dc2626; transform: scale(1.12); }
+
+/* Floating bookmark icon — fixed, just above the scroll-to-top button */
+@keyframes bookmark-save {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.28); }
+  60%  { transform: scale(0.92); }
+  100% { transform: scale(1); }
+}
+@keyframes bookmark-remove {
+  0%   { transform: translateX(0); }
+  20%  { transform: translateX(-5px) rotate(-8deg); }
+  45%  { transform: translateX(5px)  rotate(8deg); }
+  65%  { transform: translateX(-3px) rotate(-4deg); }
+  80%  { transform: translateX(2px)  rotate(2deg); }
+  100% { transform: translateX(0)    rotate(0); }
+}
+.article-bookmark-float {
+  position: fixed;
+  right: 1.5rem;
+  bottom: calc(1.5rem + 44px + 10px);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: #ef4444;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 4px 14px rgba(239,68,68,0.35);
+  color: #ffffff;
+  cursor: pointer;
+  text-decoration: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, background 0.2s, box-shadow 0.2s;
+}
+.article-bookmark-float.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.article-bookmark-float svg { width: 20px; height: 20px; }
+.article-bookmark-float:hover {
+  background: #dc2626;
+  box-shadow: 0 6px 20px rgba(239,68,68,0.45);
+}
+.article-bookmark-float[data-saved="true"] {
+  background: #1f2937;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  color: #ef4444;
+}
+.article-bookmark-float[data-saved="true"]:hover {
+  background: #111827;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+}
+.article-bookmark-float.anim-save   { animation: bookmark-save   0.4s cubic-bezier(0.34,1.56,0.64,1) both; }
+.article-bookmark-float.anim-remove { animation: bookmark-remove 0.45s ease both; }
+.article-bookmark-float .bookmark-icon-filled { display: none; }
+.article-bookmark-float[data-saved="true"] .bookmark-icon-empty  { display: none; }
+.article-bookmark-float[data-saved="true"] .bookmark-icon-filled { display: block; }
 
 /* ── Scroll-to-top button ────────────────────────────────── */
 html[data-theme="dark"] .scroll-top-btn circle[fill="#ffffff"] {

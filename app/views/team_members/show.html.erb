@@ -51,8 +51,8 @@
           <%# Info %>
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2 mb-1">
-              <% if article.category %>
-                <span class="text-xs font-bold px-2 py-0.5 bg-red-500 text-white uppercase tracking-wide"><%= article.category.name %></span>
+              <% article.categories.each do |cat| %>
+                <span class="text-xs font-bold px-2 py-0.5 text-white uppercase tracking-wide" style="<%= category_badge_style(cat) %>"><%= cat.name %></span>
               <% end %>
               <time class="text-xs text-gray-400"><%= article.published_at.strftime("%B %-d, %Y") %></time>
             </div>

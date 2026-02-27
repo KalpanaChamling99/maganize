@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_02_26_120000) do
+ActiveRecord::Schema[7.1].define(version: 2026_02_27_210000) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -56,8 +56,20 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_26_120000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "role_id"
+    t.integer "team_member_id"
     t.index ["email"], name: "index_admin_users_on_email", unique: true
     t.index ["role_id"], name: "index_admin_users_on_role_id"
+    t.index ["team_member_id"], name: "index_admin_users_on_team_member_id"
+  end
+
+  create_table "article_categories", force: :cascade do |t|
+    t.integer "article_id", null: false
+    t.integer "category_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["article_id", "category_id"], name: "index_article_categories_on_article_id_and_category_id", unique: true
+    t.index ["article_id"], name: "index_article_categories_on_article_id"
+    t.index ["category_id"], name: "index_article_categories_on_category_id"
   end
 
   create_table "article_tags", force: :cascade do |t|
@@ -75,11 +87,9 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_26_120000) do
     t.datetime "published_at"
     t.boolean "featured"
     t.string "cover_image"
-    t.integer "category_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "team_member_id"
-    t.index ["category_id"], name: "index_articles_on_category_id"
     t.index ["team_member_id"], name: "index_articles_on_team_member_id"
   end
 
@@ -89,6 +99,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_26_120000) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "color"
   end
 
   create_table "collection_articles", force: :cascade do |t|
@@ -145,9 +156,11 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_26_120000) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "admin_users", "team_members"
+  add_foreign_key "article_categories", "articles"
+  add_foreign_key "article_categories", "categories"
   add_foreign_key "article_tags", "articles"
   add_foreign_key "article_tags", "tags"
-  add_foreign_key "articles", "categories"
   add_foreign_key "articles", "team_members"
   add_foreign_key "collection_articles", "articles"
   add_foreign_key "collection_articles", "collections"

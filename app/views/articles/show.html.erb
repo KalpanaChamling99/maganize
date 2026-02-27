@@ -9,9 +9,10 @@
     <div class="absolute bottom-0 left-0 right-0 px-6 sm:px-10 pb-8">
       <div class="max-w-3xl">
         <div class="flex flex-wrap items-center gap-2 mb-4">
-          <% if @article.category %>
-            <%= link_to @article.category.name, category_path(@article.category),
-              class: "text-xs font-bold px-3 py-1 bg-red-500 text-white uppercase tracking-widest hover:bg-red-600 transition-colors" %>
+          <% @article.categories.each do |cat| %>
+            <%= link_to cat.name, category_path(cat),
+              class: "text-xs font-bold px-3 py-1 text-white uppercase tracking-widest hover:opacity-90 transition-opacity",
+              style: category_badge_style(cat) %>
           <% end %>
           <% @article.tags.each do |tag| %>
             <%= link_to "##{tag.name}", tag_path(tag),
@@ -23,7 +24,10 @@
         </h1>
         <div class="flex items-center gap-4 text-sm text-white/70">
           <%= lucide_icon "calendar", class: "w-4 h-4 shrink-0 text-white/60" %>
-          <time><%= @article.published_at.strftime("%B %-d, %Y") %></time>
+          <%= link_to articles_path(year: @article.published_at.year, month: @article.published_at.month),
+                class: "hover:text-white transition-colors" do %>
+            <time><%= @article.published_at.strftime("%B %-d, %Y") %></time>
+          <% end %>
           <% if @article.author %>
             <span class="text-white/40">·</span>
             <%= lucide_icon "user", class: "w-4 h-4 shrink-0 text-white/60" %>
@@ -41,9 +45,10 @@
   <%# No image: plain header block %>
   <div class="mb-10 pb-8 border-b border-gray-200">
     <div class="flex flex-wrap items-center gap-2 mb-4">
-      <% if @article.category %>
-        <%= link_to @article.category.name, category_path(@article.category),
-          class: "text-xs font-bold px-3 py-1 bg-red-500 text-white uppercase tracking-widest" %>
+      <% @article.categories.each do |cat| %>
+        <%= link_to cat.name, category_path(cat),
+          class: "text-xs font-bold px-3 py-1 text-white uppercase tracking-widest hover:opacity-90 transition-opacity",
+          style: category_badge_style(cat) %>
       <% end %>
       <% @article.tags.each do |tag| %>
         <%= link_to "##{tag.name}", tag_path(tag),
@@ -55,7 +60,10 @@
     </h1>
     <div class="flex items-center gap-4 text-sm text-gray-400">
       <%= lucide_icon "calendar", class: "w-4 h-4 shrink-0" %>
-      <time><%= @article.published_at.strftime("%B %-d, %Y") %></time>
+      <%= link_to articles_path(year: @article.published_at.year, month: @article.published_at.month),
+            class: "hover:text-gray-700 transition-colors" do %>
+        <time><%= @article.published_at.strftime("%B %-d, %Y") %></time>
+      <% end %>
       <% if @article.author %>
         <span>·</span>
         <%= lucide_icon "user", class: "w-4 h-4 shrink-0" %>
@@ -67,6 +75,10 @@
       <span><%= [(@article.body.to_plain_text.split.size / 200.0).ceil, 1].max %> min read</span>
     </div>
   </div>
+<% end %>
+
+<% content_for :head do %>
+  <meta name="article-id" content="<%= @article.id %>">
 <% end %>
 
 <%# ── Article body ─────────────────────────────────────────── %>
@@ -264,8 +276,8 @@
   <%# ── Back nav ────────────────────────────────────────────── %>
   <div class="mt-10 pt-6 border-t border-gray-200 flex items-center justify-between text-sm text-gray-400">
     <%= link_to "← Back to articles", articles_path, class: "hover:text-gray-900 transition-colors" %>
-    <% if @article.category %>
-      <%= link_to "More in #{@article.category.name} →", category_path(@article.category),
+    <% @article.categories.each do |cat| %>
+      <%= link_to "More in #{cat.name} →", category_path(cat),
         class: "hover:text-gray-900 transition-colors" %>
     <% end %>
   </div>

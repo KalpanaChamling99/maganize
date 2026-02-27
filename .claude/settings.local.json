@@ -35,7 +35,15 @@
       "Bash(gem update --system 3.4.22)",
       "Bash(gem install bundler:2.3.18)",
       "Bash(gem --version)",
-      "Bash(bin/rails db:create)"
+      "Bash(bin/rails db:create)",
+      "Bash(bundle exec rails db:migrate)",
+      "Bash(python3 -c \"import sys,json; data=json.load\\(sys.stdin\\); [print\\(u[''picture''][''large'']\\) for u in data[''results'']]\")",
+      "Skill(keybindings-help)",
+      "Skill(keybindings-help:*)",
+      "WebFetch(domain:brandequity.economictimes.indiatimes.com)",
+      "Bash(bundle exec rails db:seed)",
+      "Bash(git -C /home/kalpana/projects/magazine add -A)",
+      "Bash(git -C:*)"
     ]
   }
 }

@@ -62,6 +62,16 @@
       class: "w-full border border-gray-200 px-3 py-2.5 text-sm focus:border-gray-900 focus:outline-none focus:ring-0 transition-colors" %>
   </div>
 
+  <%# Team member profile link %>
+  <div>
+    <%= form.label :team_member_id, "Team Member Profile", class: "block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2" %>
+    <%= form.select :team_member_id,
+      TeamMember.order(:name).map { |m| [m.name, m.id] },
+      { selected: user.team_member_id, include_blank: "— Not linked —" },
+      class: "w-full border border-gray-200 px-3 py-2.5 text-sm focus:border-gray-900 focus:outline-none focus:ring-0 transition-colors bg-white" %>
+    <p class="text-xs text-gray-400 mt-1">Links this admin to a team member profile — used as the default article author.</p>
+  </div>
+
   <%# Role %>
   <div>
     <%= form.label :role_id, "Role", class: "block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2" %>

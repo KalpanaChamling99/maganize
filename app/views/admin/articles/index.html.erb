@@ -23,14 +23,23 @@
         <% @articles.each do |article| %>
           <tr class="hover:bg-gray-50 transition-colors group">
             <td class="px-6 py-4 max-w-xs">
-              <p class="font-medium line-clamp-1 group-hover:text-gray-600"><%= article.title %></p>
-              <p class="text-xs text-gray-400 mt-0.5 line-clamp-1"><%= article.excerpt %></p>
+              <%= link_to edit_admin_article_path(article), class: "block hover:text-gray-600 transition-colors" do %>
+                <p class="font-medium line-clamp-1"><%= article.title %></p>
+              <% end %>
             </td>
             <td class="px-6 py-4 hidden md:table-cell text-gray-500 text-xs">
               <%= article.author&.name || "—" %>
             </td>
-            <td class="px-6 py-4 hidden md:table-cell text-gray-500 text-xs">
-              <%= article.category&.name || "—" %>
+            <td class="px-6 py-4 hidden md:table-cell">
+              <% if article.categories.any? %>
+                <div class="flex flex-wrap gap-1">
+                  <% article.categories.each do |cat| %>
+                    <span class="text-xs px-1.5 py-0.5 text-white" style="<%= category_badge_style(cat) %>"><%= cat.name %></span>
+                  <% end %>
+                </div>
+              <% else %>
+                <span class="text-xs text-gray-300">—</span>
+              <% end %>
             </td>
             <td class="px-6 py-4 hidden lg:table-cell">
               <div class="flex flex-wrap gap-1">

@@ -99,41 +99,50 @@
     <%# Author %>
     <div class="md:col-span-2">
       <%= form.label :team_member_id, "Author", class: "block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2" %>
-      <% team_members = TeamMember.order(:name) %>
-      <% if team_members.any? %>
-        <div class="relative">
-          <%= form.select :team_member_id,
-            team_members.map { |m| [m.name, m.id] },
-            { prompt: "No author assigned…", include_blank: true },
-            class: "w-full border border-gray-200 focus:border-gray-900 focus:outline-none focus:ring-0 px-3 py-2.5 text-sm bg-white appearance-none pr-8 transition-colors" %>
-          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400">
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
+      <% if current_admin_user.role&.name == "Root Admin" %>
+        <% team_members = TeamMember.order(:name) %>
+        <% if team_members.any? %>
+          <div class="relative">
+            <%= form.select :team_member_id,
+              team_members.map { |m| [m.name, m.id] },
+              { prompt: "No author assigned…", include_blank: true },
+              class: "w-full border border-gray-200 focus:border-gray-900 focus:outline-none focus:ring-0 px-3 py-2.5 text-sm bg-white appearance-none pr-8 transition-colors" %>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
           </div>
-        </div>
+        <% else %>
+          <div class="border border-dashed border-gray-200 px-3 py-2.5 text-sm text-gray-400">
+            No team members yet.
+            <%= link_to "Add one →", new_admin_team_member_path, class: "text-gray-700 underline", target: "_blank" %>
+          </div>
+        <% end %>
       <% else %>
-        <div class="border border-dashed border-gray-200 px-3 py-2.5 text-sm text-gray-400">
-          No team members yet.
-          <%= link_to "Add one →", new_admin_team_member_path, class: "text-gray-700 underline", target: "_blank" %>
+        <div class="border border-gray-200 px-3 py-2.5 text-sm text-gray-700 bg-gray-50 flex items-center justify-between">
+          <span><%= article.author&.name || "No author assigned" %></span>
+          <span class="text-xs text-gray-400">Only Root Admin can change this</span>
         </div>
       <% end %>
     </div>
 
     <div>
-      <%= form.label :category_id, "Category", class: "block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2" %>
+      <p class="block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2">Categories</p>
       <% if @categories.any? %>
-        <div class="relative">
-          <%= form.select :category_id,
-            @categories.map { |c| [c.name, c.id] },
-            { prompt: "Select a category…" },
-            class: "w-full border border-gray-200 focus:border-gray-900 focus:outline-none focus:ring-0 px-3 py-2.5 text-sm bg-white appearance-none pr-8 transition-colors" %>
-          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400">
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
-          </div>
+        <div class="border border-gray-200 p-3 flex flex-wrap gap-x-4 gap-y-2 bg-white">
+          <% @categories.each do |cat| %>
+            <label class="flex items-center gap-2 cursor-pointer group">
+              <input type="checkbox"
+                name="article[category_ids][]"
+                value="<%= cat.id %>"
+                <%= article.category_ids.include?(cat.id) ? "checked" : "" %>
+                class="h-4 w-4 rounded border-gray-300 text-gray-900 focus:ring-1 focus:ring-gray-900 focus:ring-offset-0">
+              <span class="text-sm text-gray-600 group-hover:text-gray-900 transition-colors"><%= cat.name %></span>
+            </label>
+          <% end %>
         </div>
+        <input type="hidden" name="article[category_ids][]" value="">
       <% else %>
         <div class="border border-dashed border-gray-200 px-3 py-2.5 text-sm text-gray-400">
           No categories.

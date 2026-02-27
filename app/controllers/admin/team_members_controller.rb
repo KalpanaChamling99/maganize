@@ -23,6 +23,8 @@ class Admin::TeamMembersController < Admin::BaseController
   end
 
   def update
+    @team_member.avatar.purge if params[:team_member][:remove_avatar] == "1"
+    @team_member.slug = nil if params[:regenerate_slug] == "1"
     if @team_member.update(team_member_params)
       redirect_to admin_team_members_path, notice: "Team member updated."
     else

@@ -20,6 +20,63 @@
       class: "w-full border border-gray-200 focus:border-gray-900 focus:outline-none focus:ring-0 p-3 text-sm resize-none transition-colors" %>
   </div>
 
+  <div>
+    <%= form.label :color, "Badge Color", class: "block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2" %>
+    <div class="flex items-center gap-4">
+      <%= form.color_field :color,
+            value: category.color.presence || "#ef4444",
+            id: "cat_color_picker",
+            class: "w-10 h-10 border border-gray-200 cursor-pointer p-0.5 rounded" %>
+      <span id="cat_color_preview"
+            class="text-xs font-bold px-3 py-1 text-white uppercase tracking-wide"
+            style="background-color: <%= category.color.presence || '#ef4444' %>">
+        <%= category.name.presence || "Preview" %>
+      </span>
+      <button type="button" id="cat_color_reset"
+              class="text-xs text-gray-400 hover:text-gray-700 underline underline-offset-2 transition-colors">
+        Auto
+      </button>
+    </div>
+    <p class="text-xs text-gray-400 mt-1.5">Click "Auto" to generate a color from the category name.</p>
+    <script>
+      document.addEventListener('turbo:load', function() {
+        var picker  = document.getElementById('cat_color_picker');
+        var preview = document.getElementById('cat_color_preview');
+        var nameEl  = document.querySelector('input[name="category[name]"]');
+        var resetBtn = document.getElementById('cat_color_reset');
+        if (!picker || !preview) return;
+
+        var palette = ['#ef4444','#3b82f6','#16a34a','#9333ea','#f59e0b','#ec4899',
+                       '#6366f1','#14b8a6','#f97316','#06b6d4','#f43f5e','#7c3aed'];
+
+        function nameToColor(name) {
+          var sum = 0;
+          for (var i = 0; i < name.length; i++) sum += name.charCodeAt(i);
+          return palette[sum % palette.length];
+        }
+
+        picker.addEventListener('input', function() {
+          preview.style.backgroundColor = picker.value;
+        });
+
+        if (nameEl) {
+          nameEl.addEventListener('input', function() {
+            preview.textContent = nameEl.value || 'Preview';
+          });
+        }
+
+        if (resetBtn) {
+          resetBtn.addEventListener('click', function() {
+            var name = nameEl ? nameEl.value : '';
+            var auto = nameToColor(name || 'default');
+            picker.value = auto;
+            preview.style.backgroundColor = auto;
+          });
+        }
+      });
+    </script>
+  </div>
+
   <div class="flex items-center justify-between border-t border-gray-100 pt-4">
     <%= link_to "Cancel", admin_categories_path, class: "text-sm text-gray-400 hover:text-gray-700 transition-colors" %>
     <%= form.submit category.persisted? ? "Update Category" : "Create Category",
