@@ -1,0 +1,9 @@
+one:
+  name: Jane Doe
+  role: Editor
+  slug: jane-doe
+
+two:
+  name: John Smith
+  role: Writer
+  slug: john-smith
