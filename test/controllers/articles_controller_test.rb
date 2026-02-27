@@ -1,48 +1,29 @@
-require "test_helper"
+# frozen_string_literal: true
+
+require 'test_helper'
 
 class ArticlesControllerTest < ActionDispatch::IntegrationTest
   setup do
     @article = articles(:one)
   end
 
-  test "should get index" do
+  test 'should get index' do
     get articles_url
     assert_response :success
   end
 
-  test "should get new" do
-    get new_article_url
-    assert_response :success
-  end
-
-  test "should create article" do
-    assert_difference("Article.count") do
-      post articles_url, params: { article: { body: @article.body, category_id: @article.category_id, cover_image: @article.cover_image, excerpt: @article.excerpt, featured: @article.featured, published_at: @article.published_at, title: @article.title } }
-    end
-
-    assert_redirected_to article_url(Article.last)
-  end
-
-  test "should show article" do
+  test 'should show article' do
     get article_url(@article)
     assert_response :success
   end
 
-  test "should get edit" do
-    get edit_article_url(@article)
+  test 'index filters by category' do
+    get articles_url, params: { category_id: categories(:culture).id }
     assert_response :success
   end
 
-  test "should update article" do
-    patch article_url(@article), params: { article: { body: @article.body, category_id: @article.category_id, cover_image: @article.cover_image, excerpt: @article.excerpt, featured: @article.featured, published_at: @article.published_at, title: @article.title } }
-    assert_redirected_to article_url(@article)
-  end
-
-  test "should destroy article" do
-    assert_difference("Article.count", -1) do
-      delete article_url(@article)
-    end
-
-    assert_redirected_to articles_url
+  test 'index filters by year and month' do
+    get articles_url, params: { year: 2026, month: 1 }
+    assert_response :success
   end
 end

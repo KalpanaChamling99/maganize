@@ -2,8 +2,8 @@
 
 one:
   article: one
-  tag: one
+  tag: longform
 
 two:
   article: two
-  tag: two
+  tag: interview

@@ -1,19 +1,14 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# Articles fixture.
+# Note: category association is now via article_categories join table (see article_categories.yml).
 
 one:
-  title: MyString
-  excerpt: MyText
-  body: MyText
-  published_at: 2026-02-20 09:40:42
+  title: City of Tomorrow
+  excerpt: How urban design is reshaping how we live.
+  published_at: "2026-01-01 10:00:00"
   featured: false
-  cover_image: MyString
-  category: one
 
 two:
-  title: MyString
-  excerpt: MyText
-  body: MyText
-  published_at: 2026-02-20 09:40:42
-  featured: false
-  cover_image: MyString
-  category: two
+  title: The Future of AI
+  excerpt: Artificial intelligence in daily life.
+  published_at: "2026-01-15 10:00:00"
+  featured: true
