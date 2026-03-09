@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_02_27_210000) do
+ActiveRecord::Schema[7.1].define(version: 2026_03_09_110534) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -72,6 +72,17 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_27_210000) do
     t.index ["category_id"], name: "index_article_categories_on_category_id"
   end
 
+  create_table "article_ratings", force: :cascade do |t|
+    t.integer "article_id", null: false
+    t.integer "user_id"
+    t.integer "value", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["article_id", "user_id"], name: "index_article_ratings_on_article_id_and_user_id", unique: true
+    t.index ["article_id"], name: "index_article_ratings_on_article_id"
+    t.index ["user_id"], name: "index_article_ratings_on_user_id"
+  end
+
   create_table "article_tags", force: :cascade do |t|
     t.integer "article_id", null: false
     t.integer "tag_id", null: false
@@ -118,6 +129,17 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_27_210000) do
     t.boolean "featured", default: false, null: false
   end
 
+  create_table "comment_reactions", force: :cascade do |t|
+    t.integer "comment_id", null: false
+    t.integer "user_id"
+    t.string "emoji", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["comment_id", "user_id"], name: "index_comment_reactions_on_comment_id_and_user_id", unique: true, where: "user_id IS NOT NULL"
+    t.index ["comment_id"], name: "index_comment_reactions_on_comment_id"
+    t.index ["user_id"], name: "index_comment_reactions_on_user_id"
+  end
+
   create_table "comments", force: :cascade do |t|
     t.integer "article_id", null: false
     t.string "name", null: false
@@ -125,8 +147,10 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_27_210000) do
     t.text "body", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "user_id"
     t.index ["article_id"], name: "index_comments_on_article_id"
     t.index ["created_at"], name: "index_comments_on_created_at"
+    t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -154,15 +178,30 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_27_210000) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "users", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "email", null: false
+    t.string "password_digest", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "role", default: "viewer", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "admin_users", "team_members"
   add_foreign_key "article_categories", "articles"
   add_foreign_key "article_categories", "categories"
+  add_foreign_key "article_ratings", "articles"
+  add_foreign_key "article_ratings", "users"
   add_foreign_key "article_tags", "articles"
   add_foreign_key "article_tags", "tags"
   add_foreign_key "articles", "team_members"
   add_foreign_key "collection_articles", "articles"
   add_foreign_key "collection_articles", "collections"
+  add_foreign_key "comment_reactions", "comments"
+  add_foreign_key "comment_reactions", "users"
   add_foreign_key "comments", "articles"
+  add_foreign_key "comments", "users"
 end

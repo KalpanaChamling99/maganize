@@ -111,7 +111,7 @@
               <% end %>
             </td>
             <td class="px-6 py-4 hidden md:table-cell text-gray-500">
-              <%= article.category&.name || "—" %>
+              <%= article.categories.first&.name || "—" %>
             </td>
             <td class="px-6 py-4 hidden lg:table-cell">
               <% if article.published? %>

@@ -1,0 +1,70 @@
+<div class="w-full max-w-sm mx-auto px-4">
+
+  <%# Branding %>
+  <div class="text-center mb-8">
+    <p class="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-1">Admin Panel</p>
+    <h1 class="font-serif text-3xl font-bold text-gray-900">The Magazine</h1>
+  </div>
+
+  <%# Card %>
+  <div class="bg-white border border-gray-200 shadow-sm">
+    <div class="h-1 bg-red-600 w-full"></div>
+
+    <div class="p-8">
+      <h2 class="text-base font-semibold text-gray-900 mb-6">Create an account</h2>
+
+      <% if @admin_user.errors.any? %>
+        <div class="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 mb-5">
+          <% @admin_user.errors.full_messages.each do |msg| %>
+            <p><%= msg %></p>
+          <% end %>
+        </div>
+      <% end %>
+
+      <%= form_with model: @admin_user, url: admin_register_path, class: "space-y-5" do |f| %>
+
+        <div>
+          <label class="block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2">Name</label>
+          <%= f.text_field :name, autocomplete: "name", autofocus: true, required: true,
+            class: "w-full border border-gray-200 px-3 py-2.5 text-sm focus:border-gray-900 focus:outline-none focus:ring-0 transition-colors",
+            placeholder: "Your name" %>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2">Email</label>
+          <%= f.email_field :email, autocomplete: "email", required: true,
+            class: "w-full border border-gray-200 px-3 py-2.5 text-sm focus:border-gray-900 focus:outline-none focus:ring-0 transition-colors",
+            placeholder: "you@example.com" %>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2">Password</label>
+          <%= f.password_field :password, autocomplete: "new-password", required: true,
+            class: "w-full border border-gray-200 px-3 py-2.5 text-sm focus:border-gray-900 focus:outline-none focus:ring-0 transition-colors",
+            placeholder: "••••••••" %>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2">Confirm Password</label>
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", required: true,
+            class: "w-full border border-gray-200 px-3 py-2.5 text-sm focus:border-gray-900 focus:outline-none focus:ring-0 transition-colors",
+            placeholder: "••••••••" %>
+        </div>
+
+        <%= f.submit "Create Account",
+          class: "w-full bg-gray-900 text-white text-xs font-semibold tracking-widest uppercase px-6 py-3 hover:bg-gray-700 transition-colors cursor-pointer mt-2" %>
+
+      <% end %>
+    </div>
+  </div>
+
+  <p class="text-center mt-6 text-xs text-gray-400">
+    Already have an account?
+    <%= link_to "Sign in", admin_login_path, class: "text-gray-700 font-semibold hover:text-gray-900 transition-colors" %>
+  </p>
+
+  <p class="text-center mt-3">
+    <%= link_to "← Back to site", root_path, class: "text-xs text-gray-400 hover:text-gray-700 transition-colors" %>
+  </p>
+
+</div>

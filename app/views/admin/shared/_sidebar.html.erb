@@ -89,7 +89,7 @@
 
     <%# ── Access dropdown — conditionally shown ─────────────── %>
     <% if current_admin_user&.can?("manage_users") || current_admin_user&.can?("manage_roles") %>
-      <% access_active = request.path.start_with?('/admin/users', '/admin/roles') %>
+      <% access_active = request.path.start_with?('/admin/users', '/admin/members', '/admin/roles') %>
       <div data-controller="dropdown" data-dropdown-open-value="<%= access_active %>">
         <button data-action="click->dropdown#toggle"
                 class="w-full flex items-center gap-3 px-3 py-2.5 rounded text-sm font-medium transition-colors <%= access_active ? 'bg-white/10 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white' %>">
@@ -104,8 +104,14 @@
             <%= link_to admin_users_path,
               class: "flex items-center gap-3 px-3 py-2 rounded text-sm font-medium transition-colors #{request.path.start_with?('/admin/users') ? 'bg-white/10 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'}" do %>
               <%= lucide_icon "shield", class: "h-4 w-4 shrink-0" %>
-              Users
+              Admin Users
               <span class="ml-auto text-xs bg-white/10 px-2 py-0.5 rounded-full"><%= AdminUser.count %></span>
+            <% end %>
+            <%= link_to admin_members_path,
+              class: "flex items-center gap-3 px-3 py-2 rounded text-sm font-medium transition-colors #{request.path.start_with?('/admin/members') ? 'bg-white/10 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'}" do %>
+              <%= lucide_icon "users", class: "h-4 w-4 shrink-0" %>
+              Members
+              <span class="ml-auto text-xs bg-white/10 px-2 py-0.5 rounded-full"><%= User.count %></span>
             <% end %>
           <% end %>
           <% if current_admin_user.can?("manage_roles") %>

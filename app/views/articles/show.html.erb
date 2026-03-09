@@ -1,3 +1,6 @@
+<%# ── GLightbox ───────────────────────────────────────────── %>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+
 <%# ── Hero image ──────────────────────────────────────────── %>
 <% if @article.images.attached? %>
   <div class="relative h-[480px] -mx-4 sm:-mx-6 mb-10 overflow-hidden">
@@ -130,10 +133,18 @@
 
       <div class="swiper article-gallery-swiper">
         <div class="swiper-wrapper">
-          <% @article.images[1..].each do |image| %>
+          <% gallery_images = @article.images[1..] %>
+          <% gallery_images.each_with_index do |image, i| %>
             <div class="swiper-slide">
-              <%= image_tag image, alt: @article.title,
-                class: "w-full h-72 object-cover border border-gray-100" %>
+              <a href="<%= url_for(image) %>" class="glightbox relative group block overflow-hidden" data-gallery="article-gallery" data-description="<%= @article.title %>">
+                <%= image_tag image, alt: @article.title,
+                  class: "w-full h-72 object-cover border border-gray-100 transition-transform duration-300 group-hover:scale-105" %>
+                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div class="bg-black/80 rounded-2xl p-3.5 shadow-lg">
+                    <%= lucide_icon "zoom-in", class: "w-6 h-6 text-white" %>
+                  </div>
+                </div>
+              </a>
             </div>
           <% end %>
         </div>
@@ -212,24 +223,155 @@
 
     <%# Existing comments %>
     <% if @article.comments.any? %>
-      <div class="space-y-6 mb-10">
-        <% @article.comments.order(created_at: :asc).each do |comment| %>
-          <div class="flex gap-4">
-            <div class="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center shrink-0 text-xs font-bold text-gray-600 uppercase select-none">
-              <%= comment.name.split.map(&:first).first(2).join %>
+      <div class="mb-10 divide-y divide-gray-100">
+        <% @article.comments.includes({ reactions: { user: { avatar_attachment: :blob } } }, { user: { avatar_attachment: :blob } }).order(created_at: :asc).each do |comment| %>
+          <div class="flex gap-3 py-5" id="comment-<%= comment.id %>">
+            <%# Avatar %>
+            <div class="shrink-0">
+              <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-800 flex items-center justify-center ring-2 ring-white shadow-sm">
+                <% if comment.user&.avatar&.attached? %>
+                  <%= image_tag comment.user.avatar, class: "w-full h-full object-cover" %>
+                <% else %>
+                  <span class="text-xs font-bold text-white leading-none uppercase">
+                    <%= comment.name.split.map(&:first).first(2).join %>
+                  </span>
+                <% end %>
+              </div>
             </div>
             <div class="flex-1 min-w-0">
               <div class="flex flex-wrap items-baseline gap-2 mb-1">
                 <span class="text-sm font-semibold text-gray-900"><%= comment.name %></span>
                 <span class="text-xs text-gray-400"><%= comment.created_at.strftime("%B %-d, %Y · %-I:%M %p") %></span>
+                <% if current_user && (comment.user_id == current_user.id || (comment.user_id.nil? && comment.email == current_user.email)) %>
+                  <%= link_to "Edit", edit_comment_path(comment),
+                    class: "text-xs text-blue-500 hover:text-blue-700 transition-colors" %>
+                <% end %>
               </div>
-              <p class="text-sm text-gray-600 leading-relaxed"><%= comment.body %></p>
+              <p class="text-sm text-gray-700 leading-relaxed"><%= comment.body %></p>
+
+              <%# LinkedIn-style Reactions %>
+              <%
+                my_reaction = CommentReaction::EMOJIS.find { |e|
+                  if current_user
+                    comment.reactions.any? { |r| r.emoji == e && r.user_id == current_user.id }
+                  else
+                    session["reaction_#{comment.id}_#{e}"].present?
+                  end
+                }
+                my_dislike = if current_user
+                  comment.reactions.any? { |r| r.emoji == CommentReaction::DISLIKE && r.user_id == current_user.id }
+                else
+                  session["reaction_#{comment.id}_#{CommentReaction::DISLIKE}"].present?
+                end
+                like_reactions = comment.reactions.reject { |r| r.emoji == CommentReaction::DISLIKE }
+                all_reactors   = like_reactions.group_by(&:emoji)
+                like_total     = like_reactions.count
+                dislike_total  = comment.reactions.count { |r| r.emoji == CommentReaction::DISLIKE }
+                named_like_total = like_reactions.count(&:user)
+              %>
+              <div class="flex items-center gap-1 mt-3 pt-2 border-t border-gray-100">
+
+                <%# Like button + emoji picker %>
+                <div class="relative" data-controller="popup">
+                  <button data-action="click->popup#toggle"
+                    class="flex items-center gap-1.5 text-sm font-medium transition-colors px-3 py-1.5 rounded-full select-none <%= my_reaction ? 'text-blue-600 bg-blue-50 hover:bg-blue-100' : 'text-gray-500 hover:bg-gray-100' %>">
+                    <% if my_reaction %>
+                      <span class="text-base leading-none"><%= my_reaction %></span>
+                    <% else %>
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
+                      </svg>
+                    <% end %>
+                    Like<% if named_like_total > 0 %> <span class="font-semibold"><%= named_like_total %></span><% end %>
+                  </button>
+
+                  <%# Floating emoji picker %>
+                  <div data-popup-target="menu"
+                       class="hidden absolute top-full left-0 mt-2 flex items-center gap-1 bg-white border border-gray-200 rounded-full shadow-2xl px-3 py-2.5 z-30 pointer-events-auto"
+                       style="filter: drop-shadow(0 8px 24px rgba(0,0,0,0.15));">
+                    <% CommentReaction::EMOJIS.each do |emoji| %>
+                      <%= form_with url: comment_reactions_path(comment), method: :post, class: "inline" do |f| %>
+                        <%= f.hidden_field :emoji, value: emoji %>
+                        <button type="submit"
+                          class="text-2xl leading-none transition-all duration-150 hover:scale-150 hover:-translate-y-2 active:scale-90 block px-0.5"
+                          title="<%= emoji %>">
+                          <%= emoji %>
+                        </button>
+                      <% end %>
+                    <% end %>
+                  </div>
+                </div>
+
+                <%# Dislike button %>
+                <%= form_with url: comment_reactions_path(comment), method: :post, class: "inline" do |f| %>
+                  <%= f.hidden_field :emoji, value: CommentReaction::DISLIKE %>
+                  <button type="submit"
+                    class="flex items-center gap-1.5 text-sm font-medium transition-colors px-3 py-1.5 rounded-full select-none <%= my_dislike ? 'text-red-600 bg-red-50 hover:bg-red-100' : 'text-gray-500 hover:bg-gray-100' %>">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018c.163 0 .326.02.485.06L17 4m-7 10v2a2 2 0 002 2h.095c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5"/>
+                    </svg>
+                    Dislike<% if dislike_total > 0 %> <span class="font-semibold"><%= dislike_total %></span><% end %>
+                  </button>
+                <% end %>
+
+                <%# Reaction counts with per-emoji tooltip (named users only) %>
+                <% if named_like_total > 0 %>
+                  <div class="flex items-center gap-1.5 ml-1">
+                    <div class="flex -space-x-1">
+                      <% all_reactors.select { |_, rs| rs.any?(&:user) }.keys.first(3).each do |emoji| %>
+                        <span class="text-sm leading-none w-5 h-5 flex items-center justify-center bg-white rounded-full ring-1 ring-gray-100 shadow-sm"><%= emoji %></span>
+                      <% end %>
+                    </div>
+                    <div class="relative group/count">
+                      <button type="button" class="text-xs text-gray-500 hover:text-blue-600 hover:underline transition-colors font-medium">
+                        <%= named_like_total %> <%= named_like_total == 1 ? "reaction" : "reactions" %>
+                      </button>
+                      <div class="absolute bottom-full left-0 mb-2 hidden group-hover/count:block z-30 pointer-events-none" style="min-width:200px;">
+                        <div class="bg-white border border-gray-200 rounded-xl shadow-2xl overflow-hidden">
+                          <% all_reactors.each do |emoji, rs| %>
+                            <% named = rs.select(&:user) %>
+                            <% next if named.empty? %>
+                            <div class="px-3 pt-2 pb-1">
+                              <div class="flex items-center gap-1.5 mb-1.5">
+                                <span class="text-base leading-none"><%= emoji %></span>
+                                <span class="text-xs font-semibold text-gray-700"><%= named.count %></span>
+                              </div>
+                              <% named.first(4).each do |r| %>
+                                <div class="flex items-center gap-2 py-0.5">
+                                  <div class="w-6 h-6 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center shrink-0">
+                                    <% if r.user.avatar.attached? %>
+                                      <%= image_tag r.user.avatar, class: "w-full h-full object-cover" %>
+                                    <% else %>
+                                      <span class="text-[8px] font-bold text-gray-600 leading-none"><%= r.user.name.split.map(&:first).first(2).join.upcase %></span>
+                                    <% end %>
+                                  </div>
+                                  <span class="text-xs text-gray-700 truncate"><%= r.user.name %></span>
+                                </div>
+                              <% end %>
+                              <% if named.size > 4 %>
+                                <p class="text-[10px] text-gray-400 mt-0.5">+<%= named.size - 4 %> more</p>
+                              <% end %>
+                            </div>
+                            <% unless emoji == all_reactors.keys.last %>
+                              <div class="border-t border-gray-100 mx-3"></div>
+                            <% end %>
+                          <% end %>
+                        </div>
+                        <div class="flex justify-start pl-4">
+                          <div class="w-3 h-3 bg-white border-r border-b border-gray-200 rotate-45 -mt-1.5"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
             </div>
           </div>
         <% end %>
       </div>
     <% else %>
       <p class="text-sm text-gray-400 italic mb-8">No comments yet. Be the first to share your thoughts.</p>
+
     <% end %>
 
     <%# Flash for comment errors %>
@@ -239,21 +381,18 @@
       </div>
     <% end %>
 
-    <%# Comment form — admin users only %>
-    <% if current_admin_user %>
+    <%# Comment form — viewers only %>
+    <% if current_user&.role == "viewer" %>
       <div id="comment-form" class="bg-gray-50 border border-gray-200 p-6">
         <div class="flex items-center justify-between mb-5">
           <p class="text-xs font-semibold tracking-widest uppercase text-gray-500">Leave a comment</p>
           <span class="inline-flex items-center gap-1.5 text-xs text-gray-500">
             <span class="w-2 h-2 rounded-full bg-green-400 shrink-0"></span>
-            Signed in as <strong class="text-gray-800"><%= current_admin_user.name %></strong>
-            <% if current_admin_user.role %>
-              <span class="text-gray-400">&middot; <%= current_admin_user.role.name %></span>
-            <% end %>
+            Signed in as <strong class="text-gray-800"><%= current_user.name %></strong>
           </span>
         </div>
 
-        <%= form_with url: article_comments_path(@article), class: "space-y-4" do |f| %>
+        <%= form_with url: article_comments_path(@article), scope: :comment, class: "space-y-4" do |f| %>
           <div>
             <%= f.label :body, "Comment *", class: "block text-xs font-semibold tracking-widest uppercase text-gray-500 mb-1.5" %>
             <%= f.text_area :body, rows: 4, placeholder: "Share your thoughts…", required: true,
@@ -263,14 +402,69 @@
             class: "px-6 py-2.5 text-sm font-semibold bg-gray-900 text-white hover:bg-gray-700 transition-colors cursor-pointer" %>
         <% end %>
       </div>
-    <% else %>
+    <% elsif !current_user && !current_admin_user %>
       <div class="border border-dashed border-gray-200 px-6 py-8 text-center">
         <p class="text-sm text-gray-500 mb-3">Sign in to join the conversation.</p>
-        <%= link_to "Sign in", admin_login_path,
+        <%= link_to "Sign in", user_login_path,
           class: "inline-block px-5 py-2 text-sm font-semibold bg-gray-900 text-white hover:bg-gray-700 transition-colors" %>
       </div>
     <% end %>
 
+  </div>
+
+  <%# ── Rating ─────────────────────────────────────────────── %>
+  <% avg   = @article.ratings.average(:value)&.round(1) %>
+  <% total = @article.ratings.count %>
+  <div id="rating" class="mt-10 pt-8 border-t border-gray-200">
+    <div class="flex items-center justify-between flex-wrap gap-4">
+
+      <%# Average display — always visible %>
+      <div>
+        <p class="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-2">Rating</p>
+        <div class="flex items-center gap-2">
+          <% (1..5).each do |n| %>
+            <svg style="width:20px;height:20px;color:<%= avg && n <= avg.round ? '#facc15' : '#d1d5db' %>" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+            </svg>
+          <% end %>
+          <span style="font-size:13px;color:#6b7280;">
+            <% if avg %>
+              <%= avg %> / 5 &nbsp;(<%= total %> <%= total == 1 ? "rating" : "ratings" %>)
+            <% else %>
+              No ratings yet
+            <% end %>
+          </span>
+        </div>
+      </div>
+
+      <%# User rating — single form with 5 submit buttons %>
+      <% my_rating = if current_user
+                        @article.ratings.find_by(user: current_user)&.value
+                      else
+                        (rid = session["rating_article_#{@article.id}"]) && @article.ratings.find_by(id: rid)&.value
+                      end %>
+      <div>
+        <p class="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-2">
+          <%= my_rating ? "Your rating (click to change):" : "Rate this article:" %>
+        </p>
+        <form action="<%= article_ratings_path(@article) %>" method="post" style="display:inline;">
+          <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+          <input type="hidden" name="_method" value="post">
+          <div style="display:flex;gap:4px;align-items:center;">
+            <% (1..5).each do |n| %>
+              <button type="submit" name="value" value="<%= n %>"
+                style="background:none;border:none;padding:2px;cursor:pointer;line-height:0;"
+                title="Rate <%= n %> star">
+                <svg style="width:32px;height:32px;color:<%= my_rating && n <= my_rating ? '#facc15' : '#9ca3af' %>;" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                </svg>
+              </button>
+            <% end %>
+          </div>
+        </form>
+      </div>
+
+    </div>
   </div>
 
   <%# ── Back nav ────────────────────────────────────────────── %>
@@ -282,6 +476,43 @@
     <% end %>
   </div>
 </div>
+
+<%# ── GLightbox init ───────────────────────────────────────── %>
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+<script>
+  const lightbox = GLightbox({ selector: '.glightbox', touchNavigation: true, loop: true });
+
+  function updateGlCounter() {
+    let counter = document.getElementById('gl-counter');
+    if (!counter) {
+      const container = document.querySelector('.gcontainer');
+      if (!container) return;
+      counter = document.createElement('div');
+      counter.id = 'gl-counter';
+      counter.style.cssText = [
+        'position:absolute',
+        'bottom:20px',
+        'left:50%',
+        'transform:translateX(-50%)',
+        'background:rgba(0,0,0,.45)',
+        'backdrop-filter:blur(6px)',
+        'color:rgba(255,255,255,.85)',
+        'font-size:12px',
+        'font-weight:600',
+        'letter-spacing:.1em',
+        'padding:4px 14px',
+        'border-radius:999px',
+        'z-index:9999',
+        'pointer-events:none',
+      ].join(';');
+      container.appendChild(counter);
+    }
+    counter.textContent = `${lightbox.index + 1} / ${lightbox.elements.length}`;
+  }
+
+  lightbox.on('open', updateGlCounter);
+  lightbox.on('slide_changed', updateGlCounter);
+</script>
 
 <%# ── Related articles ─────────────────────────────────────── %>
 <% if @related_articles.any? %>

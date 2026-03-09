@@ -9,3 +9,46 @@
 <div class="max-w-3xl bg-white border border-gray-200 p-8">
   <%= render "form", article: @article %>
 </div>
+
+<%# ── Ratings ──────────────────────────────────────────── %>
+<% ratings = @article.ratings.includes(:user).order(created_at: :desc) %>
+<% if ratings.any? %>
+  <div class="max-w-3xl mt-6 bg-white border border-gray-200">
+    <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+      <h2 class="text-xs font-semibold tracking-widest uppercase text-gray-500">Ratings</h2>
+      <% avg = ratings.average(:value)&.round(1) %>
+      <span class="text-sm font-semibold text-gray-900">
+        &#9733; <%= avg %> / 5 &nbsp;<span class="font-normal text-gray-400">(<%= ratings.count %>)</span>
+      </span>
+    </div>
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-gray-100 text-xs font-semibold tracking-widest uppercase text-gray-400">
+          <th class="text-left px-6 py-3">User</th>
+          <th class="text-left px-6 py-3">Rating</th>
+          <th class="text-left px-6 py-3 hidden md:table-cell">Date</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-50">
+        <% ratings.each do |rating| %>
+          <tr class="hover:bg-gray-50">
+            <td class="px-6 py-3 text-gray-700">
+              <% if rating.user %>
+                <%= rating.user.name %>
+                <span class="text-xs text-gray-400 ml-1"><%= rating.user.email %></span>
+              <% else %>
+                <span class="text-gray-400 italic">Guest</span>
+              <% end %>
+            </td>
+            <td class="px-6 py-3">
+              <span class="text-yellow-500 font-semibold"><%= "★" * rating.value %></span><span class="text-gray-200"><%= "★" * (5 - rating.value) %></span>
+            </td>
+            <td class="px-6 py-3 hidden md:table-cell text-gray-400 text-xs">
+              <%= rating.created_at.strftime("%b %-d, %Y") %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>

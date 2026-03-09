@@ -6,7 +6,9 @@ class ArticlesController < ApplicationController
     @categories = Category.joins(:articles).merge(Article.published).distinct.order(:name)
     @current_category = Category.find_by(id: params[:category_id]) if params[:category_id].present?
     scope = Article.published.recent.includes(:categories, :tags, :author)
-    scope = scope.joins(:categories).where(categories: { id: @current_category.id }) if @current_category
+    if @current_category
+      scope = scope.where(id: Article.joins(:categories).where(categories: { id: @current_category.id }).select(:id))
+    end
     if params[:year].present? && params[:month].present?
       @current_date = Date.new(params[:year].to_i, params[:month].to_i, 1)
       scope = scope.where(published_at: @current_date.beginning_of_month..@current_date.end_of_month)
